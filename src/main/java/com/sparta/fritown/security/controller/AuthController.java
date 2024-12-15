@@ -1,6 +1,7 @@
 package com.sparta.fritown.security.controller;
 
 import com.sparta.fritown.security.dto.StatusResponseDto;
+import com.sparta.fritown.security.dto.TokenResponseStatus;
 import com.sparta.fritown.security.repository.RefreshTokenRepository;
 import com.sparta.fritown.security.service.RefreshTokenService;
 import com.sparta.fritown.security.util.JwtUtil;

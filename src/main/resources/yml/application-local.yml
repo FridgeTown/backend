@@ -5,7 +5,11 @@ spring:
     active:
       on-profile: local
 
-
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${local-db.url}
+    username: ${local-db.username}
+    password: ${local-db.password}
 
   data:
     redis:
