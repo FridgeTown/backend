@@ -2,14 +2,12 @@ package com.sparta.fritown.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 @Getter
-@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,5 +25,17 @@ public class User {
         this.email = email;
         this.userRole = userRole;
         this.nickname = nickname;
+    }
+
+    public User() {
+
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 }
