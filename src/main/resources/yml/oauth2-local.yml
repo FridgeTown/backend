@@ -1,8 +1,4 @@
 spring:
-  config:
-    active:
-      on-profile: local
-
   security:
     oauth2:
       client:

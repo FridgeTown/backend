@@ -2,6 +2,7 @@ spring:
   config:
     import:
       - classpath:/yml/application-secret.yml
+      - classpath:/yml/oauth2-local.yml
     active:
       on-profile: local
 
@@ -16,3 +17,6 @@ spring:
       host: ${local-redis.host}
       port: ${local-redis.port}
       password: ${local-redis.password}5
+
+  jwt:
+    secret: ${jwt.secret.key.access}
