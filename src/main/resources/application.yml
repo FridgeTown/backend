@@ -1,0 +1,11 @@
+spring:
+  application:
+    name:
+      Fridge_Town
+  config:
+    import:
+      - classpath:/yml/application-local.yml
+      - classpath:/yml/application-dev.yml
+
+  profiles:
+    active: local
