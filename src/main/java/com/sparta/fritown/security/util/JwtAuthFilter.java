@@ -1,5 +1,8 @@
 package com.sparta.fritown.security.util;
 
+import com.sparta.fritown.security.dto.SecurityUserDto;
+import com.sparta.fritown.user.entity.User;
+import com.sparta.fritown.user.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +26,7 @@ import java.util.List;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final MemberRepository memberRepository;
+    private final UserRepository userRepository;
 
 
     @Override
@@ -46,15 +49,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (jwtUtil.verifyToken(atc)) {
 
             // AccessToken 내부의 payload에 있는 email로 user를 조회한다. 없다면 예외를 발생시킨다 -> 정상 케이스가 아님
-            Member findMember = memberRepository.findByEmail(jwtUtil.getUid(atc))
+            User user = userRepository.findByEmail(jwtUtil.getUid(atc))
                     .orElseThrow(IllegalStateException::new);
 
             // SecurityContext에 등록할 User 객체를 만들어준다.
             SecurityUserDto userDto = SecurityUserDto.builder()
-                    .memberNo(findMember.getMemberNo())
-                    .email(findMember.getEmail())
-                    .role("ROLE_".concat(findMember.getUserRole()))
-                    .nickname(findMember.getNickname())
+                    .id(user.getId())
+                    .email(user.getEmail())
+                    .role("ROLE_".concat(user.getUserRole()))
+                    .nickname(user.getNickname())
                     .build();
 
             // SecurityContext에 인증 객체를 등록해준다.

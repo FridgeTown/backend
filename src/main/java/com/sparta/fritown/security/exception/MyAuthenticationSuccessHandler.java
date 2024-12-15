@@ -1,5 +1,6 @@
 package com.sparta.fritown.security.exception;
 
+import com.sparta.fritown.security.auth.GeneratedToken;
 import com.sparta.fritown.security.util.JwtUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
