@@ -22,7 +22,6 @@ public class AuthController {
     private final RefreshTokenRepository tokenRepository;
     private final RefreshTokenService tokenService;
     private final JwtUtil jwtUtil;
-    private final EmitterRepository emitterRepository;
 
     @PostMapping("token/logout")
     public ResponseEntity<StatusResponseDto> logout(@RequestHeader("Authorization") final String accessToken) {
