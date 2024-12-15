@@ -1,5 +1,6 @@
 package com.sparta.fritown.security.util;
 
+
 import com.sparta.fritown.security.dto.SecurityUserDto;
 import com.sparta.fritown.user.entity.User;
 import com.sparta.fritown.user.repository.UserRepository;
@@ -16,6 +17,8 @@ import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.security.core.Authentication;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -30,7 +33,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, IOException {
         // request Header에서 AccessToken을 가져온다.
         String atc = request.getHeader("Authorization");
 
