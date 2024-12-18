@@ -20,7 +20,7 @@ spring:
     redis:
       host: ${local-redis.host}
       port: ${local-redis.port}
-      password: ${local-redis.password}5
+      password: ${local-redis.password}
 
   jwt:
     secret: ${jwt.secret.key.access}
