@@ -27,6 +27,7 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
         // OAuth2User로 캐스팅하여 인증된 사용자 정보를 가져온다.
+        // OAuth2User는 OAuth 서버에서 회원정보를 가져와서, 우리가 만든 틀에 저장해둔 dto라고 할 수 있겠다.
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         // 사용자 이메일을 가져온다.
         String email = oAuth2User.getAttribute("email");
@@ -44,15 +45,16 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
         // 회원이 존재할경우
         if (isExist) {
             // 회원이 존재하면 jwt token 발행을 시작한다.
-            GeneratedToken token = jwtUtil.generateToken(email, role);
+            GeneratedToken token = jwtUtil.generateToken(email, role); // generateToken에서 AccessToken과 RefreshToken을 발급해 준다.
             log.info("jwtToken = {}", token.getAccessToken());
 
             // accessToken을 쿼리스트링에 담는 url을 만들어준다.
-            String targetUrl = UriComponentsBuilder.fromUriString("http://3.39.72.204/loginSuccess")
+            String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/health/login/success")
                     .queryParam("accessToken", token.getAccessToken())
                     .build()
                     .encode(StandardCharsets.UTF_8)
                     .toUriString();
+
             log.info("redirect 준비");
             // 로그인 확인 페이지로 리다이렉트 시킨다.
             getRedirectStrategy().sendRedirect(request, response, targetUrl);
@@ -60,8 +62,8 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
 
         } else {
 
-            // 회원이 존재하지 않을경우, 서비스 제공자와 email을 쿼리스트링으로 전달하는 url을 만들어준다.
-            String targetUrl = UriComponentsBuilder.fromUriString("http://3.39.72.204/loginSuccess")
+            // 회원이 존재하지 않을경우, 서비스 제공자와 email을 쿼리스트링으로 전달하는 url을 만들어준다.// 데이터를 프론트엔드에 보내주고, 프론트엔드에서 이를 가지고 회원가입 폼 작성.
+            String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/health/login/failure")
                     .queryParam("email", (String) oAuth2User.getAttribute("email"))
                     .queryParam("provider", provider)
                     .build()
