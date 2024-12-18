@@ -17,4 +17,9 @@ public class TestController {
     public String failureHealthCheck() {
         return "MyAuthentication Failed; sign up page should be shown";
     }
+
+    @GetMapping("/failure")
+    public String errorHealthCheck() {
+        return "OAuth just failed";
+    }
 }
