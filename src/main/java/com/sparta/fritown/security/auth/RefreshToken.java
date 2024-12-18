@@ -16,7 +16,7 @@ public class RefreshToken implements Serializable {
     @Id
     private String id;
 
-    @Indexed
+    @Indexed // findByAccessToken과 같은 질의가 가능하도록 함.
     private String accessToken;
 
     private String refreshToken;

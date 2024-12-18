@@ -31,13 +31,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        return request.getRequestURI().contains("/token/");
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, IOException {
         // request Header에서 AccessToken을 가져온다.
         String atc = request.getHeader("Authorization");
 
-        // 토큰 검사 생략(모두 허용 URL의 경우 토큰 검사 통과)
+        // 토큰 검사 생략(모두 허용 URL의 경우 토큰 검사 통과) /signup /login 처럼 애초부터 토큰이 없는 요청의 경우 다음 filter로 에러 없이 바로 넘겨줘야 하기 때문에, return
         if (!StringUtils.hasText(atc)) {
             doFilter(request, response, filterChain);
             return;
@@ -64,7 +68,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     .build();
 
             // SecurityContext에 인증 객체를 등록해준다.
-            Authentication auth = getAuthentication(userDto);
+            Authentication auth = getAuthentication(userDto); // authentication 객체 생성 : 인증된 사용자 정보와 권한을 포함, 이후 어플리케이션 내에서 인증 상태를 나타냄.
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
 
