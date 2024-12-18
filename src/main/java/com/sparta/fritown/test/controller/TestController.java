@@ -7,8 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/health")
 public class TestController {
+
     @GetMapping("/login/success")
-    public String successHealthCheck(){
+    public String successHealthCheck() {
         return "MyAuthentication Success";
+    }
+
+    @GetMapping("/login/failure")
+    public String failureHealthCheck() {
+        return "MyAuthentication Failed; sign up page should be shown";
     }
 }
