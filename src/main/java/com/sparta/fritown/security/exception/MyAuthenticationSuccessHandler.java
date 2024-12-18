@@ -63,7 +63,7 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
         } else {
 
             // 회원이 존재하지 않을경우, 서비스 제공자와 email을 쿼리스트링으로 전달하는 url을 만들어준다.// 데이터를 프론트엔드에 보내주고, 프론트엔드에서 이를 가지고 회원가입 폼 작성.
-            String targetUrl = UriComponentsBuilder.fromUriString("http://3.39.72.204/loginSuccess")
+            String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/health/login/failure")
                     .queryParam("email", (String) oAuth2User.getAttribute("email"))
                     .queryParam("provider", provider)
                     .build()
