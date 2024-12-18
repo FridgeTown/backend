@@ -18,9 +18,10 @@ import java.util.Date;
 @Service
 @RequiredArgsConstructor
 public class JwtUtil {
+    // JwtUtil은 JWT를 생성, 검증 및 데이터를 추출하는 유틸리티. (access, refresh token 생성. 토큰 유효성 검증. 토큰에서 정보 추출)
     private final JwtProperties jwtProperties;
     private final RefreshTokenService tokenService;
-    private String secretKey;
+    private String secretKey; // 서명하고 검증하는 데 사용되는 비밀 키를 저장.
 
     @PostConstruct
     protected void init() {
@@ -30,17 +31,17 @@ public class JwtUtil {
 
     public GeneratedToken generateToken(String email, String role) {
         // refreshToken과 accessToken을 생성한다.
-        String refreshToken = generateRefreshToken(email, role);
-        String accessToken = generateAccessToken(email, role);
+        String refreshToken = generateRefreshToken(email, role); // refresh Token 생성
+        String accessToken = generateAccessToken(email, role); // access Token 생성
 
-        // 토큰을 Redis에 저장한다.
-        tokenService.saveTokenInfo(email, refreshToken, accessToken);
+        // 토큰을 Redis에 저장한다. **
+        tokenService.saveTokenInfo(email, refreshToken, accessToken); // email, refreshToken, accessToken 값을 redis에 저장
         return new GeneratedToken(accessToken, refreshToken);
     }
 
     public String generateRefreshToken(String email, String role) {
         // 토큰의 유효 기간을 밀리초 단위로 설정.
-        long refreshPeriod = 1000L * 60L * 60L * 24L * 14; // 2주
+        long refreshPeriod = 1000L * 60L * 60L * 24L * 14; // 2주동안 refresh token이 유효하도록 함.
 
         // 새로운 클레임 객체를 생성하고, 이메일과 역할(권한)을 셋팅
         Claims claims = Jwts.claims().setSubject(email);
@@ -59,11 +60,11 @@ public class JwtUtil {
                 // 지정된 서명 알고리즘과 비밀 키를 사용하여 토큰을 서명한다.
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
-    }
+    } // refresh token 반환
 
 
     public String generateAccessToken(String email, String role) {
-        long tokenPeriod = 1000L * 60L * 30L; // 30분
+        long tokenPeriod = 1000L * 60L * 30L; // 30분 : access token 유효 시간.
         Claims claims = Jwts.claims().setSubject(email);
         claims.put("role", role);
 
@@ -100,7 +101,7 @@ public class JwtUtil {
 
     // 토큰에서 Email을 추출한다.
     public String getUid(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject(); // subject가 이메일에 해당
     }
 
     // 토큰에서 ROLE(권한)만 추출한다.
