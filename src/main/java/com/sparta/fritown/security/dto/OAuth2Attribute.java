@@ -11,7 +11,7 @@ import java.util.Map;
 @ToString
 @Builder(access = AccessLevel.PRIVATE)
 @Getter
-public class OAuth2Attribute {
+public class OAuth2Attribute { // OAuth2 공급자에서 제공사는 사용자 정보를 식별하고, 각 소셜별 데이터 담기.
     private Map<String, Object> attributes;
     private String attributeKey;
     private String email;
@@ -23,9 +23,9 @@ public class OAuth2Attribute {
                                      Map<String, Object> attributes) {
         switch (provider) {
             case "google":
-                return ofGoogle(provider, attributeKey, attributes);
+                return ofGoogle(provider, attributeKey, attributes); // hard coding
             case "naver":
-                return ofNaver(provider, "id", attributes);
+                return ofNaver(provider, attributeKey, attributes);
             default:
                 throw new RuntimeException(); // ** global exception 설정 후 수정 필요
         }
