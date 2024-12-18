@@ -27,17 +27,17 @@ public class SecurityConfig3 {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .httpBasic(httpBasic -> httpBasic.disable()) // HTTP 기본 인증 비활성화
-                .cors(cors -> {}) // CORS 활성화
+                .httpBasic(httpBasic -> httpBasic.disable()) // 기본 로그인 창으로 이동되지 않도록 비활성화
+                .cors(cors -> {}) // CORS 활성화 ; 다른 origin에서 오는 요청 허용
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화
                 .formLogin(form -> form.disable()) // Form 로그인 비활성화
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 관리 설정
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 관리 설정 ; 세션을 절대 사용하지 않겠다.
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/token/**").permitAll() // 토큰 발급 경로는 허용
                         .anyRequest().authenticated()) // 나머지 요청은 인증 필요
                 .oauth2Login(oauth2 -> oauth2
-                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService)) // customOAuth2UserService로, 사용자 정보 처리
                         .failureHandler(oAuth2LoginFailureHandler)
                         .successHandler(oAuth2LoginSuccessHandler));
         // JWT 인증 필터를 추가
