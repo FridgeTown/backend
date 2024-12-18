@@ -14,7 +14,7 @@ public class RefreshTokenService {
 
     @Transactional
     public void saveTokenInfo(String email, String refreshToken, String accessToken) {
-        repository.save(new RefreshToken(email, accessToken, refreshToken));
+        repository.save(new RefreshToken(email, accessToken, refreshToken)); // RefreshToken이라는 틀에 accessToken, refreshToken 저장 후, refreshToken을 redis에 저장..
     }
 
     @Transactional
