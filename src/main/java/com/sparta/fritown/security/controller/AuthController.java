@@ -6,10 +6,15 @@ import com.sparta.fritown.security.repository.RefreshTokenRepository;
 import com.sparta.fritown.security.service.RefreshTokenService;
 import com.sparta.fritown.security.util.JwtUtil;
 import com.sparta.fritown.security.auth.RefreshToken;
+import com.sparta.fritown.user.dto.RegisterRequestDto;
+import com.sparta.fritown.user.entity.User;
+import com.sparta.fritown.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +24,7 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
-
+    private final UserService userService;
     private final RefreshTokenRepository tokenRepository;
     private final RefreshTokenService tokenService;
     private final JwtUtil jwtUtil;
@@ -52,6 +57,13 @@ public class AuthController {
         }
 
         return ResponseEntity.badRequest().body(TokenResponseStatus.addStatus(400, null));
+    }
+
+    @PostMapping("/api/auth/register")
+    public ResponseEntity<StatusResponseDto> registerUser(@RequestBody RegisterRequestDto requestDto) {
+        User user = userService.register(requestDto);
+
+        return ResponseEntity.ok(StatusResponseDto.addStatus(200));
     }
 
 }
