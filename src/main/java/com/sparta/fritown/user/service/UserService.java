@@ -19,15 +19,21 @@ public class UserService {
         if (userRepository.existsByEmail(requestDto.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
-
+        System.out.println(requestDto.getRole());
         User user = new User(
                 requestDto.getEmail(),
+                requestDto.getRole(),
                 requestDto.getName(),
                 requestDto.getProfileImage(),
-                requestDto.getProvider(),
-                passwordEncoder.encode("defaultPassword"),
-                requestDto.getRole()
+                requestDto.getProvider()
         );
+
+//        this.email = email;
+//        this.role = role;
+//        this.nickname = nickname;
+//        this.profileImage = profileImage;
+//        this.provider = provider;
+//        this.password = password;
         log.info("userService_register called");
         return userRepository.save(user);
     }

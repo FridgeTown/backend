@@ -46,6 +46,7 @@ public class SecurityConfig3 {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login/success").permitAll()
                         .requestMatchers("/token/**").permitAll() // 토큰 발급 경로는 허용
+                        .requestMatchers("/api/auth/register").permitAll()
                         .anyRequest().authenticated()) // 나머지 요청은 인증 필요
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService)) // customOAuth2UserService로, 사용자 정보 처리
