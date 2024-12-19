@@ -16,19 +16,30 @@ public class User {
     private String email;
 
     @Column(nullable = false)
-    private String userRole;
+    private String role;
+
 
     private String nickname;
 
-    // 생성자
-    public User(String email, String userRole, String nickname) {
-        this.email = email;
-        this.userRole = userRole;
-        this.nickname = nickname;
-    }
+    private String profileImage;
+    private String provider;
+    private String password;
 
     public User() {
+    }
+    // 생성자
+    public User(String email, String role, String nickname, String profileImage, String provider, String password) {
+        this.email = email;
+        this.role = role;
+        this.nickname = nickname;
+        this.profileImage = profileImage;
+        this.provider = provider;
+        this.password = password;
+    }
 
+    public User(String email, String provider) {
+        this.email = email;
+        this.provider = provider;
     }
 
     public void setId(Long id) {

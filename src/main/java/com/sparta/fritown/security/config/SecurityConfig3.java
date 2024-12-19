@@ -6,17 +6,21 @@ import com.sparta.fritown.security.service.CustomOAuth2UserService;
 import com.sparta.fritown.security.util.JwtAuthFilter;
 import com.sparta.fritown.security.util.JwtExceptionFilter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityConfig3 {
     private final MyAuthenticationSuccessHandler oAuth2LoginSuccessHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
@@ -25,7 +29,13 @@ public class SecurityConfig3 {
     private final JwtExceptionFilter jwtExceptionFilter;
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        log.info("filterChain started");
         http
                 .httpBasic(httpBasic -> httpBasic.disable()) // 기본 로그인 창으로 이동되지 않도록 비활성화
                 .cors(cors -> {}) // CORS 활성화 ; 다른 origin에서 오는 요청 허용
@@ -34,6 +44,7 @@ public class SecurityConfig3 {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 관리 설정 ; 세션을 절대 사용하지 않겠다.
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/login/success").permitAll()
                         .requestMatchers("/token/**").permitAll() // 토큰 발급 경로는 허용
                         .anyRequest().authenticated()) // 나머지 요청은 인증 필요
                 .oauth2Login(oauth2 -> oauth2

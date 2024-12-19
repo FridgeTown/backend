@@ -3,10 +3,12 @@ package com.sparta.fritown.security.service;
 import com.sparta.fritown.security.auth.RefreshToken;
 import com.sparta.fritown.security.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class RefreshTokenService {
 
@@ -14,6 +16,7 @@ public class RefreshTokenService {
 
     @Transactional
     public void saveTokenInfo(String email, String refreshToken, String accessToken) {
+        log.info("saveTokenInfo called with email={}, accessToken={}, refreshToken={}", email, accessToken, refreshToken);
         repository.save(new RefreshToken(email, accessToken, refreshToken)); // RefreshToken이라는 틀에 accessToken, refreshToken 저장 후, refreshToken을 redis에 저장..
     }
 
