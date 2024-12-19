@@ -56,7 +56,7 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
             log.info("jwtToken = {}", token.getAccessToken());
 
             // accessToken을 쿼리스트링에 담는 url을 만들어준다.
-            String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/health/login/success")
+            String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/")
                     .queryParam("accessToken", token.getAccessToken())
                     .build()
                     .encode(StandardCharsets.UTF_8)
@@ -73,7 +73,7 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
 
             // 프론트 서버 연결 코드. -> 프론트에서 회원가입을 위한 추가적인 정보를 받고, 이를 /api/auth/register에 보내서, 회원 정보 저장하고, 다시 로그인 시도로, isExist 가 true인 것을 실행하도록
             // 회원이 존재하지 않을경우, 서비스 제공자와 email을 쿼리스트링으로 전달하는 url을 만들어준다.// 데이터를 프론트엔드에 보내주고, 프론트엔드에서 이를 가지고 회원가입 폼 작성.
-            String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/api/auth/register")
+            String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/register")
                     .queryParam("email", (String) oAuth2User.getAttribute("email"))
                     .queryParam("provider", provider)
                     .build()
