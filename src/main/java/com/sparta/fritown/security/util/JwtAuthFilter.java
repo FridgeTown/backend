@@ -63,7 +63,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             SecurityUserDto userDto = SecurityUserDto.builder()
                     .id(user.getId())
                     .email(user.getEmail())
-                    .role("ROLE_".concat(user.getUserRole()))
+                    .role("ROLE_".concat(user.getRole()))
                     .nickname(user.getNickname())
                     .build();
 
