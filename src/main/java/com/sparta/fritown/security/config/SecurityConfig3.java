@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 @Slf4j
 public class SecurityConfig3 {
+    // security 관련 보안 filter, 로직 처리 (JWT 인증, OAuth2, 권한 부여)
     private final MyAuthenticationSuccessHandler oAuth2LoginSuccessHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final JwtAuthFilter jwtAuthFilter;
