@@ -31,7 +31,6 @@ public class AuthController {
 
     @PostMapping("/token/logout")
     public ResponseEntity<StatusResponseDto> logout(@RequestHeader("Authorization") final String accessToken) {
-
         // 엑세스 토큰으로 현재 Redis 정보 삭제
         tokenService.removeRefreshToken(accessToken);
         return ResponseEntity.ok(StatusResponseDto.addStatus(200));
@@ -61,9 +60,10 @@ public class AuthController {
 
     @PostMapping("/api/auth/register")
     public ResponseEntity<StatusResponseDto> registerUser(@RequestBody RegisterRequestDto requestDto) {
+        requestDto.setRole("ROLE_USER");
         User user = userService.register(requestDto);
 
-        return ResponseEntity.ok(StatusResponseDto.addStatus(200));
+        return ResponseEntity.ok(StatusResponseDto.success(user));
     }
 
 }

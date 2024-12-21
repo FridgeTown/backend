@@ -17,7 +17,7 @@ public class MyAuthenticationFailureHandler implements AuthenticationFailureHand
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         // 인증 실패시 메인 페이지로 이동
         log.info("failure handler started");
-        response.sendRedirect("http://localhost:8080/health/failure");
+        response.sendRedirect("http://localhost:5173/failed");
     }
 
 }
