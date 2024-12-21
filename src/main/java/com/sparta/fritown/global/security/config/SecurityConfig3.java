@@ -45,6 +45,7 @@ public class SecurityConfig3 {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 관리 설정 ; 세션을 절대 사용하지 않겠다.
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/health/**").permitAll()
                         .requestMatchers("/login/success").permitAll()
                         .requestMatchers("/token/**").permitAll() // 토큰 발급 경로는 허용
                         .requestMatchers("/api/auth/register").permitAll()
