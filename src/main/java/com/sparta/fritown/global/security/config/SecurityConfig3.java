@@ -47,6 +47,7 @@ public class SecurityConfig3 {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(AuthenticatedMatchers.loginArray).permitAll()
                         .requestMatchers(AuthenticatedMatchers.testArray).permitAll()
+                        .requestMatchers(AuthenticatedMatchers.swaggerArray).permitAll()
                         .anyRequest().authenticated()) // 나머지 요청은 인증 필요
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService)) // customOAuth2UserService로, 사용자 정보 처리
