@@ -8,6 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig {
+    // 전역적인 요청/응답 로직을 처리(CORS 정책, 전역 인터셉터); SecurityConfig3 동작 후, WebConfig 동작
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
