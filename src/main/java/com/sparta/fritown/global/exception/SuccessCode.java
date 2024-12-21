@@ -1,14 +1,10 @@
 package com.sparta.fritown.global.exception;
 
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-@Getter
 public enum SuccessCode implements ApiCode {
-
-    //Common
-    CREATED(HttpStatus.CREATED, "C001", "Created"),
-    OK(HttpStatus.OK, "C002", "well done");
+    OK(HttpStatus.OK, "C001", "Well done"),
+    CREATED(HttpStatus.CREATED, "C002", "Created successfully");
 
     private final HttpStatus status;
     private final String code;
@@ -19,4 +15,8 @@ public enum SuccessCode implements ApiCode {
         this.code = code;
         this.message = message;
     }
+
+    public HttpStatus getStatus() { return status; }
+    public String getCode() { return code; }
+    public String getMessage() { return message; }
 }
