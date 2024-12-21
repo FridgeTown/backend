@@ -1,12 +1,10 @@
 package com.sparta.fritown.global.exception;
 
-import lombok.Getter;
+
 import org.springframework.http.HttpStatus;
 
-@Getter
-public enum ErrorCode {
-    //Common
-    IO_EXCEPTION(HttpStatus.BAD_REQUEST, "C001", "IO Error");
+public enum ErrorCode implements ApiCode {
+    IO_EXCEPTION(HttpStatus.BAD_REQUEST, "E001", "IO error");
 
     private final HttpStatus status;
     private final String code;
@@ -18,5 +16,7 @@ public enum ErrorCode {
         this.message = message;
     }
 
-
+    public HttpStatus getStatus() { return status; }
+    public String getCode() { return code; }
+    public String getMessage() { return message; }
 }
