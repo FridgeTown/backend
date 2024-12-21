@@ -24,3 +24,14 @@ spring:
 
   jwt:
     secret: ${jwt.secret.key.access}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    groups-order: DESC
+    tags-sorter: alpha
+    operations-sorter: method
+  api-docs:
+    path: /v3/api-docs
+  paths-to-match:
+    - /**

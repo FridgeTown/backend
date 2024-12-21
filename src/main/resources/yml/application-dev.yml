@@ -4,3 +4,13 @@ spring:
       - classpath:/yml/application-secret.yml
     active:
       on-profile: dev
+
+
+springdoc:
+  swagger-ui:
+    path: /swagger
+    groups-order: DESC
+    tags-sorter: alpha
+    operations-sorter: method
+  paths-to-match:
+    - /**
