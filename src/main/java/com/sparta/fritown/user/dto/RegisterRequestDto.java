@@ -14,10 +14,10 @@ public class RegisterRequestDto {
     private String profileImage;
     private String role;
 
-    public RegisterRequestDto(String email, String provider, String defaultName) {
+    public RegisterRequestDto(String email, String provider, String defaultName, String role) {
         this.email = email;
         this.provider = provider;
         this.name = defaultName;
-        this.role = "USER"; // default role
+        this.role = role; // default role
     }
 }
