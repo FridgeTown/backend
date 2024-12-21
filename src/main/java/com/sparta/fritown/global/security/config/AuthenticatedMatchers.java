@@ -17,9 +17,7 @@ public class AuthenticatedMatchers {
     public static final String[] swaggerArray = {
             "/swagger-ui/**",
             "/swagger",
-            "/swagger/**",
             "/v3/api-docs/**",
-            "/swagger-ui.html"
     };
 }
 
