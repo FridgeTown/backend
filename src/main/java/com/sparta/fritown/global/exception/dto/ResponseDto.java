@@ -22,4 +22,9 @@ public class ResponseDto<T> extends BaseResponse {
     public static ResponseDto<Void> success(SuccessCode successCode) {
         return success(successCode.getMessage(), null);
     }
+
+
+    public static <T> ResponseDto<T> success(SuccessCode successCode, T data) {
+        return success(successCode.getMessage(), data);
+    }
 }

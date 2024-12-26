@@ -43,11 +43,6 @@ public class UserController implements UserControllerDocs {
         return "OAuth just failed";
     }
 
-    @GetMapping("/check")
-    public String healthCheck() {
-        testService.healthCheck();
-        throw ServiceException.of(ErrorCode.USER_NOT_ACCEPTABLE);
-    }
 
     @PostMapping("/new/user/check")
     public String newUser(){
