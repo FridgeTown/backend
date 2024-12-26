@@ -3,6 +3,7 @@ package com.sparta.fritown.domain.user.entity;
 import com.sparta.fritown.domain.user.entity.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -26,6 +27,7 @@ public class Matches {
     @OneToMany(mappedBy = "matches")
     private List<UserMatch> userMatches = new ArrayList<>();
 
+    @Setter
     private Status status;
 
     private String place;
@@ -37,6 +39,5 @@ public class Matches {
     @ManyToOne
     @JoinColumn(name = "CHALLENGED_BY_ID")
     private User challengedBy;
-
 
 }
