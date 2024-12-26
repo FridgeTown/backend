@@ -1,6 +1,6 @@
-package com.sparta.fritown.domain.user.entity;
+package com.sparta.fritown.domain.entity;
 
-import com.sparta.fritown.domain.user.entity.enums.Status;
+import com.sparta.fritown.domain.entity.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
 

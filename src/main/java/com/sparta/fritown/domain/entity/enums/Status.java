@@ -1,4 +1,4 @@
-package com.sparta.fritown.domain.user.entity.enums;
+package com.sparta.fritown.domain.entity.enums;
 
 public enum Status {
     PENDING("대기중"),

@@ -1,4 +1,4 @@
-package com.sparta.fritown.domain.test.service;
+package com.sparta.fritown.domain.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

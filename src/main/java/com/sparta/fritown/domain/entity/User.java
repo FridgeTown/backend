@@ -1,7 +1,7 @@
-package com.sparta.fritown.domain.user.entity;
+package com.sparta.fritown.domain.entity;
 
-import com.sparta.fritown.domain.user.entity.enums.Gender;
-import com.sparta.fritown.domain.user.entity.enums.WeightClass;
+import com.sparta.fritown.domain.entity.enums.Gender;
+import com.sparta.fritown.domain.entity.enums.WeightClass;
 import jakarta.persistence.*;
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package com.sparta.fritown.domain.user.dto;
+package com.sparta.fritown.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
