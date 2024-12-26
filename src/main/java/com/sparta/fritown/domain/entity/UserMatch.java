@@ -1,4 +1,4 @@
-package com.sparta.fritown.domain.user.entity;
+package com.sparta.fritown.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

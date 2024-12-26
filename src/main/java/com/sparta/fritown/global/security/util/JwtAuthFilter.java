@@ -2,8 +2,8 @@ package com.sparta.fritown.global.security.util;
 
 
 import com.sparta.fritown.global.security.dto.SecurityUserDto;
-import com.sparta.fritown.domain.user.entity.User;
-import com.sparta.fritown.domain.user.repository.UserRepository;
+import com.sparta.fritown.domain.entity.User;
+import com.sparta.fritown.domain.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

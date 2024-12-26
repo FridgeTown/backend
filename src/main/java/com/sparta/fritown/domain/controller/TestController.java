@@ -1,7 +1,7 @@
-package com.sparta.fritown.domain.test.controller;
+package com.sparta.fritown.domain.controller;
 
-import com.sparta.fritown.domain.test.service.TestService;
-import com.sparta.fritown.domain.user.entity.User;
+import com.sparta.fritown.domain.service.TestService;
+import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.global.docs.TestControllerDocs;
 import com.sparta.fritown.global.exception.ErrorCode;
 import com.sparta.fritown.global.exception.custom.ServiceException;
