@@ -14,16 +14,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Tag(name = "Test", description = "APIs for test")
 public interface TestControllerDocs {
 
-    @Operation(summary = "IO Error Response checker", description = "ServiceException Handler 작동 확인을 위한 API" )
-    @ApiResponses ({
-            @ApiResponse(responseCode = "400",
-                         description = "status, message, code가 출력 된다면 정상",
-                         content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
-    })
-    @Parameters({
-            @Parameter(name = "test",
-                       description = "actually this api does not have parameters",
-                       example = "i just wanted to show you an example")
-    })
-    public String healthCheck();
+//    @Operation(summary = "IO Error Response checker", description = "ServiceException Handler 작동 확인을 위한 API" )
+//    @ApiResponses ({
+//            @ApiResponse(responseCode = "400",
+//                         description = "status, message, code가 출력 된다면 정상",
+//                         content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+//    })
+//    @Parameters({
+//            @Parameter(name = "test",
+//                       description = "actually this api does not have parameters",
+//                       example = "i just wanted to show you an example")
+//    })
+//    public String healthCheck();
 }
