@@ -26,6 +26,7 @@ public class Matches {
     @OneToMany(mappedBy = "matches")
     private List<UserMatch> userMatches = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     private String place;

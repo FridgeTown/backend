@@ -15,7 +15,7 @@ public class UserMatch {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "USERS_ID")
     private User user;
 
     @OneToMany(mappedBy = "userMatch")
