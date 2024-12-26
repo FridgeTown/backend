@@ -1,11 +1,16 @@
 package com.sparta.fritown.domain.user.entity;
 
+import com.nimbusds.openid.connect.sdk.claims.Gender;
+import com.sparta.fritown.domain.user.entity.enums.WeightClass;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 public class User {
 
     @Id
@@ -15,21 +20,54 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    private String role;
-
-    private String nickname;
-
-    private String profileImage;
     private String provider;
+
+    private String profileImg;
+
+    private Gender gender;
+
+    private Integer age;
+
+    private Integer weight;
+
+    private Integer height;
+
+    private String bio;
+
+    private Integer points;
+
+    private Integer heartBeat;
+
+    private Integer punchSpeed;
+
+    private Integer kcal;
+
+    private WeightClass weightClass;
+
+    private String role; /// 임시
+    private String nickname; // 임시
+
+    @OneToMany(mappedBy = "user")
+    private List<UserMatch> userMatches = new ArrayList<>();
+
+    @OneToMany(mappedBy = "challengedTo")
+    private List<Match> challengedTo = new ArrayList<>();
+
+    @OneToMany(mappedBy = "challengedBy")
+    private List<Match> challengedBy = new ArrayList<>();
 
     public User() {
     }
     // 생성자
     public User(String email, String role, String nickname, String profileImage, String provider) {
         this.email = email;
-        this.role = role;
-        this.nickname = nickname;
-        this.profileImage = profileImage;
+        this.profileImg = profileImage;
         this.provider = provider;
+    }
+
+    public User(String s, String hihi, String naver) { //// test ****
+        this.email = s;
+        this.profileImg = hihi;
+        this.provider = naver;
     }
 }
