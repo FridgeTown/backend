@@ -23,7 +23,7 @@ public class UserMatch {
 
     @ManyToOne
     @JoinColumn(name = "MATCH_ID")
-    private Match matches;
+    private Matches matches;
 
     private Boolean winner;
 }
