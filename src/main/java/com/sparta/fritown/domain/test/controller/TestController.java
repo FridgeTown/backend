@@ -1,18 +1,23 @@
 package com.sparta.fritown.domain.test.controller;
 
+import com.sparta.fritown.domain.test.service.TestService;
+import com.sparta.fritown.domain.user.entity.User;
 import com.sparta.fritown.global.docs.TestControllerDocs;
 import com.sparta.fritown.global.exception.ErrorCode;
 import com.sparta.fritown.global.exception.custom.ServiceException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/health")
 @Slf4j
 public class TestController implements TestControllerDocs {
+
+    private final TestService testService;
+
+    public TestController(TestService testService) {
+        this.testService = testService;
+    }
 
     @GetMapping("/login/success")
     public String loginSuccess(@RequestParam("accessToken") String accessToken) {
@@ -39,6 +44,13 @@ public class TestController implements TestControllerDocs {
 
     @GetMapping("/check")
     public String healthCheck() {
-        throw ServiceException.of(ErrorCode.IO_EXCEPTION);
+        testService.healthCheck();
+        throw ServiceException.of(ErrorCode.USER_NOT_ACCEPTABLE);
+    }
+
+    @PostMapping("/new/user/check")
+    public String newUser(){
+        User user = new User("20@nav", "hihi", "naver");
+        return user.getProfileImg();
     }
 }
