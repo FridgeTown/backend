@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "matches")
 @Getter
-public class Match {
+public class Matches {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

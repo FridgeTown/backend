@@ -51,10 +51,10 @@ public class User {
     private List<UserMatch> userMatches = new ArrayList<>();
 
     @OneToMany(mappedBy = "challengedTo")
-    private List<Match> challengedTo = new ArrayList<>();
+    private List<Matches> challengedTo = new ArrayList<>();
 
     @OneToMany(mappedBy = "challengedBy")
-    private List<Match> challengedBy = new ArrayList<>();
+    private List<Matches> challengedBy = new ArrayList<>();
 
     public User() {
     }
