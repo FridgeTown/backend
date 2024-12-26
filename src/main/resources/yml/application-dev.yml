@@ -1,10 +1,30 @@
 spring:
+  jpa:
+    hibernate:
+      dialect: org.hibernate.dialect.MySQLDialect
+      ddl-auto: update
+
   config:
     import:
       - classpath:/yml/application-secret.yml
+      - classpath:/yml/oauth2-dev.yml
     active:
       on-profile: dev
 
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${dev-db.url}
+    username: ${dev-db.username}
+    password: ${dev-db.password}
+
+  data:
+    redis:
+      host: ${local-redis.host}
+      port: ${local-redis.port}
+      password: ${local-redis.password}
+
+  jwt:
+    secret: ${jwt.secret.key.access}
 
 springdoc:
   swagger-ui:
@@ -14,3 +34,4 @@ springdoc:
     operations-sorter: method
   paths-to-match:
     - /**
+
