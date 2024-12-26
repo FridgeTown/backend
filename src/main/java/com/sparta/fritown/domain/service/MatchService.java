@@ -7,10 +7,5 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TestService {
-
-
-    public void healthCheck() {
-      log.info("hihihi");
-    }
+public class MatchService {
 }
