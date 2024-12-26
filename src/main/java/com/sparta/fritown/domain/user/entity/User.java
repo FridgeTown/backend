@@ -1,6 +1,6 @@
 package com.sparta.fritown.domain.user.entity;
 
-import com.nimbusds.openid.connect.sdk.claims.Gender;
+import com.sparta.fritown.domain.user.entity.enums.Gender;
 import com.sparta.fritown.domain.user.entity.enums.WeightClass;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -24,6 +24,7 @@ public class User {
 
     private String profileImg;
 
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     private Integer age;
@@ -42,6 +43,7 @@ public class User {
 
     private Integer kcal;
 
+    @Enumerated(EnumType.STRING)
     private WeightClass weightClass;
 
     private String role; /// 임시
