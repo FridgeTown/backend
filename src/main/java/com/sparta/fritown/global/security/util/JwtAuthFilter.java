@@ -1,9 +1,9 @@
 package com.sparta.fritown.global.security.util;
 
 
-import com.sparta.fritown.global.security.dto.SecurityUserDto;
-import com.sparta.fritown.domain.user.entity.User;
-import com.sparta.fritown.domain.user.repository.UserRepository;
+import com.sparta.fritown.global.security.dto.UserDetailsImpl;
+import com.sparta.fritown.domain.entity.User;
+import com.sparta.fritown.domain.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,6 +38,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, IOException {
+
         // request Header에서 AccessToken을 가져온다.
         String atc = request.getHeader("Authorization");
 
@@ -47,38 +48,36 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        // AccessToken을 검증하고, 만료되었을경우 예외를 발생시킨다.
-        if (!jwtUtil.verifyToken(atc)) {
-            throw new JwtException("Access Token 만료!");
-        }
+        atc = atc.replace("Bearer", "").trim(); // to remove bearer
+
+        log.info("토큰 : {}", atc);
 
         // AccessToken의 값이 있고, 유효한 경우에 진행한다.
-        if (jwtUtil.verifyToken(atc)) {
-
-            // AccessToken 내부의 payload에 있는 email로 user를 조회한다. 없다면 예외를 발생시킨다 -> 정상 케이스가 아님
-            User user = userRepository.findByEmail(jwtUtil.getUid(atc))
-                    .orElseThrow(IllegalStateException::new);
-
-            // SecurityContext에 등록할 User 객체를 만들어준다.
-            SecurityUserDto userDto = SecurityUserDto.builder()
-                    .id(user.getId())
-                    .email(user.getEmail())
-                    .role("ROLE_".concat(user.getRole()))
-                    .nickname(user.getNickname())
-                    .build();
-
-            // SecurityContext에 인증 객체를 등록해준다.
-            Authentication auth = getAuthentication(userDto); // authentication 객체 생성 : 인증된 사용자 정보와 권한을 포함, 이후 어플리케이션 내에서 인증 상태를 나타냄.
-            SecurityContextHolder.getContext().setAuthentication(auth);
+        if (!jwtUtil.verifyToken(atc)) {
+            log.info("jwtUtil.verifyToken 부분을 통과하지 못함.");
+            throw new JwtException("Access Token 만료");
         }
 
+        User user = userRepository.findByEmail(jwtUtil.getUid(atc)).orElseThrow(
+                () -> new JwtException("유저를 찾을 수 없습니다.")
+        );
+
+
+            // SecurityContext에 등록할 User 객체를 만들어준다.
+        UserDetailsImpl userDto = UserDetailsImpl.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .role("ROLE_USER")
+                .nickname(user.getNickname())
+                .build();
+
+            // SecurityContext에 인증 객체를 등록해준다.
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                userDto, "", List.of(new SimpleGrantedAuthority("ROLE_USER"))
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
         filterChain.doFilter(request, response);
-    }
-
-
-    public Authentication getAuthentication(SecurityUserDto member) {
-        return new UsernamePasswordAuthenticationToken(member, "",
-                List.of(new SimpleGrantedAuthority(member.getRole())));
     }
 
 }
