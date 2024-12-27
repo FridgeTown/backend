@@ -3,6 +3,7 @@ package com.sparta.fritown.domain.user.entity;
 import com.nimbusds.openid.connect.sdk.claims.Gender;
 import com.sparta.fritown.domain.user.entity.enums.WeightClass;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -58,6 +59,26 @@ public class User {
 
     public User() {
     }
+
+    @Builder
+    public User(String email, String provider, String profileImg, Gender gender, Integer age, Integer weight, Integer height, String bio, Integer points, Integer heartBeat, Integer punchSpeed, Integer kcal, WeightClass weightClass, String role, String nickname) {
+        this.email = email;
+        this.provider = provider;
+        this.profileImg = profileImg;
+        this.gender = gender;
+        this.age = age;
+        this.weight = weight;
+        this.height = height;
+        this.bio = bio;
+        this.points = points;
+        this.heartBeat = heartBeat;
+        this.punchSpeed = punchSpeed;
+        this.kcal = kcal;
+        this.weightClass = weightClass;
+        this.role = role;
+        this.nickname = nickname;
+    }
+
     // 생성자
     public User(String email, String role, String nickname, String profileImage, String provider) {
         this.email = email;
