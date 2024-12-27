@@ -11,13 +11,13 @@ import java.util.List;
 
 @Getter
 @Builder
-public class SecurityUserDto implements UserDetails {
+public class UserDetailsImpl implements UserDetails {
     private Long id;
     private String email;
     private String role;
     private String nickname;
 
-    private SecurityUserDto(Long id, String email, String role, String nickname) {
+    private UserDetailsImpl(Long id, String email, String role, String nickname) {
         this.id = id;
         this.email = email;
         this.role = role;

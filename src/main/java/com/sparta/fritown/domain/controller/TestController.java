@@ -5,7 +5,7 @@ import com.sparta.fritown.global.exception.ErrorCode;
 import com.sparta.fritown.global.exception.SuccessCode;
 import com.sparta.fritown.global.exception.custom.ServiceException;
 import com.sparta.fritown.global.exception.dto.ResponseDto;
-import com.sparta.fritown.global.security.dto.SecurityUserDto;
+import com.sparta.fritown.global.security.dto.UserDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -43,7 +43,7 @@ public class TestController implements TestControllerDocs {
 
 
     @GetMapping("/success/auth")
-    public ResponseDto<Long> successAuthCheck(@AuthenticationPrincipal SecurityUserDto userDetails) {
+    public ResponseDto<Long> successAuthCheck(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long userId = userDetails.getId();
         return ResponseDto.success(SuccessCode.OK, userId);
     }
@@ -67,7 +67,7 @@ public class TestController implements TestControllerDocs {
     }
 
     @GetMapping("/test-auth")
-    public String testAuthentication(@AuthenticationPrincipal SecurityUserDto userDetails) {
+    public String testAuthentication(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         if (userDetails != null) {
             log.info("UserDetails: {}", userDetails);
             return "Authenticated user: " + userDetails.getEmail();
