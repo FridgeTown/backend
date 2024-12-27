@@ -53,4 +53,5 @@ public class TestController implements TestControllerDocs {
         User user = new User("20@nav", "hihi", "naver");
         return user.getProfileImg();
     }
+
 }

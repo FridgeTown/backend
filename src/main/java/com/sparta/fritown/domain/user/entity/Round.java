@@ -2,9 +2,11 @@ package com.sparta.fritown.domain.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 public class Round {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,4 +23,5 @@ public class Round {
     private Integer heartBeat;
 
     private Integer punchNum;
+
 }
