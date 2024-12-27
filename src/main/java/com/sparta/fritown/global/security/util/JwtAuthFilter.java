@@ -10,9 +10,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.task.TaskExecutionProperties;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -38,6 +40,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, IOException {
+        log.info("doFilterInternal 시작 됨");
+
         // request Header에서 AccessToken을 가져온다.
         String atc = request.getHeader("Authorization");
 
@@ -47,38 +51,45 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        // AccessToken을 검증하고, 만료되었을경우 예외를 발생시킨다.
-        if (!jwtUtil.verifyToken(atc)) {
-            throw new JwtException("Access Token 만료!");
-        }
+        log.info("StringUtils.hasText가 true임.");
+
+        atc = atc.replace("Bearer", "").trim(); // to remove bearer
+
+        log.info("토큰 : {}", atc);
 
         // AccessToken의 값이 있고, 유효한 경우에 진행한다.
-        if (jwtUtil.verifyToken(atc)) {
-
-            // AccessToken 내부의 payload에 있는 email로 user를 조회한다. 없다면 예외를 발생시킨다 -> 정상 케이스가 아님
-            User user = userRepository.findByEmail(jwtUtil.getUid(atc))
-                    .orElseThrow(IllegalStateException::new);
-
-            // SecurityContext에 등록할 User 객체를 만들어준다.
-            SecurityUserDto userDto = SecurityUserDto.builder()
-                    .id(user.getId())
-                    .email(user.getEmail())
-                    .role("ROLE_".concat(user.getRole()))
-                    .nickname(user.getNickname())
-                    .build();
-
-            // SecurityContext에 인증 객체를 등록해준다.
-            Authentication auth = getAuthentication(userDto); // authentication 객체 생성 : 인증된 사용자 정보와 권한을 포함, 이후 어플리케이션 내에서 인증 상태를 나타냄.
-            SecurityContextHolder.getContext().setAuthentication(auth);
+        if (!jwtUtil.verifyToken(atc)) {
+            log.info("jwtUtil.verifyToken 부분을 통과하지 못함.");
+            throw new JwtException("Access Token 만료");
         }
 
+        log.info("Access Token 만료 부분 지남.");
+
+        User user = userRepository.findByEmail(jwtUtil.getUid(atc)).orElseThrow(
+                () -> new JwtException("유저를 찾을 수 없습니다.")
+        );
+
+        log.info("유저 이메일 정보 출력 : {}", user.getEmail());
+
+
+            // SecurityContext에 등록할 User 객체를 만들어준다.
+        SecurityUserDto userDto = SecurityUserDto.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .role("ROLE_USER")
+                .nickname(user.getNickname())
+                .build();
+
+            // SecurityContext에 인증 객체를 등록해준다.
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                userDto, "", List.of(new SimpleGrantedAuthority("ROLE_USER"))
+        );
+
+        log.info("Authentication set: {}", SecurityContextHolder.getContext().getAuthentication());
+
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
         filterChain.doFilter(request, response);
-    }
-
-
-    public Authentication getAuthentication(SecurityUserDto member) {
-        return new UsernamePasswordAuthenticationToken(member, "",
-                List.of(new SimpleGrantedAuthority(member.getRole())));
     }
 
 }
