@@ -53,6 +53,7 @@ public class TestController implements TestControllerDocs {
      */
 
 
+    // 추후에 인증 관련 문제 테스트 할 때, 아래 2개 api 사용해 보세요!
     @GetMapping("/test")
     public String testAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
