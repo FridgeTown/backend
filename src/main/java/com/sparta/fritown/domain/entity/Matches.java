@@ -2,12 +2,10 @@ package com.sparta.fritown.domain.user.entity;
 
 import com.sparta.fritown.domain.user.entity.enums.Status;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
+import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,12 +21,11 @@ public class Matches {
     private Timestamp streamingTime;
     private Integer totalRounds;
     private String title;
-    private LocalDate date;
+    private Date date;
 
     @OneToMany(mappedBy = "matches")
     private List<UserMatch> userMatches = new ArrayList<>();
 
-    @Setter
     private Status status;
 
     private String place;
@@ -41,19 +38,5 @@ public class Matches {
     @JoinColumn(name = "CHALLENGED_BY_ID")
     private User challengedBy;
 
-    @Builder
-    public Matches(User challengedBy, User challengedTo, String place, LocalDate date, String title) {
-        this.challengedBy = challengedBy;
-        this.challengedTo = challengedTo;
-        this.place = place;
-        this.date = date;
-        this.title = title;
-        this.status = Status.PENDING;
-        this.streamingTime = new Timestamp(System.currentTimeMillis());
-        this.totalRounds = 0;
-    }
 
-    public Matches() {
-
-    }
 }

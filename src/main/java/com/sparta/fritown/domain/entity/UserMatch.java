@@ -1,4 +1,4 @@
-package com.sparta.fritown.domain.user.entity;
+package com.sparta.fritown.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -15,7 +15,7 @@ public class UserMatch {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "USERS_ID")
     private User user;
 
     @OneToMany(mappedBy = "userMatch")

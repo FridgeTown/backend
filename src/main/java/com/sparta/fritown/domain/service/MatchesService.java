@@ -1,8 +1,8 @@
-package com.sparta.fritown.domain.user.service;
+package com.sparta.fritown.domain.service;
 
-import com.sparta.fritown.domain.user.entity.Matches;
-import com.sparta.fritown.domain.user.entity.enums.Status;
-import com.sparta.fritown.domain.user.repository.MatchesRepository;
+import com.sparta.fritown.domain.entity.Matches;
+import com.sparta.fritown.domain.entity.enums.Status;
+import com.sparta.fritown.domain.repository.MatchesRepository;
 import com.sparta.fritown.global.exception.ErrorCode;
 import com.sparta.fritown.global.exception.custom.ServiceException;
 import lombok.RequiredArgsConstructor;
