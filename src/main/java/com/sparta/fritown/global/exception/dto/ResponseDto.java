@@ -12,6 +12,10 @@ public class ResponseDto<T> extends BaseResponse {
         this.data = data;
     }
 
+    public T getData() {
+        return data;
+    }
+
     public static <T> ResponseDto<T> success(String message, T data) {
         // 정적 팩토리 메서드
         // type 매개변수 사용을 통해, 여러 형태의 data type이 이용 가능하도록 함.
