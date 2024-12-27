@@ -9,6 +9,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
@@ -25,12 +26,18 @@ public class JwtUtil {
 
     @PostConstruct
     protected void init() {
+//        secretKey = jwtProperties.getSecret();
+//        log.info("비밀 키 initialized: {}", secretKey);
         secretKey = Base64.getEncoder().encodeToString(jwtProperties.getSecret().getBytes());
+        log.info("Base64로 인코딩된 비밀 키: {}", secretKey);
     }
 
 
     public GeneratedToken generateToken(String email, String role) {
         // refreshToken과 accessToken을 생성한다.
+        log.info("이메일을 위한 토큰 발행: {}", email);
+        log.info("비밀 키를 사용 : {}", secretKey);
+
         String refreshToken = generateRefreshToken(email, role); // refresh Token 생성
         String accessToken = generateAccessToken(email, role); // access Token 생성
 
@@ -90,10 +97,21 @@ public class JwtUtil {
                     .setSigningKey(secretKey) // 비밀키를 설정하여 파싱한다.
                     .parseClaimsJws(token);  // 주어진 토큰을 파싱하여 Claims 객체를 얻는다.
             // 토큰의 만료 시간과 현재 시간비교
-            return claims.getBody()
-                    .getExpiration()
-                    .after(new Date());  // 만료 시간이 현재 시간 이후인지 확인하여 유효성 검사 결과를 반환
+            Date expiration = claims.getBody().getExpiration();
+            log.info("토큰 만료 시간: {}", expiration);
+
+            if (expiration != null) {
+                return expiration.after(new Date());
+            } else {
+                log.error("토큰에 만료 시간 정보가 없습니다.");
+                return false;
+            }
+
+        } catch (JwtException e) {
+            log.error("JWT 파싱 오류 : {}", e.getMessage());
+            return false;
         } catch (Exception e) {
+            log.error("예상치 못한 오류 발생: {}", e.getMessage());
             return false;
         }
     }
