@@ -4,10 +4,12 @@ import com.sparta.fritown.global.docs.TestControllerDocs;
 import com.sparta.fritown.global.exception.ErrorCode;
 import com.sparta.fritown.global.exception.SuccessCode;
 import com.sparta.fritown.global.exception.custom.ServiceException;
-import com.sparta.fritown.global.exception.custom.UserDetailsImpl;
 import com.sparta.fritown.global.exception.dto.ResponseDto;
+import com.sparta.fritown.global.security.dto.UserDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -42,7 +44,7 @@ public class TestController implements TestControllerDocs {
 
     @GetMapping("/success/auth")
     public ResponseDto<Long> successAuthCheck(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Long userId = userDetails.getUser().getId();
+        Long userId = userDetails.getId();
         return ResponseDto.success(SuccessCode.OK, userId);
     }
     /* 목적: 성공적으로 코드 흚이 완료되었고, 반환할 값이 있을 때, 사용
@@ -50,4 +52,29 @@ public class TestController implements TestControllerDocs {
      * 메시지는 /success에 언급한 방식대로 진행하면 된다.
      */
 
+
+    // 추후에 인증 관련 문제 테스트 할 때, 아래 2개 api 사용해 보세요!
+    @GetMapping("/test")
+    public String testAuthentication() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            Object principal = authentication.getPrincipal();
+            log.info("Controller Principal type: {}", principal.getClass().getName());
+            log.info("Controller Principal details: {}", principal);
+        } else {
+            log.info("Authentication is null in Controller");
+        }
+        return "Test Endpoint";
+    }
+
+    @GetMapping("/test-auth")
+    public String testAuthentication(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if (userDetails != null) {
+            log.info("UserDetails: {}", userDetails);
+            return "Authenticated user: " + userDetails.getEmail();
+        } else {
+            log.info("UserDetails is null");
+            return "User is not authenticated";
+        }
+    }
 }
