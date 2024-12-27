@@ -1,7 +1,7 @@
 package com.sparta.fritown.global.security.util;
 
 
-import com.sparta.fritown.global.security.dto.SecurityUserDto;
+import com.sparta.fritown.global.security.dto.UserDetailsImpl;
 import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.domain.repository.UserRepository;
 import jakarta.servlet.FilterChain;
@@ -10,11 +10,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.task.TaskExecutionProperties;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -73,7 +71,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
 
             // SecurityContext에 등록할 User 객체를 만들어준다.
-        SecurityUserDto userDto = SecurityUserDto.builder()
+        UserDetailsImpl userDto = UserDetailsImpl.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .role("ROLE_USER")
