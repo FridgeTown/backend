@@ -1,6 +1,6 @@
 package com.sparta.fritown.domain.service;
 
-import com.sparta.fritown.domain.dto.RoundsDto;
+import com.sparta.fritown.domain.dto.rounds.RoundsDto;
 import com.sparta.fritown.domain.entity.Round;
 import com.sparta.fritown.domain.repository.RoundRepository;
 import lombok.RequiredArgsConstructor;
