@@ -1,21 +1,22 @@
-package com.sparta.fritown.domain.test.controller;
+package com.sparta.fritown.domain.controller;
 
-import com.sparta.fritown.domain.test.service.TestService;
-import com.sparta.fritown.domain.user.entity.User;
-import com.sparta.fritown.global.docs.TestControllerDocs;
+import com.sparta.fritown.domain.entity.User;
+import com.sparta.fritown.domain.service.TestService;
+import com.sparta.fritown.global.docs.UserControllerDocs;
 import com.sparta.fritown.global.exception.ErrorCode;
 import com.sparta.fritown.global.exception.custom.ServiceException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/health")
-@Slf4j
-public class TestController implements TestControllerDocs {
+public class UserController implements UserControllerDocs {
 
     private final TestService testService;
 
-    public TestController(TestService testService) {
+    public UserController(TestService testService) {
         this.testService = testService;
     }
 
@@ -42,11 +43,6 @@ public class TestController implements TestControllerDocs {
         return "OAuth just failed";
     }
 
-    @GetMapping("/check")
-    public String healthCheck() {
-        testService.healthCheck();
-        throw ServiceException.of(ErrorCode.USER_NOT_ACCEPTABLE);
-    }
 
     @PostMapping("/new/user/check")
     public String newUser(){
