@@ -2,6 +2,7 @@ package com.sparta.fritown.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,4 +27,5 @@ public class UserMatch {
     private Matches matches;
 
     private Boolean winner;
+
 }

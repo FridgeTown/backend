@@ -4,8 +4,8 @@ spring:
       Fridge_Town
   config:
     import:
-#      - classpath:/yml/application-local.yml
-      - classpath:/yml/application-dev.yml
+      - classpath:/yml/application-local.yml
+#      - classpath:/yml/application-dev.yml
 
   profiles:
-    active: dev
+    active: local
