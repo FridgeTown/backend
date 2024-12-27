@@ -11,7 +11,8 @@ public class AuthenticatedMatchers {
     };
 
     public static final String[] testArray = {
-            "/health/**"
+            "/health/**",
+            "/test/**"
     };
 
     public static final String[] swaggerArray = {
