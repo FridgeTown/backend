@@ -6,7 +6,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 public class Round {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
