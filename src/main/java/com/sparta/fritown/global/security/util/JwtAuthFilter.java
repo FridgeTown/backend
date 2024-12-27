@@ -38,7 +38,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, IOException {
-        log.info("doFilterInternal 시작 됨");
 
         // request Header에서 AccessToken을 가져온다.
         String atc = request.getHeader("Authorization");
@@ -48,8 +47,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             doFilter(request, response, filterChain);
             return;
         }
-
-        log.info("StringUtils.hasText가 true임.");
 
         atc = atc.replace("Bearer", "").trim(); // to remove bearer
 
@@ -61,13 +58,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throw new JwtException("Access Token 만료");
         }
 
-        log.info("Access Token 만료 부분 지남.");
-
         User user = userRepository.findByEmail(jwtUtil.getUid(atc)).orElseThrow(
                 () -> new JwtException("유저를 찾을 수 없습니다.")
         );
-
-        log.info("유저 이메일 정보 출력 : {}", user.getEmail());
 
 
             // SecurityContext에 등록할 User 객체를 만들어준다.
@@ -83,20 +76,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 userDto, "", List.of(new SimpleGrantedAuthority("ROLE_USER"))
         );
 
-        log.info("Authentication set: {}", SecurityContextHolder.getContext().getAuthentication());
-
         SecurityContextHolder.getContext().setAuthentication(auth);
-        log.info("SecurityContext에 Authentication 설정 완료");
-        log.info("Authentication set: {}", SecurityContextHolder.getContext().getAuthentication());
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if(authentication != null) {
-            Object principal = authentication.getPrincipal();
-//            log.info("Principal type: {}", principal.getClass().getName());
-//            log.info("Principal details: {}", principal);
-        }
-
         filterChain.doFilter(request, response);
     }
 
