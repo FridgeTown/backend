@@ -42,6 +42,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // request Header에서 AccessToken을 가져온다.
         String atc = request.getHeader("Authorization");
 
+        System.out.println(atc);
+
         // 토큰 검사 생략(모두 허용 URL의 경우 토큰 검사 통과) /signup /login 처럼 애초부터 토큰이 없는 요청의 경우 다음 filter로 에러 없이 바로 넘겨줘야 하기 때문에, return
         if (!StringUtils.hasText(atc)) {
             doFilter(request, response, filterChain);

@@ -1,10 +1,10 @@
-package com.sparta.fritown.domain.user.service;
+package com.sparta.fritown.domain.service;
 
-import com.sparta.fritown.domain.user.dto.RegisterRequestDto;
-import com.sparta.fritown.domain.user.entity.Matches;
-import com.sparta.fritown.domain.user.entity.User;
-import com.sparta.fritown.domain.user.entity.enums.Status;
-import com.sparta.fritown.domain.user.repository.MatchesRepository;
+import com.sparta.fritown.domain.dto.RegisterRequestDto;
+import com.sparta.fritown.domain.entity.Matches;
+import com.sparta.fritown.domain.entity.User;
+import com.sparta.fritown.domain.entity.enums.Status;
+import com.sparta.fritown.domain.repository.MatchesRepository;
 import com.sparta.fritown.global.exception.ErrorCode;
 import com.sparta.fritown.global.exception.custom.ServiceException;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ class MatchesServiceTest {
     void 존재하지_않는_매치수락() {
         User user = userService.register(new RegisterRequestDto("test1@gmail.com", "google", "test1", "ROLE_USER"));
 
-        ServiceException exception = assertThrows(ServiceException.class, () -> matchesService.matchAccept(0L, user.getId().toString()));
+        ServiceException exception = assertThrows(ServiceException.class, () -> matchesService.matchAccept(0L, user.getEmail()));
         assertThat(exception.getCode()).isEqualTo(ErrorCode.MATCH_NOT_FOUND.getCode());
     }
 
@@ -51,7 +51,7 @@ class MatchesServiceTest {
                 .build());
 
         // 매치 신청한 사람
-        Matches acceptedMatch = matchesService.matchAccept(match.getId(), user2.getId().toString());
+        Matches acceptedMatch = matchesService.matchAccept(match.getId(), user2.getEmail());
         assertThat(acceptedMatch.getStatus()).isEqualTo(Status.ACCEPTED);
     }
 
@@ -69,12 +69,12 @@ class MatchesServiceTest {
                 .title("title")
                 .build());
 
-        Matches acceptedMatch = matchesService.matchAccept(match.getId(), user2.getId().toString());
+        Matches acceptedMatch = matchesService.matchAccept(match.getId(), user2.getEmail());
 
         // status == ACCEPTED
         assertThat(acceptedMatch.getStatus()).isEqualTo(Status.ACCEPTED);
 
-        ServiceException exception = assertThrows(ServiceException.class, () -> matchesService.matchAccept(acceptedMatch.getId(), user2.getId().toString()));
+        ServiceException exception = assertThrows(ServiceException.class, () -> matchesService.matchAccept(acceptedMatch.getId(), user2.getEmail()));
         assertThat(exception.getCode()).isEqualTo(ErrorCode.MATCH_NOT_PENDING.getCode());
     }
 
@@ -94,11 +94,11 @@ class MatchesServiceTest {
 
         ServiceException exception;
         // 신청한 사람
-        exception = assertThrows(ServiceException.class, () -> matchesService.matchAccept(match.getId(), user1.getId().toString()));
+        exception = assertThrows(ServiceException.class, () -> matchesService.matchAccept(match.getId(), user1.getEmail()));
         assertThat(exception.getCode()).isEqualTo(ErrorCode.USER_NOT_PARTICIPANT.getCode());
 
         // 제 3자
-        exception = assertThrows(ServiceException.class, () -> matchesService.matchAccept(match.getId(), user3.getId().toString()));
+        exception = assertThrows(ServiceException.class, () -> matchesService.matchAccept(match.getId(), user3.getEmail()));
         assertThat(exception.getCode()).isEqualTo(ErrorCode.USER_NOT_PARTICIPANT.getCode());
     }
 
@@ -113,7 +113,7 @@ class MatchesServiceTest {
                 .place("place")
                 .title("title")
                 .build());
-        Matches acceptedMatch = matchesService.matchReject(match.getId(), user2.getId().toString());
+        Matches acceptedMatch = matchesService.matchReject(match.getId(), user2.getEmail().toString());
         assertThat(acceptedMatch.getStatus()).isEqualTo(Status.REJECTED);
 
     }
