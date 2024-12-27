@@ -6,13 +6,13 @@ spring:
           google:
             client-id: 1004439305409-to67cvquiebr9u797hbducdrcbl5mos0.apps.googleusercontent.com
             client-secret: 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
-            redirect-uri: "http://3.34.46.87/login/oauth2/code/google"
+            redirect-uri: "http://{서버 주소}/login/oauth2/code/google"
             authorization-grant-type: authorization_code
             scope: email
 
           kakao:
             client-id: 8d03f285bc0b4c9ea28b6d22db28aed8
-            redirect-uri: "http://3.34.46.87/login/oauth2/code/kakao"
+            redirect-uri: "http://{서버 주소}/login/oauth2/code/kakao"
             client-authentication-method: POST
             authorization-grant-type: authorization_code
             scope: profile_nickname, profile_image, account_email
@@ -20,7 +20,7 @@ spring:
           naver:
             client-id: VIpBl21dBFbBG6eyLfuN
             client-secret: WgZzcgFJx_
-            redirect-uri: "http://3.34.46.87/login/oauth2/code/naver"
+            redirect-uri: "http://{서버 주소}/login/oauth2/code/naver"
             authorization-grant-type: authorization_code
             scope: name, email, profile_image
             client-name: Naver
