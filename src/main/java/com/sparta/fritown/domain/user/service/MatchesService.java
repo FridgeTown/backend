@@ -6,12 +6,18 @@ import com.sparta.fritown.domain.user.repository.MatchesRepository;
 import com.sparta.fritown.global.exception.ErrorCode;
 import com.sparta.fritown.global.exception.custom.ServiceException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class MatchesService {
     MatchesRepository matchesRepository;
+
+    @Autowired
+    public MatchesService(MatchesRepository matchesRepository) {
+        this.matchesRepository = matchesRepository;
+    }
 
     public Matches matchAccept(Long matchId, String userId) {
         Matches match = matchesRepository.findById(matchId).orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
@@ -48,9 +54,6 @@ public class MatchesService {
             throw ServiceException.of(ErrorCode.IO_EXCEPTION); // 잘못된 형식의 ID
         }
 
-        if (userIdAsLong.equals(match.getChallengedBy().getId())) {
-            return;
-        }
         if (userIdAsLong.equals(match.getChallengedTo().getId())) {
             return;
         }
