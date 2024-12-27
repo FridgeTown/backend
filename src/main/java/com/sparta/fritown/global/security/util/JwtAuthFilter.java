@@ -87,8 +87,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         log.info("Authentication set: {}", SecurityContextHolder.getContext().getAuthentication());
 
-
         SecurityContextHolder.getContext().setAuthentication(auth);
+        log.info("SecurityContext에 Authentication 설정 완료");
+        log.info("Authentication set: {}", SecurityContextHolder.getContext().getAuthentication());
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(authentication != null) {
+            Object principal = authentication.getPrincipal();
+//            log.info("Principal type: {}", principal.getClass().getName());
+//            log.info("Principal details: {}", principal);
+        }
+
         filterChain.doFilter(request, response);
     }
 
