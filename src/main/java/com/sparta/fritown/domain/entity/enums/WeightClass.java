@@ -1,4 +1,4 @@
-package com.sparta.fritown.domain.user.entity.enums;
+package com.sparta.fritown.domain.entity.enums;
 
 public enum WeightClass {
     LIGHTFLY("라이트플라이"),
