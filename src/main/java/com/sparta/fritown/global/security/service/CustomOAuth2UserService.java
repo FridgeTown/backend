@@ -1,8 +1,8 @@
 package com.sparta.fritown.global.security.service;
 
 import com.sparta.fritown.global.security.dto.OAuth2Attribute;
-import com.sparta.fritown.domain.user.entity.User;
-import com.sparta.fritown.domain.user.repository.UserRepository;
+import com.sparta.fritown.domain.entity.User;
+import com.sparta.fritown.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

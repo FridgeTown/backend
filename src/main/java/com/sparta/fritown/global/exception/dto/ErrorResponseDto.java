@@ -16,4 +16,6 @@ public class ErrorResponseDto extends BaseResponse {
     public static ErrorResponseDto failure(HttpStatus status, String code, String message) {
         return new ErrorResponseDto(status.value(), message, code);
     }
+
+
 }

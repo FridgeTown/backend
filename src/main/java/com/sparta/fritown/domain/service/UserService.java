@@ -1,15 +1,15 @@
-package com.sparta.fritown.domain.user.service;
+package com.sparta.fritown.domain.service;
 
-import com.sparta.fritown.domain.user.dto.RegisterRequestDto;
-import com.sparta.fritown.domain.user.entity.User;
-import com.sparta.fritown.domain.user.repository.UserRepository;
+import com.sparta.fritown.domain.dto.RegisterRequestDto;
+import com.sparta.fritown.domain.repository.UserRepository;
+import com.sparta.fritown.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;

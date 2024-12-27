@@ -16,14 +16,17 @@ spring:
     username: ${local-db.username}
     password: ${local-db.password}
 
-  data:
-    redis:
-      host: ${local-redis.host}
-      port: ${local-redis.port}
-      password: ${local-redis.password}
+  redis:
+    host: ${local-redis.host}
+    port: ${local-redis.port}
+    password: ${local-redis.password}
 
   jwt:
     secret: ${jwt.secret.key.access}
+
+logging:
+  level:
+    org.springframework.data.redis: DEBUG
 
 springdoc:
   swagger-ui:
