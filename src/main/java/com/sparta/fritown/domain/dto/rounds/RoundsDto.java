@@ -5,10 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class RoundsDto {
     Integer roundNum;
     Integer kcal;
     Integer heartBeat;
+
+    public RoundsDto(Integer roundNum, Integer kcal, Integer heartBeat) {
+        this.roundNum = roundNum;
+        this.kcal = kcal;
+        this.heartBeat = heartBeat;
+    }
 }
