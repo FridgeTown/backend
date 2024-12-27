@@ -11,9 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Tag(name = "Test", description = "APIs for test")
+@Tag(name = "Match", description = "APIs for test")
 public interface TestControllerDocs {
-
 //    @Operation(summary = "IO Error Response checker", description = "ServiceException Handler 작동 확인을 위한 API" )
 //    @ApiResponses ({
 //            @ApiResponse(responseCode = "400",
