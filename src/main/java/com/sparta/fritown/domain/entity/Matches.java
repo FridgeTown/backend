@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class Matches {
     private Timestamp streamingTime;
     private Integer totalRounds;
     private String title;
-    private Date date;
+    private LocalDate date;
 
     @OneToMany(mappedBy = "matches")
     private List<UserMatch> userMatches = new ArrayList<>();
