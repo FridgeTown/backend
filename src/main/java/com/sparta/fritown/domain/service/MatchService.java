@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -154,6 +155,11 @@ public class MatchService {
 
     @Transactional
     public void requestMatch(Long opponentId, Long userId) {
+
+        if (Objects.equals(userId, opponentId)) {
+            throw ServiceException.of(ErrorCode.SELF_FIGHT_REQUEST);
+        }
+
         //현재 유저 정보 가져오기
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> ServiceException.of(ErrorCode.USER_NOT_FOUND));
@@ -182,6 +188,7 @@ public class MatchService {
         }
 
         Matches newMatch = new Matches(opponent, user, Status.PENDING);
+
         UserMatch userMatch = new UserMatch(newMatch, opponent);
         UserMatch opponentMatch = new UserMatch(newMatch, user);
 
