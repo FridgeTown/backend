@@ -3,6 +3,7 @@ package com.sparta.fritown.domain.entity;
 import com.sparta.fritown.domain.entity.enums.Gender;
 import com.sparta.fritown.domain.entity.enums.WeightClass;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -46,8 +47,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     private WeightClass weightClass;
 
-    private String role; /// 임시
-    private String nickname; // 임시
+    private String role;
+
+    @Column(nullable = false, unique = true)
+    @Pattern(
+            regexp = "^[a-zA-Z가-힣]{2,7}$",
+            message = "닉네임은 2자에서 7자 사이로, 영어 또는 한글만 사용 가능합니다."
+    )
+    private String nickname;
 
     @OneToMany(mappedBy = "user")
     private List<UserMatch> userMatches = new ArrayList<>();
