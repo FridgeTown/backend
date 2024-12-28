@@ -48,4 +48,4 @@ cloud:
       bucket: fightclub-bucket
     region: ap-northeast-2
     stack:
-      auto-: false
+      auto: false
