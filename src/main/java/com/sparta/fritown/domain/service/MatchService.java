@@ -170,7 +170,7 @@ public class MatchService {
         validateUserParticipation(user, matches);
         validateMatchStatus(matches);
 
-        matches.updaterStatus(status);
+        matches.updateStatus(status);
         matchesRepository.save(matches);
         return true;
     }
@@ -209,7 +209,7 @@ public class MatchService {
         // 기존에 상대가 스파링 요청을 한 상태일 시, 수락
         for (Matches matched : matches) {
             if (matched.getStatus().equals(Status.PENDING)) {
-                matched.setStatus(Status.ACCEPTED);
+                matched.updateStatus(Status.ACCEPTED);
                 // 이후 채팅방 생성 로직이 들어가거나 해야 할 듯.
                 return;
             }
