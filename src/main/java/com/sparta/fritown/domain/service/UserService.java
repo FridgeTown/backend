@@ -4,6 +4,8 @@ import com.sparta.fritown.domain.dto.RegisterRequestDto;
 import com.sparta.fritown.domain.dto.user.OpponentDto;
 import com.sparta.fritown.domain.repository.UserRepository;
 import com.sparta.fritown.domain.entity.User;
+import com.sparta.fritown.global.exception.ErrorCode;
+import com.sparta.fritown.global.exception.custom.ServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,6 +52,11 @@ public class UserService {
         // 데이터베이스에서 랜덤 사용자 가져오기
         int count = 5;
         List<User> users = userRepository.findRandomUsersExcluding(userId, count);
+
+        if (users.isEmpty())
+        {
+            throw ServiceException.of(ErrorCode.RECOMMENDED_USERS_NOT_FOUND);
+        }
 
         // User 엔티티를 OpponentDto로 변환
         return users.stream()

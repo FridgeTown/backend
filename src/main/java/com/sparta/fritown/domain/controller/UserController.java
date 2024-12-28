@@ -60,6 +60,7 @@ public class UserController implements UserControllerDocs {
         return user.getProfileImg();
     }
 
+    @Override
     @GetMapping("/user/recommended-users")
     public ResponseDto<List<OpponentDto>> getRecommendedOpponents(@AuthenticationPrincipal UserDetailsImpl userDetails)
     {
