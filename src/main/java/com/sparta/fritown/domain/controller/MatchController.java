@@ -1,5 +1,6 @@
 package com.sparta.fritown.domain.controller;
 
+import com.sparta.fritown.domain.dto.match.MatchSummaryDto;
 import com.sparta.fritown.domain.dto.rounds.RoundsDto;
 import com.sparta.fritown.domain.service.MatchService;
 import com.sparta.fritown.global.docs.MatchControllerDocs;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/match")
-public class MatchController implements MatchControllerDocs{
+public class MatchController implements MatchControllerDocs {
 
     private final MatchService matchService;
 
@@ -29,7 +30,13 @@ public class MatchController implements MatchControllerDocs{
     public ResponseDto<List<RoundsDto>> getRoundsByMatchId(@PathVariable Long matchId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<RoundsDto> rounds = matchService.getRoundsByMatchId(matchId, userDetails.getId());
         return ResponseDto.success(SuccessCode.OK, rounds);
+    }
 
+    @Override
+    @GetMapping("/history")
+    public ResponseDto<List<MatchSummaryDto>> getMatchHistory(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<MatchSummaryDto> matchSummaryDtos = matchService.getMatchHistory(userDetails.getId());
+        return ResponseDto.success(SuccessCode.MATCHED_USERS, matchSummaryDtos);
     }
 
 
