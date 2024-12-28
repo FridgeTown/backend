@@ -61,7 +61,7 @@ public class UserController implements UserControllerDocs {
     }
 
     @Override
-    @GetMapping("/user/recommended-users")
+    @GetMapping("/user/recommendation")
     public ResponseDto<List<OpponentDto>> getRecommendedOpponents(@AuthenticationPrincipal UserDetailsImpl userDetails)
     {
         Long userId = userDetails.getId();
