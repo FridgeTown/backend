@@ -4,7 +4,6 @@ import com.sparta.fritown.domain.entity.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,5 +39,16 @@ public class Matches {
     @JoinColumn(name = "CHALLENGED_BY_ID")
     private User challengedBy;
 
+    public Matches() {
+    }
 
+    public Matches(User challengedTo, User challengedBy, Status status) {
+        this.challengedTo = challengedTo;
+        this.challengedBy = challengedBy;
+        this.status = status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 }
