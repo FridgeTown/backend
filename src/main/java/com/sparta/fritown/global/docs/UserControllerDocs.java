@@ -11,7 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.List;
 
-@Tag(name = "User API", description =  "APIs for user-related operations")
+@Tag(name = "User", description =  "APIs for user-related operations")
 public interface UserControllerDocs {
     @Operation(summary = "추천 사용자 조회",
             description = "현재 로그인한 사용자를 제외한 랜덤 추천 사용자 리스트를 반환합니다. 만약 사용자가 아예 없으면 빈 리스트를 반환")
