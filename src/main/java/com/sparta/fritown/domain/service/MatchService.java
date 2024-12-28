@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MatchService {
 
+    private final UserService userService;
     private final RoundRepository roundRepository;
     private final MatchesRepository matchesRepository;
     private final UserRepository userRepository;
@@ -146,6 +147,41 @@ public class MatchService {
                 .filter(userMatch -> isFutureMatch(userMatch, todayDate))
                 .map(userMatch -> createMatchFutureDto(userMatch, user))
                 .collect(Collectors.toList());
+    }
+
+
+    public boolean matchAccept(Long matchId, String email) {
+        return handleMatch(matchId, email, Status.ACCEPTED);
+    }
+
+    public boolean matchReject(Long matchId, String email) {
+        return handleMatch(matchId, email, Status.REJECTED);
+    }
+
+    private boolean handleMatch(Long matchId, String email, Status status) {
+        User user = userService.findByEmail(email);
+        Matches matches = matchesRepository.findById(matchId).orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
+
+        validateUserParticipation(user, matches);
+        validateMatchStatus(matches);
+
+        matches.updaterStatus(status);
+        matchesRepository.save(matches);
+        return true;
+    }
+
+    private void validateUserParticipation(User user, Matches matches) {
+        if (user.getId().equals(matches.getChallengedTo().getId())) {
+            return;
+        }
+        throw ServiceException.of(ErrorCode.USER_NOT_CHALLENGED_TO);
+    }
+
+    private void validateMatchStatus(Matches matches) {
+        if (matches.getStatus().equals(Status.PENDING)) {
+            return;
+        }
+        throw ServiceException.of(ErrorCode.MATCH_NOT_PENDING);
     }
 }
 
