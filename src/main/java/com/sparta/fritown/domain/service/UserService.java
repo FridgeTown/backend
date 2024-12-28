@@ -51,7 +51,7 @@ public class UserService {
 
     public List<OpponentDto> getRandomUsers(Long userId) {
         // 데이터베이스에서 랜덤 사용자 가져오기
-        int count = 5;
+        int count = 20;
         List<User> users = userRepository.findRandomUsersExcluding(userId, count);
 
         if (users.isEmpty())
@@ -73,7 +73,5 @@ public class UserService {
                 ))
                 .toList();
     }
-
-
 
 }
