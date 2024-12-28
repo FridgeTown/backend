@@ -3,7 +3,6 @@ package com.sparta.fritown.domain.dto.match;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Getter
 public class MatchSummaryDto {
@@ -15,7 +14,7 @@ public class MatchSummaryDto {
     private final Integer heartBeat;
     private final Integer punchCnt;
 
-    public MatchSummaryDto(Long matchId, MatchInfo userMatch, String opponent) {
+    public MatchSummaryDto(Long matchId, MatchInfoDto userMatch, String opponent) {
         this.matchId = matchId;
         this.opponent = opponent;
         this.roundNum = userMatch.getRoundNum();
