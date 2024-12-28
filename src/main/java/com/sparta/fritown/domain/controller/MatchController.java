@@ -10,10 +10,7 @@ import com.sparta.fritown.global.exception.SuccessCode;
 import com.sparta.fritown.global.exception.dto.ResponseDto;
 import com.sparta.fritown.global.security.dto.UserDetailsImpl;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -47,6 +44,13 @@ public class MatchController implements MatchControllerDocs {
         List<MatchFutureDto> matchFutureDtos = matchService.getMatchFuture(userDetails.getId());
         return ResponseDto.success(SuccessCode.MATCHING_USERS, matchFutureDtos);
     }
+
+    @PostMapping("/{opponentId}")
+    public ResponseDto<Void> requestMatch(@PathVariable Long opponentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        matchService.requestMatch(opponentId, userDetails.getId());
+        return ResponseDto.success(SuccessCode.MATCH_REQUEST);
+    }
+
 
 
 }
