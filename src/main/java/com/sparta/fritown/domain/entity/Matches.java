@@ -57,4 +57,8 @@ public class Matches {
     public Matches() {
 
     }
+
+    public void updaterStatus(Status status) {
+        this.status = status;
+    }
 }

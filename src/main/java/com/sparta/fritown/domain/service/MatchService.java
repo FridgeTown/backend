@@ -159,14 +159,13 @@ public class MatchService {
     }
 
     private boolean handleMatch(Long matchId, String email, Status status) {
-        System.out.println("matchId: " + matchId);
         User user = userService.findByEmail(email);
         Matches matches = matchesRepository.findById(matchId).orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
 
         validateUserParticipation(user, matches);
         validateMatchStatus(matches);
 
-        matches.setStatus(status);
+        matches.updaterStatus(status);
         matchesRepository.save(matches);
         return true;
     }
