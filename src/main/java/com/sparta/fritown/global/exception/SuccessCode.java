@@ -4,7 +4,10 @@ import org.springframework.http.HttpStatus;
 
 public enum SuccessCode implements ApiCode {
     OK(HttpStatus.OK, "C001", "Well done"),
-    CREATED(HttpStatus.CREATED, "C002", "Created successfully");
+    CREATED(HttpStatus.CREATED, "C002", "Created successfully"),
+
+    //match
+    MATCHED_USERS(HttpStatus.OK, "M001", "스파링 했던 상대들을 성공적으로 반환하였습니다.");
 
     private final HttpStatus status;
     private final String code;
