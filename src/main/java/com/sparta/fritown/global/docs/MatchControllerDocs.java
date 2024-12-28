@@ -1,5 +1,6 @@
 package com.sparta.fritown.global.docs;
 
+import com.sparta.fritown.domain.dto.match.MatchSummaryDto;
 import com.sparta.fritown.domain.dto.rounds.RoundsDto;
 import com.sparta.fritown.global.exception.dto.ErrorResponseDto;
 import com.sparta.fritown.global.exception.dto.ResponseDto;
@@ -45,7 +46,30 @@ public interface MatchControllerDocs {
                     required = true
             )
     })
-
     public ResponseDto<List<RoundsDto>> getRoundsByMatchId(@PathVariable Long matchId, @AuthenticationPrincipal UserDetailsImpl userDetails);
 
+
+
+    @Operation(
+            summary = "Get match history for a user",
+            description = "Fetches a list of completed match summaries for the authenticated user."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully retrieved match history",
+                    content = @Content(schema = @Schema(implementation = MatchSummaryDto.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "User not found",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
+            )
+    })
+    @Parameter(
+            name = "userDetails",
+            description = "Details of the authenticated user (automatically injected)",
+            required = true
+    )
+    public ResponseDto<List<MatchSummaryDto>> getMatchHistory(@AuthenticationPrincipal UserDetailsImpl userDetails);
 }

@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/match")
-public class MatchController implements MatchControllerDocs{
+public class MatchController implements MatchControllerDocs {
 
     private final MatchService matchService;
 
@@ -32,6 +32,7 @@ public class MatchController implements MatchControllerDocs{
         return ResponseDto.success(SuccessCode.OK, rounds);
     }
 
+    @Override
     @GetMapping("/history")
     public ResponseDto<List<MatchSummaryDto>> getMatchHistory(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<MatchSummaryDto> matchSummaryDtos = matchService.getMatchHistory(userDetails.getId());
