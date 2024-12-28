@@ -6,6 +6,7 @@ import com.sparta.fritown.domain.repository.UserRepository;
 import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.global.exception.ErrorCode;
 import com.sparta.fritown.global.exception.custom.ServiceException;
+import com.sparta.fritown.global.s3.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,10 +20,12 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final S3Service s3Service;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, S3Service s3Service) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.s3Service = s3Service;
     }
 
 
@@ -69,7 +72,7 @@ public class UserService {
                         user.getWeight(),           // 몸무게
                         user.getBio(),              // 소개글
                         user.getGender().toString(),// 성별 (Gender Enum -> String 변환)
-                        user.getProfileImg()        // 프로필 이미지
+                        s3Service.getFileUrl(user.getProfileImg())        // 프로필 이미지
                 ))
                 .toList();
     }
