@@ -52,6 +52,10 @@ public class TestController implements TestControllerDocs {
      * 메시지는 /success에 언급한 방식대로 진행하면 된다.
      */
 
+    @GetMapping("/health")
+    public String healthCheck(){
+        return "OK";
+    }
 
     // 추후에 인증 관련 문제 테스트 할 때, 아래 2개 api 사용해 보세요!
     @GetMapping("/test")
