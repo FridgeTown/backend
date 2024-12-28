@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/match")
-public class MatchController implements MatchControllerDocs {
+public class MatchController implements MatchControllerDocs{
 
     private final MatchService matchService;
 
@@ -24,11 +24,13 @@ public class MatchController implements MatchControllerDocs {
         this.matchService = matchService;
     }
 
-    //@Override
+    @Override
     @GetMapping("/{matchId}/round")
-    public ResponseDto<List<RoundsDto>> getRoundsByMatchId(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long matchId) {
+    public ResponseDto<List<RoundsDto>> getRoundsByMatchId(@PathVariable Long matchId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<RoundsDto> rounds = matchService.getRoundsByMatchId(matchId, userDetails.getId());
         return ResponseDto.success(SuccessCode.OK, rounds);
+
     }
+
 
 }

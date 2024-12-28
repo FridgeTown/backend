@@ -26,7 +26,7 @@ public class MatchService {
     private final UserRepository userRepository;
 
     public List<RoundsDto> getRoundsByMatchId(Long matchId, Long userId) {
-        Matches match = matchesRepository.findById(matchId).orElseThrow(() -> new NoSuchElementException("User with id " + matchId + " not found"));
+        Matches match = matchesRepository.findById(matchId).orElseThrow(() -> new NoSuchElementException("Match with id " + matchId + " not found"));
         List<UserMatch> userMatches = match.getUserMatches();
 
         User me = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
