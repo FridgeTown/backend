@@ -38,3 +38,14 @@ springdoc:
     path: /v3/api-docs
   paths-to-match:
     - /**
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${s3.accessKey}
+      secretKey: ${s3.secretKey}
+    s3:
+      bucket: fightclub-bucket
+    region: ap-northeast-2
+    stack:
+      auto-: false
