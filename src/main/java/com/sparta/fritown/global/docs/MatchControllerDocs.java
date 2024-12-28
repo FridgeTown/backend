@@ -3,6 +3,7 @@ package com.sparta.fritown.global.docs;
 import com.sparta.fritown.domain.dto.rounds.RoundsDto;
 import com.sparta.fritown.global.exception.dto.ErrorResponseDto;
 import com.sparta.fritown.global.exception.dto.ResponseDto;
+import com.sparta.fritown.global.security.dto.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
@@ -44,6 +46,6 @@ public interface MatchControllerDocs {
             )
     })
 
-    public ResponseDto<List<RoundsDto>> getRoundsByMatchId(@PathVariable Long matchId);
+    public ResponseDto<List<RoundsDto>> getRoundsByMatchId(@PathVariable Long matchId, @AuthenticationPrincipal UserDetailsImpl userDetails);
 
 }

@@ -1,13 +1,21 @@
 package com.sparta.fritown.domain.service;
 
 import com.sparta.fritown.domain.dto.rounds.RoundsDto;
+import com.sparta.fritown.domain.entity.Matches;
 import com.sparta.fritown.domain.entity.Round;
+import com.sparta.fritown.domain.entity.User;
+import com.sparta.fritown.domain.entity.UserMatch;
+import com.sparta.fritown.domain.repository.MatchesRepository;
 import com.sparta.fritown.domain.repository.RoundRepository;
+import com.sparta.fritown.domain.repository.UserRepository;
+import com.sparta.fritown.global.exception.ErrorCode;
+import com.sparta.fritown.global.exception.custom.ServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -16,10 +24,27 @@ import java.util.stream.Collectors;
 public class MatchService {
 
     private final RoundRepository roundRepository;
+    private final MatchesRepository matchesRepository;
+    private final UserRepository userRepository;
 
-    public List<RoundsDto> getRoundsByMatchId(Long matchId)
-    {
-        List<Round> rounds = roundRepository.findByUserMatchId(matchId);
+    public List<RoundsDto> getRoundsByMatchId(Long matchId, Long userId) {
+        Matches match = matchesRepository.findById(matchId).orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
+        List<UserMatch> userMatches = match.getUserMatches();
+
+        User me = userRepository.findById(userId).orElseThrow(() -> ServiceException.of(ErrorCode.USER_NOT_FOUND));
+
+        List<Round> rounds = null;
+        for (UserMatch userMatch : userMatches) {
+            if (userMatch.getUser() == me) {
+                rounds = userMatch.getRounds();
+                break;
+            }
+        }
+        if(rounds == null)
+        {
+            throw ServiceException.of(ErrorCode.USER_MATCH_NOT_FOUND);
+        }
+
 
         return rounds.stream()
                 .map(round -> new RoundsDto(
@@ -30,3 +55,4 @@ public class MatchService {
                 .collect(Collectors.toList());
     }
 }
+
