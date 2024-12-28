@@ -1,6 +1,7 @@
 package com.sparta.fritown.domain.service;
 
-import com.sparta.fritown.domain.dto.match.MatchInfo;
+import com.sparta.fritown.domain.dto.match.MatchFutureDto;
+import com.sparta.fritown.domain.dto.match.MatchInfoDto;
 import com.sparta.fritown.domain.dto.match.MatchSummaryDto;
 import com.sparta.fritown.domain.dto.rounds.RoundsDto;
 import com.sparta.fritown.domain.entity.Matches;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -78,13 +78,19 @@ public class MatchService {
         return matches.getDate().isBefore(todayDate) && matches.getStatus().equals(Status.DONE);
     }
 
+    private boolean isFutureMatch(UserMatch userMatch, LocalDate todayDate) {
+        Matches matches = userMatch.getMatches();
+        return matches.getDate().isAfter(todayDate) && matches.getStatus().equals(Status.ACCEPTED);
+    }
+
+
     // MatchSummaryDto 생성 메서드
     private MatchSummaryDto createMatchSummaryDto(UserMatch userMatch, User currentUser) {
         Matches matches = userMatch.getMatches();
         List<Round> rounds = userMatch.getRounds();
 
         // 라운드 데이터 계산
-        MatchInfo matchInfo = calculateMatchInfo(rounds, matches.getDate());
+        MatchInfoDto matchInfo = calculateMatchInfo(rounds, matches.getDate());
 
         // 상대 유저 찾기
         User opponent = getOpponent(matches, currentUser);
@@ -93,8 +99,18 @@ public class MatchService {
         return new MatchSummaryDto(matches.getId(), matchInfo, opponent.getNickname());
     }
 
+    private MatchFutureDto createMatchFutureDto(UserMatch userMatch, User currentUser) {
+        Matches matches = userMatch.getMatches();
+
+        // 상대 유저 찾기
+        User opponent = getOpponent(matches, currentUser);
+
+        // MatchFutureDto 생성
+        return new MatchFutureDto(matches.getId(), opponent.getNickname(), matches.getDate(), matches.getPlace());
+    }
+
     // MatchInfo 계산 로직 분리
-    private MatchInfo calculateMatchInfo(List<Round> rounds, LocalDate matchDate) {
+    private MatchInfoDto calculateMatchInfo(List<Round> rounds, LocalDate matchDate) {
         int totalKcal = 0;
         int totalHeartBeat = 0;
         int totalPunchNum = 0;
@@ -107,7 +123,7 @@ public class MatchService {
         }
 
         int avgHeartBeat = roundNums > 0 ? totalHeartBeat / roundNums : 0;
-        return new MatchInfo(totalKcal, avgHeartBeat, totalPunchNum, roundNums, matchDate);
+        return new MatchInfoDto(totalKcal, avgHeartBeat, totalPunchNum, roundNums, matchDate);
     }
 
     // 상대 유저 찾기
@@ -115,6 +131,21 @@ public class MatchService {
         return matches.getChallengedBy().equals(currentUser)
                 ? matches.getChallengedTo()
                 : matches.getChallengedBy();
+    }
+
+
+
+    public List<MatchFutureDto> getMatchFuture(Long userId) {
+        // 현재 유저 정보 가져오기
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> ServiceException.of(ErrorCode.USER_NOT_FOUND));
+
+        LocalDate todayDate = LocalDate.now();
+
+        return user.getUserMatches().stream()
+                .filter(userMatch -> isFutureMatch(userMatch, todayDate))
+                .map(userMatch -> createMatchFutureDto(userMatch, user))
+                .collect(Collectors.toList());
     }
 }
 
