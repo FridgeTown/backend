@@ -102,4 +102,85 @@ public interface MatchControllerDocs {
             required = true
     )
     public ResponseDto<List<MatchFutureDto>> getMatchFuture(@AuthenticationPrincipal UserDetailsImpl userDetails);
+
+    @Operation(
+            summary = "Accept a match invitation",
+            description = "Allows the authenticated user to accept a pending match invitation by providing the match ID."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully accepted the match invitation",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Match not found",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
+            ),
+            @ApiResponse(
+                    responseCode = "406",
+                    description = "Match not challengedTo",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
+            ),
+            @ApiResponse(
+                    responseCode = "406",
+                    description = "Match not PENDING",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "User not authorized or match is not pending",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class, defaultValue = "test"))
+            )
+    })
+    @Parameter(
+            name = "matchId",
+            description = "The ID of the match to be accepted",
+            required = true
+    )
+    public ResponseDto<Void> acceptMatch(@PathVariable Long matchId, @AuthenticationPrincipal UserDetailsImpl userDetails);
+
+    @Operation(
+            summary = "Reject a match invitation",
+            description = "Allows the authenticated user to reject a pending match invitation by providing the match ID."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully rejected the match invitation",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Match not found",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
+            ),
+            @ApiResponse(
+                    responseCode = "406",
+                    description = "Match not challengedTo",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
+            ),
+            @ApiResponse(
+                    responseCode = "406",
+                    description = "Match not PENDING",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "User not authorized or match is not pending",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
+            )
+    })
+    @Parameter(
+            name = "matchId",
+            description = "The ID of the match to be rejected",
+            required = true
+    )
+    @Parameter(
+            name = "userDetails",
+            description = "Details of the authenticated user (automatically injected)",
+            required = true
+    )
+    public ResponseDto<Void> rejectMatch(@PathVariable Long matchId, @AuthenticationPrincipal UserDetailsImpl userDetails);
 }
