@@ -49,6 +49,10 @@ public class S3Service {
         }
     }
 
+    public String getFileUrl(String fileName) {
+        return amazonS3.getUrl(bucketName, fileName).toString();
+    }
+
     private File convertMultiPartToFile(MultipartFile file) throws IOException {
         File convertedFile = new File(file.getOriginalFilename());
         file.transferTo(convertedFile);
