@@ -79,4 +79,8 @@ public class User {
         this.profileImg = hihi;
         this.provider = naver;
     }
+
+    public void setProfileImg(String imageFileName) {
+        this.profileImg = imageFileName;
+    }
 }
