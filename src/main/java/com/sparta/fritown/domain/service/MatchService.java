@@ -8,6 +8,8 @@ import com.sparta.fritown.domain.entity.UserMatch;
 import com.sparta.fritown.domain.repository.MatchesRepository;
 import com.sparta.fritown.domain.repository.RoundRepository;
 import com.sparta.fritown.domain.repository.UserRepository;
+import com.sparta.fritown.global.exception.ErrorCode;
+import com.sparta.fritown.global.exception.custom.ServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,10 +28,10 @@ public class MatchService {
     private final UserRepository userRepository;
 
     public List<RoundsDto> getRoundsByMatchId(Long matchId, Long userId) {
-        Matches match = matchesRepository.findById(matchId).orElseThrow(() -> new NoSuchElementException("Match with id " + matchId + " not found"));
+        Matches match = matchesRepository.findById(matchId).orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
         List<UserMatch> userMatches = match.getUserMatches();
 
-        User me = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
+        User me = userRepository.findById(userId).orElseThrow(() -> ServiceException.of(ErrorCode.USER_NOT_FOUND));
 
         List<Round> rounds = null;
         for (UserMatch userMatch : userMatches) {
@@ -40,7 +42,7 @@ public class MatchService {
         }
         if(rounds == null)
         {
-            throw new NoSuchElementException("No matching UserMatch for user with id" + userId);
+            throw ServiceException.of(ErrorCode.USER_MATCH_NOT_FOUND);
         }
 
 
