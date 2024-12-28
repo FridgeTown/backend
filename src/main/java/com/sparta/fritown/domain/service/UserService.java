@@ -78,4 +78,11 @@ public class UserService {
         return userRepository.findByEmail(email).orElseThrow(() -> ServiceException.of(ErrorCode.USER_NOT_FOUND));
     }
 
+    public void updateProfileImage(Long userId, String imageFileName) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> ServiceException.of(ErrorCode.IMAGE_UPLOAD_FAIL));
+
+        user.setProfileImg(imageFileName);
+        userRepository.save(user);
+    }
 }
