@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -55,7 +56,8 @@ public class UserService {
 
         if (users.isEmpty())
         {
-            throw ServiceException.of(ErrorCode.RECOMMENDED_USERS_NOT_FOUND);
+            // throw ServiceException.of(ErrorCode.RECOMMENDED_USERS_NOT_FOUND);
+            return new ArrayList<>();
         }
 
         // User 엔티티를 OpponentDto로 변환

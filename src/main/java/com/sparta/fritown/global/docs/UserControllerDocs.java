@@ -14,10 +14,9 @@ import java.util.List;
 @Tag(name = "User API", description =  "APIs for user-related operations")
 public interface UserControllerDocs {
     @Operation(summary = "추천 사용자 조회",
-            description = "현재 로그인한 사용자를 제외한 랜덤 추천 사용자 리스트를 반환합니다.")
+            description = "현재 로그인한 사용자를 제외한 랜덤 추천 사용자 리스트를 반환합니다. 만약 사용자가 아예 없으면 빈 리스트를 반환")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "추천 사용자 리스트 반환 성공"),
-            @ApiResponse(responseCode = "400", description = "추천할 사용자가 없습니다.")
     })
     ResponseDto<List<OpponentDto>> getRecommendedOpponents(@AuthenticationPrincipal UserDetailsImpl userDetails);
 }
