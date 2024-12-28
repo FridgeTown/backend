@@ -36,6 +36,7 @@ public class MatchService {
     private final MatchesRepository matchesRepository;
     private final UserRepository userRepository;
     private final UserMatchRepository userMatchRepository;
+    private final ChatService chatService;
 
     public List<RoundsDto> getRoundsByMatchId(Long matchId, Long userId) {
         Matches match = matchesRepository.findById(matchId).orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
@@ -211,6 +212,7 @@ public class MatchService {
             if (matched.getStatus().equals(Status.PENDING)) {
                 matched.updateStatus(Status.ACCEPTED);
                 // 이후 채팅방 생성 로직이 들어가거나 해야 할 듯.
+                chatService.createChannel(user.getNickname()+ opponent.getNickname(),"private");
                 return;
             }
         }
