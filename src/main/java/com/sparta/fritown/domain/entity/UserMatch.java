@@ -28,6 +28,8 @@ public class UserMatch {
 
     private Boolean winner;
 
+    public UserMatch() {
+    }
     public UserMatch(Matches newMatch, User user) {
         this.user = user;
         this.matches = newMatch;
