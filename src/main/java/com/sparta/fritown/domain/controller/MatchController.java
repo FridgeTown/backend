@@ -47,6 +47,13 @@ public class MatchController implements MatchControllerDocs {
         return ResponseDto.success(SuccessCode.MATCHING_USERS, matchFutureDtos);
     }
 
+    @PostMapping("/{opponentId}")
+    public ResponseDto<Void> requestMatch(@PathVariable Long opponentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        matchService.requestMatch(opponentId, userDetails.getId());
+        return ResponseDto.success(SuccessCode.MATCH_REQUEST);
+    }
+
+
     @PostMapping("/accept/{matchId}")
     public ResponseDto<Void> acceptMatch(@PathVariable Long matchId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         matchService.matchAccept(matchId, userDetails.getEmail());
