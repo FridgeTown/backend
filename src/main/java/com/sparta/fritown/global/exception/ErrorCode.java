@@ -12,10 +12,7 @@ public enum ErrorCode implements ApiCode {
 
     // match
     MATCH_NOT_FOUND(HttpStatus.NOT_FOUND,"M001","매치를 찾지 못했습니다"),
-    USER_MATCH_NOT_FOUND(HttpStatus.NOT_FOUND,"M002","유저 매치를 찾지 못했습니다"),
-
-    // user
-    RECOMMENDED_USERS_NOT_FOUND(HttpStatus.NOT_FOUND,"U001","추천할 사용자가 없습니다");
+    USER_MATCH_NOT_FOUND(HttpStatus.NOT_FOUND,"M002","유저 매치를 찾지 못했습니다");
 
 
     private final HttpStatus status;
