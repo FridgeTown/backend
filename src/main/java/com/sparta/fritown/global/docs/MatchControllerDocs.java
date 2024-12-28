@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@Tag(name = "Test", description =  "APIs for match-related operations")
+@Tag(name = "Match", description =  "APIs for match-related operations")
 public interface MatchControllerDocs {
     @Operation(
             summary = "Get round information for a specific match",
