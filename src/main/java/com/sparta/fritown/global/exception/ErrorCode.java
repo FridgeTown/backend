@@ -18,7 +18,10 @@ public enum ErrorCode implements ApiCode {
 
     //user
     USER_MATCH_NOT_FOUND(HttpStatus.NOT_FOUND,"U001","유저 매치를 찾지 못했습니다."),
-    USER_OP_NOT_FOUND(HttpStatus.NOT_FOUND, "U002" ,"대결 상대 정보를 찾지 못했습니다.");
+    USER_OP_NOT_FOUND(HttpStatus.NOT_FOUND, "U002" ,"대결 상대 정보를 찾지 못했습니다."),
+
+    // image
+    IMAGE_UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "I001", "이미지 업로드에 실패하였습니다.");
 
 
     private final HttpStatus status;

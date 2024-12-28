@@ -9,13 +9,18 @@ import com.sparta.fritown.global.docs.UserControllerDocs;
 import com.sparta.fritown.global.exception.ErrorCode;
 import com.sparta.fritown.global.exception.SuccessCode;
 import com.sparta.fritown.global.exception.custom.ServiceException;
+import com.sparta.fritown.global.exception.dto.ErrorResponseDto;
 import com.sparta.fritown.global.exception.dto.ResponseDto;
+import com.sparta.fritown.global.s3.service.S3Service;
 import com.sparta.fritown.global.security.dto.UserDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -24,10 +29,12 @@ public class UserController implements UserControllerDocs {
 
     private final TestService testService;
     private final UserService userService;
+    private final S3Service s3Service;
 
-    public UserController(TestService testService,UserService userService) {
+    public UserController(TestService testService, UserService userService, S3Service s3Service) {
         this.testService = testService;
         this.userService = userService;
+        this.s3Service = s3Service;
     }
 
     @GetMapping("/health/login/success")
@@ -67,6 +74,20 @@ public class UserController implements UserControllerDocs {
         Long userId = userDetails.getId();
         List<OpponentDto> opponents = userService.getRandomUsers(userId);
         return ResponseDto.success(SuccessCode.OK, opponents);
+    }
+
+    @PostMapping("/user/image")
+    public ResponseDto<Void> updateProfileImg(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam("file")MultipartFile file) {
+        try {
+            String imageFileName = s3Service.uploadFile(file, userDetails.getId());
+
+            userService.updateProfileImage(userDetails.getId(), imageFileName);
+            return ResponseDto.success(SuccessCode.IMAGE_UPLOADED);
+        } catch (Exception e) {
+            throw ServiceException.of(ErrorCode.IMAGE_UPLOAD_FAIL);
+        }
     }
 
 
