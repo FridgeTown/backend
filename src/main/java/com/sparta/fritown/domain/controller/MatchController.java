@@ -1,14 +1,16 @@
 package com.sparta.fritown.domain.controller;
 
 import com.sparta.fritown.domain.dto.match.MatchFutureDto;
-import com.sparta.fritown.domain.dto.match.MatchInfoDto;
 import com.sparta.fritown.domain.dto.match.MatchSummaryDto;
 import com.sparta.fritown.domain.dto.rounds.RoundsDto;
+import com.sparta.fritown.domain.entity.Matches;
 import com.sparta.fritown.domain.service.MatchService;
 import com.sparta.fritown.global.docs.MatchControllerDocs;
 import com.sparta.fritown.global.exception.SuccessCode;
 import com.sparta.fritown.global.exception.dto.ResponseDto;
+import com.sparta.fritown.global.security.dto.StatusResponseDto;
 import com.sparta.fritown.global.security.dto.UserDetailsImpl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,5 +54,15 @@ public class MatchController implements MatchControllerDocs {
     }
 
 
+    @PostMapping("/accept/{matchId}")
+    public ResponseDto<Void> acceptMatch(@PathVariable Long matchId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        matchService.matchAccept(matchId, userDetails.getEmail());
+        return ResponseDto.success(SuccessCode.MATCHING_ACCEPT);
+    }
 
+    @PostMapping("/reject/{matchId}")
+    public ResponseDto<Void> rejectMatch(@PathVariable Long matchId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        matchService.matchReject(matchId, userDetails.getEmail());
+        return ResponseDto.success(SuccessCode.MATCHING_REJECT);
+    }
 }
