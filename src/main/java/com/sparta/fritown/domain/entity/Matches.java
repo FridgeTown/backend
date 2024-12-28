@@ -57,16 +57,12 @@ public class Matches {
 
     }
 
-    public void updaterStatus(Status status) {
+    public void updateStatus(Status status) {
         this.status = status;
     }
     public Matches(User challengedTo, User challengedBy, Status status) {
         this.challengedTo = challengedTo;
         this.challengedBy = challengedBy;
-        this.status = status;
-    }
-
-    public void setStatus(Status status) {
         this.status = status;
     }
 }
