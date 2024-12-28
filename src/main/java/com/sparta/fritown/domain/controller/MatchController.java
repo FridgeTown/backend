@@ -41,9 +41,10 @@ public class MatchController implements MatchControllerDocs {
         return ResponseDto.success(SuccessCode.MATCHED_USERS, matchSummaryDtos);
     }
 
+    @Override
     @GetMapping("/future")
     public ResponseDto<List<MatchFutureDto>> getMatchFuture(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        List<MatchFutureDto> matchFutureDtos = matchService.getMatchFuture(2L);
+        List<MatchFutureDto> matchFutureDtos = matchService.getMatchFuture(userDetails.getId());
         return ResponseDto.success(SuccessCode.MATCHING_USERS, matchFutureDtos);
     }
 
