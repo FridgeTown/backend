@@ -7,7 +7,8 @@ public enum SuccessCode implements ApiCode {
     CREATED(HttpStatus.CREATED, "C002", "Created successfully"),
 
     //match
-    MATCHED_USERS(HttpStatus.OK, "M001", "스파링 했던 상대들을 성공적으로 반환하였습니다.");
+    MATCHED_USERS(HttpStatus.OK, "M001", "스파링 했던 상대들을 성공적으로 반환하였습니다."),
+    MATCHING_USERS(HttpStatus.OK, "M002", "스파링 예정 상대들을 성공적으로 반환하였습니다.");
 
     private final HttpStatus status;
     private final String code;
