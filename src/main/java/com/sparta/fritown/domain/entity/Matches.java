@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -58,7 +57,12 @@ public class Matches {
 
     }
 
-    public void updaterStatus(Status status) {
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
+    public Matches(User challengedTo, User challengedBy, Status status) {
+        this.challengedTo = challengedTo;
+        this.challengedBy = challengedBy;
         this.status = status;
     }
 }
