@@ -1,5 +1,6 @@
 package com.sparta.fritown.domain.entity;
 
+import com.sparta.fritown.domain.dto.user.RegisterRequestDto;
 import com.sparta.fritown.domain.entity.enums.Gender;
 import com.sparta.fritown.domain.entity.enums.WeightClass;
 import jakarta.persistence.*;
@@ -67,18 +68,32 @@ public class User {
 
     public User() {
     }
-    // 생성자
-    public User(String email, String role, String nickname, String profileImage, String provider) {
-        this.email = email;
-        this.profileImg = profileImage;
-        this.provider = provider;
-    }
+
 
     public User(String s, String hihi, String naver) { //// test ****
         this.email = s;
         this.profileImg = hihi;
         this.provider = naver;
     }
+
+    public User(RegisterRequestDto requestDto) {
+        this.email = requestDto.getEmail();
+        this.provider = requestDto.getProvider();
+        this.profileImg = requestDto.getProfileImage();
+        this.gender = requestDto.getGender();
+        this.age = requestDto.getAge();
+        this.weight = requestDto.getWeight();
+        this.height = requestDto.getHeight();
+        this.bio = requestDto.getBio();
+        this.points = 0;
+        this.heartBeat = 0;
+        this.punchSpeed = 0;
+        this.kcal = 0;
+        this.weightClass = requestDto.getWeightClass();
+        this.role = requestDto.getRole();
+        this.nickname = requestDto.getNickname();
+    }
+
 
     public void setProfileImg(String imageFileName) {
         this.profileImg = imageFileName;
