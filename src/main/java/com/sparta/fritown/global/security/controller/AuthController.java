@@ -32,7 +32,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<StatusResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         try {
-            Claims claims = jwtUtil.validateToken(loginRequestDto.getToken(), loginRequestDto.getProvider());
+            Claims claims = jwtUtil.validateToken(loginRequestDto.getIdToken(), loginRequestDto.getProvider());
             String email = claims.getSubject();
             User user = userService.findByEmail(email);
 
@@ -53,9 +53,9 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<StatusResponseDto> signup(@RequestBody RegisterRequestDto registerRequestDto) {
         User user = userService.register(registerRequestDto);
+        LoginRequestDto loginRequestDto = new LoginRequestDto(registerRequestDto);
 
-        return ResponseEntity.ok(StatusResponseDto.success("성공적으로 가입하였습니다."));
+        return login(loginRequestDto);
     }
-
 
 }
