@@ -13,13 +13,12 @@ public class KlatCreateUserRequestDto {
     private String profileImageUrl;
     private Map<String, Object> data;
 
-    public KlatCreateUserRequestDto() {}
-
-
-    public KlatCreateUserRequestDto(String userId, String username, String profileImageUrl) {
+    public KlatCreateUserRequestDto(){}
+    public KlatCreateUserRequestDto(String userId, String username, String profileImageUrl, String password) {
         this.userId = userId;
         this.password = "secret";
         this.username = username;
         this.profileImageUrl = profileImageUrl;
+        this.password = password;
     }
 }
