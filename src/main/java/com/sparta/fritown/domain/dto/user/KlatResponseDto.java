@@ -7,7 +7,7 @@ import java.util.Map;
 
 @Data
 @Getter
-public class KlatCreateUserResponseDto {
+public class KlatResponseDto {
     private UserInfo user;
     private String loginToken;
 
@@ -22,5 +22,5 @@ public class KlatCreateUserResponseDto {
         private Long createdAt;
     }
 
-    public KlatCreateUserResponseDto(){}
+    public KlatResponseDto(){}
 }
