@@ -8,8 +8,11 @@ import com.sparta.fritown.global.security.repository.RefreshTokenRepository;
 import com.sparta.fritown.domain.dto.user.RegisterRequestDto;
 import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.domain.service.UserService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,12 +31,23 @@ public class AuthController {
     //LoginRequestDto -> 아마 email 정보, provider, 토큰 정보 들이 포함..?
     @PostMapping("/login")
     public ResponseEntity<StatusResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
-        User user = userService.findByEmail(loginRequestDto.getEmail());
+        try {
+            Claims claims = jwtUtil.validateToken(loginRequestDto.getToken(), loginRequestDto.getProvider());
+            String email = claims.getSubject();
+            User user = userService.findByEmail(email);
 
-        String role = user.getRole();
-        GeneratedToken token = jwtUtil.generateToken(loginRequestDto.getEmail(), role);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(StatusResponseDto.addStatus(401));
+            }
 
-        return ResponseEntity.ok(StatusResponseDto.success(token));
+            String role = user.getRole();
+            GeneratedToken token = jwtUtil.generateToken(email, role);
+
+            return ResponseEntity.ok(StatusResponseDto.success(token));
+        } catch (JwtException e) {
+            log.error("토큰 검증에 실패했습니다 : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(StatusResponseDto.addStatus(401));
+        }
     }
 
     @PostMapping("/signup")
