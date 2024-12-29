@@ -2,14 +2,12 @@ package com.sparta.fritown.global.security.controller;
 
 import com.sparta.fritown.domain.dto.user.*;
 import com.sparta.fritown.global.docs.AuthControllerDocs;
-import com.sparta.fritown.global.security.auth.GeneratedToken;
 import com.sparta.fritown.global.security.dto.StatusResponseDto;
 import com.sparta.fritown.global.security.util.JwtUtil;
 import com.sparta.fritown.global.security.repository.RefreshTokenRepository;
 import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.domain.service.UserService;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,10 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -59,11 +53,8 @@ public class AuthController implements AuthControllerDocs {
             String role = user.getRole();
             LoginResponseDto loginResponseDto = jwtUtil.generateToken(email, role);
 
-            String chatToken = callExternalApi(String.valueOf(user.getId()), user.getNickname(), user.getProfileImg());
-
-            if (chatToken != null) {
-                loginResponseDto.setChatToken(chatToken);
-            }
+            String chatToken = callChatLoginApi(String.valueOf(user.getId()));
+            loginResponseDto.setChatToken(chatToken);
 
             return ResponseEntity.ok(StatusResponseDto.success(loginResponseDto));
         } catch (Exception e) {
@@ -80,13 +71,17 @@ public class AuthController implements AuthControllerDocs {
         if (user == null) {
            log.info("유저가 널이야!");
         }
+
+        //채팅 회원 가입
+        String chatToken = callChatSignupApi(String.valueOf(user.getId()), user.getNickname(), user.getProfileImg());
+
         LoginRequestDto loginRequestDto = new LoginRequestDto(registerRequestDto);
 
         // 회원 가입 성공 후, login 시도
         return login(loginRequestDto);
     }
 
-    private String callExternalApi(String userId, String username, String profileImageUrl) {
+    private String callChatSignupApi(String userId, String username, String profileImageUrl) {
         String externalApiUrl = "https://api.talkplus.io/v1.4/api/users/create";
 
         try {
@@ -95,16 +90,16 @@ public class AuthController implements AuthControllerDocs {
             headers.set("api-key", klatKey);
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            KlatCreateUserRequestDto requestDto = new KlatCreateUserRequestDto(userId, username, profileImageUrl);
+            KlatCreateUserRequestDto requestDto = new KlatCreateUserRequestDto(userId, username, profileImageUrl, klatUserPassword);
 
             HttpEntity<KlatCreateUserRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
 
 
-            ResponseEntity<KlatCreateUserResponseDto> response = restTemplate.exchange(
+            ResponseEntity<KlatResponseDto> response = restTemplate.exchange(
                     externalApiUrl,
                     HttpMethod.POST,
                     requestEntity,
-                    KlatCreateUserResponseDto.class
+                    KlatResponseDto.class
             );
 
             log.info("response: {}", response);
@@ -116,6 +111,37 @@ public class AuthController implements AuthControllerDocs {
                 return null;
             }
 
+        } catch (Exception e) {
+            log.error("외부 API 호출 실패 : {}", e.getMessage());
+            return null;
+        }
+    }
+
+    private String callChatLoginApi(String userId) {
+        String externalApiUrl = "https://api.talkplus.io/v1.4/api/users/login";
+
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("app-id", klatId);
+            headers.set("api-key", klatKey);
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            KlatLoginRequestDto requestDto = new KlatLoginRequestDto(userId, klatUserPassword);
+            HttpEntity<KlatLoginRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
+
+            ResponseEntity<KlatResponseDto> response = restTemplate.exchange(
+                    externalApiUrl,
+                    HttpMethod.POST,
+                    requestEntity,
+                    KlatResponseDto.class
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                return response.getBody().getLoginToken();
+            } else {
+                log.error("외부 API 호출 실패. 상태 코드 : {}", response.getStatusCode());
+                return null;
+            }
         } catch (Exception e) {
             log.error("외부 API 호출 실패 : {}", e.getMessage());
             return null;
