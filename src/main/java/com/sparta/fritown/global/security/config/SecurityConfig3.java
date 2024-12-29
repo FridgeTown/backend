@@ -23,7 +23,6 @@ public class SecurityConfig3 {
         http
                 .csrf(AbstractHttpConfigurer::disable)  // CSRF 보호 비활성화
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/signup").permitAll()  // 로그인, 회원가입 페이지는 모두 접근 허용
                         .requestMatchers(AuthenticatedMatchers.loginArray).permitAll()
                         .requestMatchers(AuthenticatedMatchers.testArray).permitAll()
                         .requestMatchers(AuthenticatedMatchers.swaggerArray).permitAll()
