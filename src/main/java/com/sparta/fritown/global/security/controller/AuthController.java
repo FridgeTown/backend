@@ -34,6 +34,7 @@ public class AuthController implements AuthControllerDocs {
     @PostMapping("/login")
     public ResponseEntity<StatusResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         try {
+            // 아이디 토큰을 인증
             Claims claims = jwtUtil.validateIdToken(loginRequestDto.getIdToken(), loginRequestDto.getProvider());
 
             log.info("Claim 후 로직: {}", claims);
@@ -66,6 +67,7 @@ public class AuthController implements AuthControllerDocs {
         }
         LoginRequestDto loginRequestDto = new LoginRequestDto(registerRequestDto);
 
+        // 회원 가입 성공 후, login 시도
         return login(loginRequestDto);
     }
 
