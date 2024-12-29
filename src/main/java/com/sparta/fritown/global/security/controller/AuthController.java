@@ -53,6 +53,7 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<StatusResponseDto> signup(@RequestBody RegisterRequestDto registerRequestDto) {
         User user = userService.register(registerRequestDto);
+
         LoginRequestDto loginRequestDto = new LoginRequestDto(registerRequestDto);
 
         return login(loginRequestDto);
