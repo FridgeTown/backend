@@ -13,12 +13,15 @@ public enum ErrorCode implements ApiCode {
     // match
     MATCH_NOT_FOUND(HttpStatus.NOT_FOUND,"M001","매치를 찾지 못했습니다."),
     SELF_FIGHT_REQUEST(HttpStatus.NOT_ACCEPTABLE,"M002" , "자신에게 스파링 요청을 보낼 수 없습니다."),
+    USER_NOT_CHALLENGED_TO(HttpStatus.NOT_ACCEPTABLE, "M003", "도전 받은 유저가 아닙니다."),
+    MATCH_NOT_PENDING(HttpStatus.NOT_ACCEPTABLE, "M004", "대기 상태의 매치가 아닙니다."),
 
     //user
     USER_MATCH_NOT_FOUND(HttpStatus.NOT_FOUND,"U001","유저 매치를 찾지 못했습니다."),
-    USER_NOT_CHALLENGED_TO(HttpStatus.NOT_ACCEPTABLE, "M004", "도전 받은 유저가 아닙니다."),
-    MATCH_NOT_PENDING(HttpStatus.NOT_ACCEPTABLE, "M005", "대기 상태의 매치가 아닙니다."),
-    USER_OP_NOT_FOUND(HttpStatus.NOT_FOUND, "U002" ,"대결 상대 정보를 찾지 못했습니다.");
+    USER_OP_NOT_FOUND(HttpStatus.NOT_FOUND, "U002" ,"대결 상대 정보를 찾지 못했습니다."),
+
+    // image
+    IMAGE_UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "I001", "이미지 업로드에 실패하였습니다.");
 
 
     private final HttpStatus status;

@@ -1,4 +1,4 @@
-package com.sparta.fritown.domain.dto;
+package com.sparta.fritown.domain.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +13,7 @@ public class RegisterRequestDto {
     private String name;
     private String profileImage;
     private String role;
+    private String idToken;
 
     public RegisterRequestDto(String email, String provider, String defaultName, String role) {
         this.email = email;
