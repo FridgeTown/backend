@@ -28,6 +28,7 @@ public class LoginResponseDto {
     private String role;
     private String nickname;
     private String accessToken;
+    private String chatToken;
 
     public LoginResponseDto(){}
     public LoginResponseDto(User user, String token) {
@@ -48,5 +49,9 @@ public class LoginResponseDto {
         this.role = user.getRole();
         this.nickname = user.getNickname();
         this.accessToken = token;
+    }
+
+    public void setChatToken(String chatToken) {
+        this.chatToken = chatToken;
     }
 }
