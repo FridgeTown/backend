@@ -1,6 +1,11 @@
 package com.sparta.fritown.global.security.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.fritown.domain.dto.user.LoginResponseDto;
+import com.sparta.fritown.domain.entity.User;
+import com.sparta.fritown.domain.repository.UserRepository;
+import com.sparta.fritown.global.exception.ErrorCode;
+import com.sparta.fritown.global.exception.custom.ServiceException;
 import com.sparta.fritown.global.security.auth.GeneratedToken;
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
@@ -28,6 +33,7 @@ public class JwtUtil {
 
     @Value("${jwt.secret.key.access}")
     private String secretKeyFromConfig;
+    private final UserRepository userRepository;
 
     @PostConstruct
     protected void init() {
@@ -38,7 +44,7 @@ public class JwtUtil {
     private final String googleJwksUrl = "https://www.googleapis.com/oauth2/v3/certs"; // Google JWKS URL
     private final String appleJwksUrl = "https://appleid.apple.com/auth/keys"; // Apple JWKS URL
 
-    public GeneratedToken generateToken(String email, String role) {
+    public LoginResponseDto generateToken(String email, String role) {
         long tokenPeriod = 1000L * 60L * 60L * 24L * 7; // 7일 유효기간
         Claims claims = Jwts.claims().setSubject(email);
         claims.put("role", role);
@@ -51,7 +57,10 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
-        return new GeneratedToken(token);
+        User user = userRepository.findByEmail(email).orElseThrow(() -> ServiceException.of(ErrorCode.USER_NOT_FOUND));
+        LoginResponseDto loginResponseDto = new LoginResponseDto(user, token);
+
+        return loginResponseDto;
     }
 
     public Claims validateIdToken(String idToken, String provider) throws JwtException {
