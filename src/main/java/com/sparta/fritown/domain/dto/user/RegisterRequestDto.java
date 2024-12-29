@@ -15,6 +15,7 @@ public class RegisterRequestDto {
     private String role;
     private String idToken;
 
+
     public RegisterRequestDto(String email, String provider, String defaultName, String role) {
         this.email = email;
         this.provider = provider;

@@ -2,9 +2,14 @@ package com.sparta.fritown.domain.service;
 
 import com.sparta.fritown.domain.dto.chat.channel.CreateChannelRequestDto;
 import com.sparta.fritown.domain.dto.chat.channel.CreateChannelResponseDto;
+import com.sparta.fritown.domain.dto.chat.channel.GetUserChannelsRequestDto;
 import com.sparta.fritown.domain.dto.chat.channel.GetUserChannelsResponseDto;
 import com.sparta.fritown.domain.dto.chat.user.CreateUserRequestDto;
 import com.sparta.fritown.domain.dto.chat.user.CreateUserResponseDto;
+import com.sparta.fritown.domain.dto.chat.user.ChatLoginRequestDto;
+import com.sparta.fritown.domain.dto.chat.user.ChatLoginResponseDto;
+import com.sparta.fritown.domain.dto.user.LoginRequestDto;
+import com.sparta.fritown.domain.dto.user.RegisterRequestDto;
 import com.sparta.fritown.domain.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -28,9 +33,51 @@ public class ChatService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     // 사용자 생성
+    // AuthController signup 에서 사용
+    // userId 와 loginToken 을 넘겨주어야 한다.
+    public Map<String,String> acceptAndCreateUser(RegisterRequestDto registerRequestDto)
+    {
+        String userId = registerRequestDto.getEmail(); // 추후에 변경 예정
+        String password = "abcdefg1234"; // 추후에 변경 예정
 
+        CreateUserRequestDto request = new CreateUserRequestDto();
+        request.setUserId(userId);
+        request.setPassword(password);
+
+        CreateUserResponseDto response = createUser(request);
+
+        Map<String, String> result = new HashMap<>();
+        result.put("userId",response.getChatUserDto().getId());
+        result.put("loginToken", response.getLoginToken());
+
+        return result;
+
+    }
+
+    // 사용자 로그인
+    // AuthController login 에서 사용
+    // userId 와 loginToken 을 넘겨주어야 한다.
+    public Map<String,String> acceptAndLoginUser(LoginRequestDto loginRequestDto)
+    {
+        String userId = loginRequestDto.getIdToken(); // 추후에 변경 예정
+        String password = loginRequestDto.getProvider(); // 추후에 변경 예정
+
+        ChatLoginRequestDto request = new ChatLoginRequestDto();
+        request.setUserId(userId);
+        request.setPassword(password);
+
+        ChatLoginResponseDto response = loginUser(request);
+
+        Map<String, String> result = new HashMap<>();
+        result.put("userId",response.getChatUserDto().getId());
+        result.put("loginToken", response.getLoginToken());
+
+        return result;
+
+    }
 
     // 채널 생성
+    // MatchService 에서 사용
     public void acceptAndCreateChannel(List<User> userList, String type, String chatRoomName)
     {
         // 채팅방에 참여하고 있는 유저의 닉네임 리스트
@@ -48,6 +95,20 @@ public class ChatService {
         createChannel(request);
     }
 
+    // 채널 삭제
+    // ChatController 에서 사용
+
+
+    // 사용자 채널 조회
+    // ChatController 에서 사용
+    // GetUserChannelsResponseDto 를 넘겨주어야 할듯
+    public GetUserChannelsResponseDto acceptAndGetUserChannels(String userId)
+    {
+        GetUserChannelsRequestDto request = new GetUserChannelsRequestDto(userId);
+        request.setUserId(userId);
+
+        return getUserChannels(request);
+    }
 
 
 
@@ -70,6 +131,29 @@ public class ChatService {
                 HttpMethod.POST,
                 request,
                 CreateUserResponseDto.class
+        );
+
+        return response.getBody();
+    }
+
+    private ChatLoginResponseDto loginUser(ChatLoginRequestDto chatLoginRequestDto)
+    {
+        String url = "https://api.talkplus.io/v1.4/api/users/login";
+        // HTTP 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("app-id", appId); // App ID 설정
+        headers.set("api-key", apiKey); // API Key 설정
+
+        // HTTP 요청 생성
+        HttpEntity<ChatLoginRequestDto> requestEntity = new HttpEntity<>(chatLoginRequestDto, headers);
+
+        // API 호출
+        ResponseEntity<ChatLoginResponseDto> response = restTemplate.exchange(
+                url,
+                HttpMethod.POST,
+                requestEntity,
+                ChatLoginResponseDto.class
         );
 
         return response.getBody();
@@ -100,8 +184,13 @@ public class ChatService {
 
     }
 
-    private GetUserChannelsResponseDto getUserChannels(String userId, String category,String subcategory ,String lastChannelId)
+    private GetUserChannelsResponseDto getUserChannels(GetUserChannelsRequestDto getUserChannelsRequestDto)
     {
+        String userId = getUserChannelsRequestDto.getUserId();
+        String category = getUserChannelsRequestDto.getCategory();
+        String subcategory = getUserChannelsRequestDto.getSubcategory();
+        String lastChannelId = getUserChannelsRequestDto.getLastChannelId();
+
         // API URL 설정
         String url = "https://api.talkplus.io/v1.4/api/users/" + userId + "/channels";
         // Query Parameters 설정
