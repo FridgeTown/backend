@@ -7,7 +7,9 @@ public class AuthenticatedMatchers {
     public static final String[] loginArray = {
             "/login/sucess",
             "/token/**",
-            "/api/auth/register"
+            "/api/auth/register",
+            "/login",
+            "/signup"
     };
 
     public static final String[] testArray = {

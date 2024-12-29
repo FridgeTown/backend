@@ -1,20 +1,21 @@
 package com.sparta.fritown.global.security.controller;
 
+import com.sparta.fritown.domain.dto.user.LoginRequestDto;
+import com.sparta.fritown.global.security.auth.GeneratedToken;
 import com.sparta.fritown.global.security.dto.StatusResponseDto;
-import com.sparta.fritown.global.security.dto.TokenResponseStatus;
 import com.sparta.fritown.global.security.util.JwtUtil;
 import com.sparta.fritown.global.security.repository.RefreshTokenRepository;
-import com.sparta.fritown.global.security.service.RefreshTokenService;
-import com.sparta.fritown.global.security.auth.RefreshToken;
-import com.sparta.fritown.domain.dto.RegisterRequestDto;
+import com.sparta.fritown.domain.dto.user.RegisterRequestDto;
 import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.domain.service.UserService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
@@ -25,44 +26,36 @@ import java.util.Optional;
 public class AuthController {
     private final UserService userService;
     private final RefreshTokenRepository tokenRepository;
-    private final RefreshTokenService tokenService;
     private final JwtUtil jwtUtil;
 
-    @PostMapping("/token/logout")
-    public ResponseEntity<StatusResponseDto> logout(@RequestHeader("Authorization") final String accessToken) {
-        // 엑세스 토큰으로 현재 Redis 정보 삭제
-        tokenService.removeRefreshToken(accessToken);
-        return ResponseEntity.ok(StatusResponseDto.addStatus(200));
-    }
+    //LoginRequestDto -> 아마 email 정보, provider, 토큰 정보 들이 포함..?
+    @PostMapping("/login")
+    public ResponseEntity<StatusResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
+        try {
+            Claims claims = jwtUtil.validateToken(loginRequestDto.getIdToken(), loginRequestDto.getProvider());
+            String email = claims.getSubject();
+            User user = userService.findByEmail(email);
 
-    @PostMapping("/token/refresh")
-    public ResponseEntity<TokenResponseStatus> refresh(@RequestHeader("Authorization") final String accessToken) {
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(StatusResponseDto.addStatus(401));
+            }
 
-        // 액세스 토큰으로 Refresh 토큰 객체를 조회
-        Optional<RefreshToken> refreshToken = tokenRepository.findByAccessToken(accessToken);
+            String role = user.getRole();
+            GeneratedToken token = jwtUtil.generateToken(email, role);
 
-        // RefreshToken이 존재하고 유효하다면 실행
-        if (refreshToken.isPresent() && jwtUtil.verifyToken(refreshToken.get().getRefreshToken())) {
-            // RefreshToken 객체를 꺼내온다.
-            RefreshToken resultToken = refreshToken.get();
-            // 권한과 아이디를 추출해 새로운 액세스토큰을 만든다.
-            String newAccessToken = jwtUtil.generateAccessToken(resultToken.getId(), jwtUtil.getRole(resultToken.getRefreshToken()));
-            // 액세스 토큰의 값을 수정해준다.
-            resultToken.updateAccessToken(newAccessToken);
-            tokenRepository.save(resultToken);
-            // 새로운 액세스 토큰을 반환해준다.
-            return ResponseEntity.ok(TokenResponseStatus.addStatus(200, newAccessToken));
+            return ResponseEntity.ok(StatusResponseDto.success(token));
+        } catch (JwtException e) {
+            log.error("토큰 검증에 실패했습니다 : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(StatusResponseDto.addStatus(401));
         }
-
-        return ResponseEntity.badRequest().body(TokenResponseStatus.addStatus(400, null));
     }
 
-    @PostMapping("/api/auth/register")
-    public ResponseEntity<StatusResponseDto> registerUser(@RequestBody RegisterRequestDto requestDto) {
-        requestDto.setRole("ROLE_USER");
-        User user = userService.register(requestDto);
+    @PostMapping("/signup")
+    public ResponseEntity<StatusResponseDto> signup(@RequestBody RegisterRequestDto registerRequestDto) {
+        User user = userService.register(registerRequestDto);
+        LoginRequestDto loginRequestDto = new LoginRequestDto(registerRequestDto);
 
-        return ResponseEntity.ok(StatusResponseDto.success(user));
+        return login(loginRequestDto);
     }
 
 }
