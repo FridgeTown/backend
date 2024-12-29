@@ -32,9 +32,13 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<StatusResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         try {
-            Claims claims = jwtUtil.validateToken(loginRequestDto.getIdToken(), loginRequestDto.getProvider());
-            String email = claims.getSubject();
+            Claims claims = jwtUtil.validateIdToken(loginRequestDto.getIdToken(), loginRequestDto.getProvider());
+
+            log.info("Claim 후 로직: {}", claims);
+            String email = loginRequestDto.getEmail();
+            //log.info("Claims에서 얻은 이메일: {}", email);
             User user = userService.findByEmail(email);
+            log.info("findByEmail 후 로직");
 
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(StatusResponseDto.addStatus(401));
@@ -42,6 +46,7 @@ public class AuthController {
 
             String role = user.getRole();
             GeneratedToken token = jwtUtil.generateToken(email, role);
+            log.info("generated Token: {}", token);
 
             return ResponseEntity.ok(StatusResponseDto.success(token));
         } catch (JwtException e) {
@@ -52,7 +57,12 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<StatusResponseDto> signup(@RequestBody RegisterRequestDto registerRequestDto) {
+        log.info("회원가입 요청 정보: {}", registerRequestDto);
+
         User user = userService.register(registerRequestDto);
+        if (user == null) {
+           log.info("유저가 널이야!");
+        }
         LoginRequestDto loginRequestDto = new LoginRequestDto(registerRequestDto);
 
         return login(loginRequestDto);
