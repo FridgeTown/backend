@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -212,7 +213,10 @@ public class MatchService {
             if (matched.getStatus().equals(Status.PENDING)) {
                 matched.updateStatus(Status.ACCEPTED);
                 // 이후 채팅방 생성 로직이 들어가거나 해야 할 듯.
-                chatService.createChannel(user.getNickname()+ opponent.getNickname(),"private");
+                chatService.acceptAndCreateChannel(
+                        Arrays.asList(user, opponent),
+                        "private",
+                        user.getNickname() + " vs " + opponent.getNickname());
                 return;
             }
         }
