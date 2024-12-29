@@ -1,6 +1,8 @@
 package com.sparta.fritown.global.security.controller;
 
 import com.sparta.fritown.domain.dto.user.LoginRequestDto;
+import com.sparta.fritown.domain.dto.user.LoginResponseDto;
+import com.sparta.fritown.global.docs.AuthControllerDocs;
 import com.sparta.fritown.global.security.auth.GeneratedToken;
 import com.sparta.fritown.global.security.dto.StatusResponseDto;
 import com.sparta.fritown.global.security.util.JwtUtil;
@@ -23,7 +25,7 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthController implements AuthControllerDocs {
     private final UserService userService;
     private final RefreshTokenRepository tokenRepository;
     private final JwtUtil jwtUtil;
@@ -32,18 +34,23 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<StatusResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         try {
-            Claims claims = jwtUtil.validateToken(loginRequestDto.getIdToken(), loginRequestDto.getProvider());
-            String email = claims.getSubject();
+            // 아이디 토큰을 인증
+            Claims claims = jwtUtil.validateIdToken(loginRequestDto.getIdToken(), loginRequestDto.getProvider());
+
+            log.info("Claim 후 로직: {}", claims);
+            String email = loginRequestDto.getEmail();
+            //log.info("Claims에서 얻은 이메일: {}", email);
             User user = userService.findByEmail(email);
+            log.info("findByEmail 후 로직");
 
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(StatusResponseDto.addStatus(401));
             }
 
             String role = user.getRole();
-            GeneratedToken token = jwtUtil.generateToken(email, role);
+            LoginResponseDto loginResponseDto = jwtUtil.generateToken(email, role);
 
-            return ResponseEntity.ok(StatusResponseDto.success(token));
+            return ResponseEntity.ok(StatusResponseDto.success(loginResponseDto));
         } catch (JwtException e) {
             log.error("토큰 검증에 실패했습니다 : {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(StatusResponseDto.addStatus(401));
@@ -52,10 +59,15 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<StatusResponseDto> signup(@RequestBody RegisterRequestDto registerRequestDto) {
-        User user = userService.register(registerRequestDto);
+        log.info("회원가입 요청 정보: {}", registerRequestDto);
 
+        User user = userService.register(registerRequestDto);
+        if (user == null) {
+           log.info("유저가 널이야!");
+        }
         LoginRequestDto loginRequestDto = new LoginRequestDto(registerRequestDto);
 
+        // 회원 가입 성공 후, login 시도
         return login(loginRequestDto);
     }
 
