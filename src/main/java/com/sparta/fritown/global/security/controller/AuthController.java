@@ -1,6 +1,7 @@
 package com.sparta.fritown.global.security.controller;
 
 import com.sparta.fritown.domain.dto.user.LoginRequestDto;
+import com.sparta.fritown.domain.dto.user.LoginResponseDto;
 import com.sparta.fritown.global.security.auth.GeneratedToken;
 import com.sparta.fritown.global.security.dto.StatusResponseDto;
 import com.sparta.fritown.global.security.util.JwtUtil;
@@ -45,10 +46,9 @@ public class AuthController {
             }
 
             String role = user.getRole();
-            GeneratedToken token = jwtUtil.generateToken(email, role);
-            log.info("generated Token: {}", token);
+            LoginResponseDto loginResponseDto = jwtUtil.generateToken(email, role);
 
-            return ResponseEntity.ok(StatusResponseDto.success(token));
+            return ResponseEntity.ok(StatusResponseDto.success(loginResponseDto));
         } catch (JwtException e) {
             log.error("토큰 검증에 실패했습니다 : {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(StatusResponseDto.addStatus(401));
