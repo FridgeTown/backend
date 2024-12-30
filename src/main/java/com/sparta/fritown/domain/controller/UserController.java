@@ -63,14 +63,6 @@ public class UserController implements UserControllerDocs {
         return "OAuth just failed";
     }
 
-
-//    @PostMapping("/health/new/user/check")
-//    public String newUser(){
-//        User user = new User("20@nav", "hihi", "naver");
-//        return user.getProfileImg();
-//    }
-
-
     @Override
     @GetMapping("/user/recommendation")
     public ResponseDto<List<OpponentDto>> getRecommendedOpponents(@AuthenticationPrincipal UserDetailsImpl userDetails)
