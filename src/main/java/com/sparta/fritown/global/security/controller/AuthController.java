@@ -53,7 +53,7 @@ public class AuthController implements AuthControllerDocs {
             String role = user.getRole();
             LoginResponseDto loginResponseDto = jwtUtil.generateToken(email, role);
 
-            String chatToken = callChatLoginApi(String.valueOf(user.getId()));
+            String chatToken = callChatLoginApi(user.getId());
             loginResponseDto.setChatToken(chatToken);
 
             return ResponseEntity.ok(StatusResponseDto.success(loginResponseDto));
@@ -73,7 +73,7 @@ public class AuthController implements AuthControllerDocs {
         }
 
         //채팅 회원 가입
-        String chatToken = callChatSignupApi(String.valueOf(user.getId()), user.getNickname(), user.getProfileImg());
+        String chatToken = callChatSignupApi(user.getId(), user.getNickname(), user.getProfileImg());
 
         LoginRequestDto loginRequestDto = new LoginRequestDto(registerRequestDto);
 
@@ -81,7 +81,9 @@ public class AuthController implements AuthControllerDocs {
         return login(loginRequestDto);
     }
 
-    private String callChatSignupApi(String userId, String username, String profileImageUrl) {
+    private String callChatSignupApi(Long longUserId, String username, String profileImageUrl) {
+
+        String userId = String.valueOf(longUserId);
         String externalApiUrl = "https://api.talkplus.io/v1.4/api/users/create";
 
         try {
@@ -117,7 +119,8 @@ public class AuthController implements AuthControllerDocs {
         }
     }
 
-    private String callChatLoginApi(String userId) {
+    public String callChatLoginApi(Long longUserId) {
+        String userId = String.valueOf(longUserId);
         String externalApiUrl = "https://api.talkplus.io/v1.4/api/users/login";
 
         try {

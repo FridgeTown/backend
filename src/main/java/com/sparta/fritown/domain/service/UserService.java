@@ -5,6 +5,7 @@ import com.sparta.fritown.domain.dto.user.OpponentDto;
 import com.sparta.fritown.domain.entity.Matches;
 import com.sparta.fritown.domain.entity.enums.Status;
 import com.sparta.fritown.domain.repository.MatchesRepository;
+import com.sparta.fritown.domain.entity.enums.WeightClass;
 import com.sparta.fritown.domain.repository.UserRepository;
 import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.global.exception.ErrorCode;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.Set;
 
 @Slf4j
@@ -25,6 +27,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final S3Service s3Service;
     private final MatchesRepository matchesRepository;
+    private static final Pattern NICKNAME_PATTERN = Pattern.compile("^[a-zA-Z가-힣]{2,7}$");
 
     public UserService(UserRepository userRepository, S3Service s3Service, MatchesRepository matchesRepository) {
         this.userRepository = userRepository;
@@ -35,11 +38,19 @@ public class UserService {
 
 
     public User register(RegisterRequestDto requestDto) {
+        // 이메일 유효성 검사
         if (userRepository.existsByEmail(requestDto.getEmail())) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+            throw ServiceException.of(ErrorCode.USER_EMAIL_DUPLICATE);
         }
-        System.out.println(requestDto.getRole());
-        User user = new User(requestDto);
+
+        // 닉네임 유효성 검사
+        if (!NICKNAME_PATTERN.matcher(requestDto.getNickname()).matches()) {
+           throw ServiceException.of(ErrorCode.USER_NICKNAME_INVALID);
+        }
+
+        // 유저 생성 로직
+        WeightClass weightClass = WeightClass.fromWeight(requestDto.getWeight());
+        User user = new User(requestDto, weightClass);
 
         log.info("userService_register called");
         return userRepository.save(user);
@@ -48,7 +59,7 @@ public class UserService {
     public List<OpponentDto> getRandomUsers(Long userId) {
         // 데이터베이스에서 랜덤 사용자 가져오기
         int count = 20;
-        
+
         // 1. Match 테이블에서 상태가 ACCEPTED/PROGRESS인 매칭 가져오기
         List<Matches> acceptedOrProgressMatches = matchesRepository.findByStatusIn(List.of(Status.ACCEPTED,Status.PROGRESS));
 
@@ -79,8 +90,6 @@ public class UserService {
                 ))
                 .toList();
     }
-
-
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> ServiceException.of(ErrorCode.USER_NOT_FOUND));

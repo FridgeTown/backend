@@ -18,7 +18,6 @@ public class RegisterRequestDto {
     private Integer weight;
     private Integer height;
     private String bio;
-    private WeightClass weightClass;
     private String role;
     private String nickname;
     private String idToken;
