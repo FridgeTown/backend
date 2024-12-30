@@ -37,6 +37,7 @@ public class UserController implements UserControllerDocs {
         this.s3Service = s3Service;
     }
 
+    @Override
     @GetMapping("/health/login/success")
     public String loginSuccess(@RequestParam("accessToken") String accessToken) {
         // 로그로 토큰 확인
@@ -50,11 +51,13 @@ public class UserController implements UserControllerDocs {
                 "</body></html>";
     }
 
+    @Override
     @GetMapping("/health/login/failure")
     public String failureHealthCheck() {
         return "MyAuthentication Failed; sign up page should be shown";
     }
 
+    @Override
     @GetMapping("/health/failure")
     public String errorHealthCheck() {
         return "OAuth just failed";
@@ -77,6 +80,7 @@ public class UserController implements UserControllerDocs {
         return ResponseDto.success(SuccessCode.OK, opponents);
     }
 
+    @Override
     @PostMapping("/user/image")
     public ResponseDto<Void> updateProfileImg(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
