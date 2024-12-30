@@ -6,6 +6,7 @@ import com.sparta.fritown.domain.dto.user.UserInfoResponseDto;
 import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.domain.service.TestService;
 import com.sparta.fritown.domain.service.UserService;
+import com.sparta.fritown.global.docs.AuthControllerDocs;
 import com.sparta.fritown.global.docs.UserControllerDocs;
 import com.sparta.fritown.global.exception.ErrorCode;
 import com.sparta.fritown.global.exception.SuccessCode;
@@ -13,6 +14,7 @@ import com.sparta.fritown.global.exception.custom.ServiceException;
 import com.sparta.fritown.global.exception.dto.ErrorResponseDto;
 import com.sparta.fritown.global.exception.dto.ResponseDto;
 import com.sparta.fritown.global.s3.service.S3Service;
+import com.sparta.fritown.global.security.controller.AuthController;
 import com.sparta.fritown.global.security.dto.UserDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,11 +33,13 @@ public class UserController implements UserControllerDocs {
     private final TestService testService;
     private final UserService userService;
     private final S3Service s3Service;
+    private final AuthController authController;
 
-    public UserController(TestService testService, UserService userService, S3Service s3Service) {
+    public UserController(TestService testService, UserService userService, S3Service s3Service, AuthController authController) {
         this.testService = testService;
         this.userService = userService;
         this.s3Service = s3Service;
+        this.authController = authController;
     }
 
     @Override
@@ -91,8 +95,13 @@ public class UserController implements UserControllerDocs {
     @Override
     @GetMapping("/user/info")
     public ResponseDto<UserInfoResponseDto> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        User user = userService.getUserInfo(userDetails.getId());
-        UserInfoResponseDto responseDto = new UserInfoResponseDto(user);
+        // 유저 정보, 채팅 토큰 정보 수집
+        Long userId = userDetails.getId();
+        User user = userService.getUserInfo(userId);
+        String chatToken = authController.callChatLoginApi(userId);
+
+        // DTO- 정보 담기
+        UserInfoResponseDto responseDto = new UserInfoResponseDto(user, chatToken);
         return ResponseDto.success(SuccessCode.OK, responseDto);
     }
 
