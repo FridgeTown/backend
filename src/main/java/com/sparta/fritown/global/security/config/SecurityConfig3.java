@@ -22,7 +22,6 @@ public class SecurityConfig3 {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)  // CSRF 보호 비활성화
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(AuthenticatedMatchers.loginArray).permitAll()
