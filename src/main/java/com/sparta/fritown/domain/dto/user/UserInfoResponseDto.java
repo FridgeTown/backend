@@ -23,10 +23,11 @@ public class UserInfoResponseDto {
     private WeightClass weightClass;
     private String role;
     private String nickname;
+    private String chatToken;
 
     public UserInfoResponseDto(){}
 
-    public UserInfoResponseDto(User user) {
+    public UserInfoResponseDto(User user, String chatToken) {
         this.id = user.getId();
         this.email = user.getEmail();
         this.provider = user.getProvider();
@@ -43,5 +44,7 @@ public class UserInfoResponseDto {
         this.weightClass = user.getWeightClass();
         this.role = user.getRole();
         this.nickname = user.getNickname();
+        this.chatToken = chatToken;
     }
+
 }
