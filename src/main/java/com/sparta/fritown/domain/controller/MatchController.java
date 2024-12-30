@@ -47,6 +47,7 @@ public class MatchController implements MatchControllerDocs {
         return ResponseDto.success(SuccessCode.MATCHING_USERS, matchFutureDtos);
     }
 
+    @Override
     @PostMapping("/{opponentId}")
     public ResponseDto<Void> requestMatch(@PathVariable Long opponentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         matchService.requestMatch(opponentId, userDetails.getId());
@@ -54,12 +55,14 @@ public class MatchController implements MatchControllerDocs {
     }
 
 
+    @Override
     @PostMapping("/accept/{matchId}")
     public ResponseDto<Void> acceptMatch(@PathVariable Long matchId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         matchService.matchAccept(matchId, userDetails.getEmail());
         return ResponseDto.success(SuccessCode.MATCHING_ACCEPT);
     }
 
+    @Override
     @PostMapping("/reject/{matchId}")
     public ResponseDto<Void> rejectMatch(@PathVariable Long matchId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         matchService.matchReject(matchId, userDetails.getEmail());
