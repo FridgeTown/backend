@@ -14,6 +14,19 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     boolean existsByEmail(String email);
 
-    @Query(value = "SELECT * FROM users WHERE id != :userId ORDER BY RAND() LIMIT :count", nativeQuery = true)
-    List<User> findRandomUsersExcluding(@Param("userId") Long userId, @Param("count") int count);
+//    @Query(value = "SELECT * FROM users WHERE id != :userId ORDER BY RAND() LIMIT :count", nativeQuery = true)
+//    List<User> findRandomUsersExcluding(@Param("userId") Long userId, @Param("count") int count);
+
+
+    @Query(value = """
+        SELECT * FROM users\s
+        WHERE id NOT IN :excludedUserIds\s
+        ORDER BY RAND()\s
+        LIMIT :count
+   \s""", nativeQuery = true)
+    List<User> findRandomUsersExcluding(
+            @Param("excludedUserIds") List<Long> excludedUserIds,
+            @Param("count") int count
+    );
+
 }
