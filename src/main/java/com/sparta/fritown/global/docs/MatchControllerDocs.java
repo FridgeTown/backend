@@ -8,9 +8,10 @@ import com.sparta.fritown.global.exception.dto.ResponseDto;
 import com.sparta.fritown.global.security.dto.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,7 +29,9 @@ public interface MatchControllerDocs {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "라운드 정보를 성공적으로 가져왔습니다.",
-                    content = @Content(schema = @Schema(implementation = RoundsDto.class))),
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RoundsDto.class),
+                            examples = @ExampleObject(value = "[{\"roundNum\": 1, \"kcal\": 300, \"heartBeat\": 120}]"))),
             @ApiResponse(responseCode = "404", description = "매치 또는 유저를 찾을 수 없습니다.",
                     content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
             @ApiResponse(responseCode = "406", description = "유저 매치를 찾을 수 없습니다.",
@@ -48,7 +51,9 @@ public interface MatchControllerDocs {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "매치 기록을 성공적으로 가져왔습니다.",
-                    content = @Content(schema = @Schema(implementation = MatchSummaryDto.class))),
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MatchSummaryDto.class),
+                            examples = @ExampleObject(value = "[{\"matchId\": 1, \"matchInfo\": {\"totalKcal\": 900, \"avgHeartRate\": 120, \"totalPunches\": 300, \"rounds\": 3}, \"opponentNickname\": \"JohnDoe\"}]"))),
             @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없습니다.",
                     content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })
@@ -65,7 +70,9 @@ public interface MatchControllerDocs {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "예정된 매치 정보를 성공적으로 가져왔습니다.",
-                    content = @Content(schema = @Schema(implementation = MatchFutureDto.class))),
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MatchFutureDto.class),
+                            examples = @ExampleObject(value = "[{\"matchId\": 1, \"opponentNickname\": \"JaneDoe\", \"matchDate\": \"2024-01-01\", \"place\": \"Central Gym\"}]"))),
             @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없습니다.",
                     content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "예정된 매치가 없습니다.",
@@ -84,7 +91,9 @@ public interface MatchControllerDocs {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "매치 초대를 성공적으로 수락했습니다.",
-                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDto.class),
+                            examples = @ExampleObject(value = "{ \"status\": \"success\", \"message\": \"매치 초대를 수락했습니다.\" }"))),
             @ApiResponse(responseCode = "404", description = "매치를 찾을 수 없습니다.",
                     content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
             @ApiResponse(responseCode = "406", description = "매치가 대기 상태가 아니거나 유저에게 도전된 매치가 아닙니다.",
@@ -93,6 +102,7 @@ public interface MatchControllerDocs {
     @Parameter(
             name = "matchId",
             description = "수락할 매치의 ID",
+            example = "1",
             required = true
     )
     ResponseDto<Void> acceptMatch(@PathVariable Long matchId, @AuthenticationPrincipal UserDetailsImpl userDetails);
@@ -103,7 +113,9 @@ public interface MatchControllerDocs {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "매치 초대를 성공적으로 거절했습니다.",
-                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDto.class),
+                            examples = @ExampleObject(value = "{ \"status\": \"success\", \"message\": \"매치 초대를 거절했습니다.\" }"))),
             @ApiResponse(responseCode = "404", description = "매치를 찾을 수 없습니다.",
                     content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
             @ApiResponse(responseCode = "406", description = "매치가 대기 상태가 아니거나 유저에게 도전된 매치가 아닙니다.",
@@ -112,6 +124,7 @@ public interface MatchControllerDocs {
     @Parameter(
             name = "matchId",
             description = "거절할 매치의 ID",
+            example = "1",
             required = true
     )
     ResponseDto<Void> rejectMatch(@PathVariable Long matchId, @AuthenticationPrincipal UserDetailsImpl userDetails);
@@ -122,7 +135,9 @@ public interface MatchControllerDocs {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "매치 요청을 성공적으로 보냈습니다.",
-                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDto.class),
+                            examples = @ExampleObject(value = "{ \"status\": \"success\", \"message\": \"매치 요청을 보냈습니다.\" }"))),
             @ApiResponse(responseCode = "404", description = "상대 유저를 찾을 수 없습니다.",
                     content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
             @ApiResponse(responseCode = "406", description = "자신에게 매치를 요청할 수 없거나 유효하지 않은 매치 상태입니다.",
@@ -131,6 +146,7 @@ public interface MatchControllerDocs {
     @Parameter(
             name = "opponentId",
             description = "매치 요청을 보낼 상대방의 ID",
+            example = "2",
             required = true
     )
     ResponseDto<Void> requestMatch(@PathVariable Long opponentId, @AuthenticationPrincipal UserDetailsImpl userDetails);

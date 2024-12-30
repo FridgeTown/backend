@@ -18,7 +18,10 @@ public interface AuthControllerDocs {
 
     @Operation(
             summary = "로그인 API",
-            description = "사용자가 제공한 ID 토큰을 통해 인증을 수행하고, 액세스 토큰과 채팅 토큰을 반환합니다."
+            description = """
+                    사용자가 제공한 ID 토큰과 이메일 정보를 통해 인증을 수행합니다.
+                    인증 성공 시, 액세스 토큰과 채팅 토큰을 반환합니다.
+                    """
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(
@@ -69,7 +72,10 @@ public interface AuthControllerDocs {
 
     @Operation(
             summary = "회원가입 API",
-            description = "사용자의 회원가입을 처리한 후 자동으로 로그인하여 액세스 토큰과 채팅 토큰을 반환합니다."
+            description = """
+                    사용자가 제공한 정보를 기반으로 회원가입을 처리한 후, 자동으로 로그인을 수행합니다.
+                    회원가입 성공 시, 액세스 토큰과 채팅 토큰을 반환합니다.
+                    """
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "회원가입 및 로그인 성공", content = @Content(
