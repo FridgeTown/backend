@@ -74,4 +74,8 @@ public class UserService {
         user.setProfileImg(imageFileName);
         userRepository.save(user);
     }
+
+    public User getUserInfo(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> ServiceException.of(ErrorCode.USER_NOT_FOUND));
+    }
 }

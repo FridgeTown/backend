@@ -2,6 +2,7 @@ package com.sparta.fritown.domain.controller;
 
 import com.sparta.fritown.domain.dto.rounds.RoundsDto;
 import com.sparta.fritown.domain.dto.user.OpponentDto;
+import com.sparta.fritown.domain.dto.user.UserInfoResponseDto;
 import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.domain.service.TestService;
 import com.sparta.fritown.domain.service.UserService;
@@ -63,14 +64,6 @@ public class UserController implements UserControllerDocs {
         return "OAuth just failed";
     }
 
-
-//    @PostMapping("/health/new/user/check")
-//    public String newUser(){
-//        User user = new User("20@nav", "hihi", "naver");
-//        return user.getProfileImg();
-//    }
-
-
     @Override
     @GetMapping("/user/recommendation")
     public ResponseDto<List<OpponentDto>> getRecommendedOpponents(@AuthenticationPrincipal UserDetailsImpl userDetails)
@@ -93,6 +86,14 @@ public class UserController implements UserControllerDocs {
         } catch (Exception e) {
             throw ServiceException.of(ErrorCode.IMAGE_UPLOAD_FAIL);
         }
+    }
+
+    @Override
+    @GetMapping("/user/info")
+    public ResponseDto<UserInfoResponseDto> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userService.getUserInfo(userDetails.getId());
+        UserInfoResponseDto responseDto = new UserInfoResponseDto(user);
+        return ResponseDto.success(SuccessCode.OK, responseDto);
     }
 
 
