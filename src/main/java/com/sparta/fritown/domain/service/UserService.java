@@ -33,9 +33,8 @@ public class UserService {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
 
-        User user = new User(requestDto);
         WeightClass weightClass = WeightClass.fromWeight(requestDto.getWeight());
-        user.setWeightClass(weightClass);
+        User user = new User(requestDto, weightClass);
 
         log.info("userService_register called");
         return userRepository.save(user);
