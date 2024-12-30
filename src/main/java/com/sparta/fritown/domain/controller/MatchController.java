@@ -10,12 +10,14 @@ import com.sparta.fritown.global.exception.SuccessCode;
 import com.sparta.fritown.global.exception.dto.ResponseDto;
 import com.sparta.fritown.global.security.dto.StatusResponseDto;
 import com.sparta.fritown.global.security.dto.UserDetailsImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/match")
 public class MatchController implements MatchControllerDocs {
