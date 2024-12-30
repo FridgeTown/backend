@@ -47,3 +47,9 @@ cloud:
     region: ap-northeast-2
     stack:
       auto: false
+
+logging:
+  level:
+    org.springframework.data.redis: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
