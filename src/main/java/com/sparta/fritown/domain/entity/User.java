@@ -51,10 +51,6 @@ public class User {
     private String role;
 
     @Column(nullable = false, unique = true)
-    @Pattern(
-            regexp = "^[a-zA-Z가-힣]{2,7}$",
-            message = "닉네임은 2자에서 7자 사이로, 영어 또는 한글만 사용 가능합니다."
-    )
     private String nickname;
 
     @OneToMany(mappedBy = "user")
