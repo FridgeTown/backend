@@ -2,6 +2,7 @@ package com.sparta.fritown.domain.controller;
 
 import com.sparta.fritown.domain.dto.rounds.RoundsDto;
 import com.sparta.fritown.domain.dto.user.OpponentDto;
+import com.sparta.fritown.domain.dto.user.UserInfoResponseDto;
 import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.domain.service.TestService;
 import com.sparta.fritown.domain.service.UserService;
@@ -85,6 +86,14 @@ public class UserController implements UserControllerDocs {
         } catch (Exception e) {
             throw ServiceException.of(ErrorCode.IMAGE_UPLOAD_FAIL);
         }
+    }
+
+    @Override
+    @GetMapping("/user/info")
+    public ResponseDto<UserInfoResponseDto> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userService.getUserInfo(userDetails.getId());
+        UserInfoResponseDto responseDto = new UserInfoResponseDto(user);
+        return ResponseDto.success(SuccessCode.OK, responseDto);
     }
 
 
