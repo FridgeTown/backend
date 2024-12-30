@@ -1,6 +1,7 @@
 package com.sparta.fritown.global.docs;
 
 import com.sparta.fritown.domain.dto.user.OpponentDto;
+import com.sparta.fritown.domain.dto.user.UserInfoResponseDto;
 import com.sparta.fritown.global.exception.dto.ResponseDto;
 import com.sparta.fritown.global.security.dto.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +12,8 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -97,4 +100,49 @@ public interface UserControllerDocs {
             )) UserDetailsImpl userDetails,
             @RequestParam("file") MultipartFile file
     );
+
+    @Operation(
+            summary = "유저 정보 조회",
+            description = "현재 로그인한 사용자의 정보를 조회합니다. 이 API는 인증이 필요하며, Authorization 헤더에 AccessToken을 포함해야 합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "유저 정보 조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UserInfoResponseDto.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                        "status": "success",
+                                        "data": {
+                                            "id": 1,
+                                            "email": "user@example.com",
+                                            "nickname": "JohnDoe",
+                                            "profileImage": "https://example.com/profile.jpg",
+                                            "bio": "I love coding",
+                                            "createdAt": "2023-01-01T12:00:00",
+                                            "updatedAt": "2023-01-10T12:00:00"
+                                        }
+                                    }
+                                    """)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "사용자를 찾을 수 없음",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(type = "string", example = """
+                                    {
+                                        "status": "error",
+                                        "message": "사용자를 찾을 수 없습니다.",
+                                        "code": "USER_NOT_FOUND"
+                                    }
+                                    """)
+                    )
+            )
+    })
+    public ResponseDto<UserInfoResponseDto> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails);
+
 }
