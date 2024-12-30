@@ -19,168 +19,119 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@Tag(name = "Match", description =  "APIs for match-related operations")
+@Tag(name = "Match", description = "매치와 관련된 API")
 public interface MatchControllerDocs {
-    @Operation(
-            summary = "Get round information for a specific match",
-            description = "Fetches detailed round information including calories burned and heart rate for a given MatchId."
-    )
-
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Successfully retrieved round information",
-                    content = @Content(schema = @Schema(implementation = RoundsDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "MatchId not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
-            )
-    })
-
-    @Parameters({
-            @Parameter(
-                    name = "matchId",
-                    description = "Unique identifier for the match",
-                    example = "1",
-                    required = true
-            )
-    })
-    public ResponseDto<List<RoundsDto>> getRoundsByMatchId(@PathVariable Long matchId, @AuthenticationPrincipal UserDetailsImpl userDetails);
-
-
 
     @Operation(
-            summary = "Get match history for a user",
-            description = "Fetches a list of completed match summaries for the authenticated user."
+            summary = "특정 매치의 라운드 정보를 가져오기",
+            description = "주어진 MatchId에 대한 소모 칼로리, 심박수 등 자세한 라운드 정보를 가져옵니다."
     )
     @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Successfully retrieved match history",
-                    content = @Content(schema = @Schema(implementation = MatchSummaryDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "User not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
-            )
-    })
-    @Parameter(
-            name = "userDetails",
-            description = "Details of the authenticated user (automatically injected)",
-            required = true
-    )
-    public ResponseDto<List<MatchSummaryDto>> getMatchHistory(@AuthenticationPrincipal UserDetailsImpl userDetails);
-
-
-    @Operation(
-            summary = "Get future match information for a user",
-            description = "Fetches a list of future match details (not yet completed matches) for the authenticated user."
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Successfully retrieved future match information",
-                    content = @Content(schema = @Schema(implementation = MatchFutureDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "User not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "No future matches found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
-            )
-    })
-    @Parameter(
-            name = "userDetails",
-            description = "Details of the authenticated user (automatically injected)",
-            required = true
-    )
-    public ResponseDto<List<MatchFutureDto>> getMatchFuture(@AuthenticationPrincipal UserDetailsImpl userDetails);
-
-    @Operation(
-            summary = "Accept a match invitation",
-            description = "Allows the authenticated user to accept a pending match invitation by providing the match ID."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Successfully accepted the match invitation",
-                    content = @Content(schema = @Schema(implementation = ResponseDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Match not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "406",
-                    description = "Match not challengedTo",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "406",
-                    description = "Match not PENDING",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "User not authorized or match is not pending",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class, defaultValue = "test"))
-            )
+            @ApiResponse(responseCode = "200", description = "라운드 정보를 성공적으로 가져왔습니다.",
+                    content = @Content(schema = @Schema(implementation = RoundsDto.class))),
+            @ApiResponse(responseCode = "404", description = "매치 또는 유저를 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(responseCode = "406", description = "유저 매치를 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })
     @Parameter(
             name = "matchId",
-            description = "The ID of the match to be accepted",
+            description = "매치의 고유 식별자",
+            example = "1",
             required = true
     )
-    public ResponseDto<Void> acceptMatch(@PathVariable Long matchId, @AuthenticationPrincipal UserDetailsImpl userDetails);
+    ResponseDto<List<RoundsDto>> getRoundsByMatchId(@PathVariable Long matchId, @AuthenticationPrincipal UserDetailsImpl userDetails);
 
     @Operation(
-            summary = "Reject a match invitation",
-            description = "Allows the authenticated user to reject a pending match invitation by providing the match ID."
+            summary = "유저의 매치 기록 가져오기",
+            description = "인증된 유저의 완료된 매치 요약 정보를 가져옵니다."
     )
     @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Successfully rejected the match invitation",
-                    content = @Content(schema = @Schema(implementation = ResponseDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Match not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "406",
-                    description = "Match not challengedTo",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "406",
-                    description = "Match not PENDING",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "User not authorized or match is not pending",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
-            )
+            @ApiResponse(responseCode = "200", description = "매치 기록을 성공적으로 가져왔습니다.",
+                    content = @Content(schema = @Schema(implementation = MatchSummaryDto.class))),
+            @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @Parameter(
+            name = "userDetails",
+            description = "인증된 유저의 정보 (자동 주입)",
+            required = true
+    )
+    ResponseDto<List<MatchSummaryDto>> getMatchHistory(@AuthenticationPrincipal UserDetailsImpl userDetails);
+
+    @Operation(
+            summary = "유저의 예정된 매치 정보 가져오기",
+            description = "인증된 유저의 예정된 매치 정보(아직 완료되지 않은 매치)를 가져옵니다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "예정된 매치 정보를 성공적으로 가져왔습니다.",
+                    content = @Content(schema = @Schema(implementation = MatchFutureDto.class))),
+            @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "예정된 매치가 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @Parameter(
+            name = "userDetails",
+            description = "인증된 유저의 정보 (자동 주입)",
+            required = true
+    )
+    ResponseDto<List<MatchFutureDto>> getMatchFuture(@AuthenticationPrincipal UserDetailsImpl userDetails);
+
+    @Operation(
+            summary = "매치 초대 수락하기",
+            description = "인증된 유저가 대기 중인 매치 초대를 수락할 수 있습니다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "매치 초대를 성공적으로 수락했습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "매치를 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(responseCode = "406", description = "매치가 대기 상태가 아니거나 유저에게 도전된 매치가 아닙니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })
     @Parameter(
             name = "matchId",
-            description = "The ID of the match to be rejected",
+            description = "수락할 매치의 ID",
             required = true
     )
+    ResponseDto<Void> acceptMatch(@PathVariable Long matchId, @AuthenticationPrincipal UserDetailsImpl userDetails);
+
+    @Operation(
+            summary = "매치 초대 거절하기",
+            description = "인증된 유저가 대기 중인 매치 초대를 거절할 수 있습니다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "매치 초대를 성공적으로 거절했습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "매치를 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(responseCode = "406", description = "매치가 대기 상태가 아니거나 유저에게 도전된 매치가 아닙니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
     @Parameter(
-            name = "userDetails",
-            description = "Details of the authenticated user (automatically injected)",
+            name = "matchId",
+            description = "거절할 매치의 ID",
             required = true
     )
-    public ResponseDto<Void> rejectMatch(@PathVariable Long matchId, @AuthenticationPrincipal UserDetailsImpl userDetails);
+    ResponseDto<Void> rejectMatch(@PathVariable Long matchId, @AuthenticationPrincipal UserDetailsImpl userDetails);
+
+    @Operation(
+            summary = "상대방에게 매치 요청하기",
+            description = "인증된 유저가 상대방 유저에게 매치를 요청할 수 있습니다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "매치 요청을 성공적으로 보냈습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "상대 유저를 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(responseCode = "406", description = "자신에게 매치를 요청할 수 없거나 유효하지 않은 매치 상태입니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @Parameter(
+            name = "opponentId",
+            description = "매치 요청을 보낼 상대방의 ID",
+            required = true
+    )
+    ResponseDto<Void> requestMatch(@PathVariable Long opponentId, @AuthenticationPrincipal UserDetailsImpl userDetails);
 }

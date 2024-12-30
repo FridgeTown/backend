@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class TestController implements TestControllerDocs {
 
+    @Override
     @GetMapping("/error")
     public String errorHealthCheck() {
         throw ServiceException.of(ErrorCode.USER_NOT_ACCEPTABLE);
@@ -31,6 +32,7 @@ public class TestController implements TestControllerDocs {
      */
 
 
+    @Override
     @GetMapping("/success")
     public ResponseDto<Void> successHealthCheck() {
         return ResponseDto.success(SuccessCode.OK);
@@ -42,6 +44,7 @@ public class TestController implements TestControllerDocs {
      */
 
 
+    @Override
     @GetMapping("/success/auth")
     public ResponseDto<Long> successAuthCheck(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long userId = userDetails.getId();
@@ -52,11 +55,13 @@ public class TestController implements TestControllerDocs {
      * 메시지는 /success에 언급한 방식대로 진행하면 된다.
      */
 
+    @Override
     @GetMapping("/health")
     public String healthCheck(){
         return "OK";
     }
 
+    @Override
     // 추후에 인증 관련 문제 테스트 할 때, 아래 2개 api 사용해 보세요!
     @GetMapping("/test")
     public String testAuthentication() {
@@ -71,6 +76,7 @@ public class TestController implements TestControllerDocs {
         return "Test Endpoint";
     }
 
+    @Override
     @GetMapping("/test-auth")
     public String testAuthentication(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         if (userDetails != null) {
