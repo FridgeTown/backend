@@ -2,6 +2,7 @@ package com.sparta.fritown.domain.service;
 
 import com.sparta.fritown.domain.dto.user.RegisterRequestDto;
 import com.sparta.fritown.domain.dto.user.OpponentDto;
+import com.sparta.fritown.domain.entity.enums.WeightClass;
 import com.sparta.fritown.domain.repository.UserRepository;
 import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.global.exception.ErrorCode;
@@ -31,8 +32,9 @@ public class UserService {
         if (userRepository.existsByEmail(requestDto.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
-        System.out.println(requestDto.getRole());
-        User user = new User(requestDto);
+
+        WeightClass weightClass = WeightClass.fromWeight(requestDto.getWeight());
+        User user = new User(requestDto, weightClass);
 
         log.info("userService_register called");
         return userRepository.save(user);

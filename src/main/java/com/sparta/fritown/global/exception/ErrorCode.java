@@ -9,6 +9,7 @@ public enum ErrorCode implements ApiCode {
     IO_EXCEPTION(HttpStatus.BAD_REQUEST, "E001", "IO error"),
     USER_NOT_ACCEPTABLE(HttpStatus.NOT_ACCEPTABLE, "E002", "유저가 허용되지 않습니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND,"E003","유저를 찾지 못했습니다."),
+    WEIGHT_NOT_ACCEPTABLE(HttpStatus.NOT_ACCEPTABLE, "E004", "유효하지 않은 몸무게입니다."),
 
     // match
     MATCH_NOT_FOUND(HttpStatus.NOT_FOUND,"M001","매치를 찾지 못했습니다."),

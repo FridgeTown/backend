@@ -113,19 +113,29 @@ public interface UserControllerDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = UserInfoResponseDto.class),
                             examples = @ExampleObject(value = """
-                                    {
-                                        "status": "success",
-                                        "data": {
-                                            "id": 1,
-                                            "email": "user@example.com",
-                                            "nickname": "JohnDoe",
-                                            "profileImage": "https://example.com/profile.jpg",
-                                            "bio": "I love coding",
-                                            "createdAt": "2023-01-01T12:00:00",
-                                            "updatedAt": "2023-01-10T12:00:00"
-                                        }
+                                {
+                                    "status": "success",
+                                    "data": {
+                                        "id": 1,
+                                        "email": "user@example.com",
+                                        "provider": "google",
+                                        "profileImg": "https://example.com/profile.jpg",
+                                        "gender": "FEMALE",
+                                        "age": 25,
+                                        "weight": 55,
+                                        "height": 165,
+                                        "bio": "I am passionate about fitness and coding.",
+                                        "points": 1200,
+                                        "heartBeat": 75,
+                                        "punchSpeed": 15,
+                                        "kcal": 300,
+                                        "weightClass": "LIGHTWEIGHT",
+                                        "role": "USER",
+                                        "nickname": "FitCoder",
+                                        "chatToken": "<chat_token>"
                                     }
-                                    """)
+                                }
+                                """)
                     )
             ),
             @ApiResponse(
@@ -134,12 +144,12 @@ public interface UserControllerDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(type = "string", example = """
-                                    {
-                                        "status": "error",
-                                        "message": "사용자를 찾을 수 없습니다.",
-                                        "code": "USER_NOT_FOUND"
-                                    }
-                                    """)
+                                {
+                                    "status": "error",
+                                    "message": "사용자를 찾을 수 없습니다.",
+                                    "code": "USER_NOT_FOUND"
+                                }
+                                """)
                     )
             )
     })

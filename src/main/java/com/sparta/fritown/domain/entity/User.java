@@ -70,13 +70,7 @@ public class User {
     }
 
 
-//    public User(String s, String hihi, String naver) { //// test ****
-//        this.email = s;
-//        this.profileImg = hihi;
-//        this.provider = naver;
-//    }
-
-    public User(RegisterRequestDto requestDto) {
+    public User(RegisterRequestDto requestDto, WeightClass weightClass) {
         this.email = requestDto.getEmail();
         this.provider = requestDto.getProvider();
         this.profileImg = requestDto.getProfileImage();
@@ -89,13 +83,17 @@ public class User {
         this.heartBeat = 0;
         this.punchSpeed = 0;
         this.kcal = 0;
-        this.weightClass = requestDto.getWeightClass();
         this.role = requestDto.getRole();
         this.nickname = requestDto.getNickname();
+        this.weightClass = weightClass;
     }
 
 
     public void setProfileImg(String imageFileName) {
         this.profileImg = imageFileName;
+    }
+
+    public void setWeightClass(WeightClass weightClass) {
+        this.weightClass = weightClass;
     }
 }
