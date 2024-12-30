@@ -119,7 +119,14 @@ public interface AuthControllerDocs {
                     {
                         "email": "user@example.com",
                         "provider": "google",
-                        "name": "User Name",
+                        "profileImage": "https://example.com/profile.jpg",
+                        "gender": "FEMALE",
+                        "age": 25,
+                        "weight": 55,
+                        "height": 165,
+                        "bio": "Hello! I love coding and sports.",
+                        "role": "USER",
+                        "nickname": "User Name",
                         "idToken": "<id_token>"
                     }
                     """)
