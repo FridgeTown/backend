@@ -14,12 +14,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final S3Service s3Service;
+    private static final Pattern NICKNAME_PATTERN = Pattern.compile("^[a-zA-Z가-힣]{2,7}$");
 
     public UserService(UserRepository userRepository, S3Service s3Service) {
         this.userRepository = userRepository;
@@ -29,10 +31,17 @@ public class UserService {
 
 
     public User register(RegisterRequestDto requestDto) {
+        // 이메일 유효성 검사
         if (userRepository.existsByEmail(requestDto.getEmail())) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+            throw ServiceException.of(ErrorCode.USER_EMAIL_DUPLICATE);
         }
 
+        // 닉네임 유효성 검사
+        if (!NICKNAME_PATTERN.matcher(requestDto.getNickname()).matches()) {
+           throw ServiceException.of(ErrorCode.USER_NICKNAME_INVALID);
+        }
+
+        // 유저 생성 로직
         WeightClass weightClass = WeightClass.fromWeight(requestDto.getWeight());
         User user = new User(requestDto, weightClass);
 
