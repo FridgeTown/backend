@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -36,6 +37,7 @@ public class MatchService {
     private final MatchesRepository matchesRepository;
     private final UserRepository userRepository;
     private final UserMatchRepository userMatchRepository;
+    private final ChatService chatService;
 
     public List<RoundsDto> getRoundsByMatchId(Long matchId, Long userId) {
         Matches match = matchesRepository.findById(matchId).orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
@@ -211,6 +213,12 @@ public class MatchService {
             if (matched.getStatus().equals(Status.PENDING)) {
                 matched.updateStatus(Status.ACCEPTED);
                 // 이후 채팅방 생성 로직이 들어가거나 해야 할 듯.
+                chatService.createChannel(
+                        Arrays.asList(user, opponent),
+                        user.getNickname() + " vs " + opponent.getNickname(),
+                        "private",
+                        "chatting"
+                        );
                 return;
             }
         }
