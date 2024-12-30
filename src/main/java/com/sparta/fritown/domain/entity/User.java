@@ -70,11 +70,11 @@ public class User {
     }
 
 
-    public User(String s, String hihi, String naver) { //// test ****
-        this.email = s;
-        this.profileImg = hihi;
-        this.provider = naver;
-    }
+//    public User(String s, String hihi, String naver) { //// test ****
+//        this.email = s;
+//        this.profileImg = hihi;
+//        this.provider = naver;
+//    }
 
     public User(RegisterRequestDto requestDto) {
         this.email = requestDto.getEmail();
