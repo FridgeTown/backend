@@ -89,7 +89,6 @@ public class User {
         this.heartBeat = 0;
         this.punchSpeed = 0;
         this.kcal = 0;
-        this.weightClass = requestDto.getWeightClass();
         this.role = requestDto.getRole();
         this.nickname = requestDto.getNickname();
     }
@@ -97,5 +96,9 @@ public class User {
 
     public void setProfileImg(String imageFileName) {
         this.profileImg = imageFileName;
+    }
+
+    public void setWeightClass(WeightClass weightClass) {
+        this.weightClass = weightClass;
     }
 }
