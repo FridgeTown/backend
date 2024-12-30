@@ -21,7 +21,7 @@ public class ChatService {
         List<String> userIdList = new ArrayList<>();
         for (User user: userList)
         {
-            userIdList.add(user.getNickname());
+            userIdList.add(String.valueOf(user.getId()));
         }
         String ownerId = userIdList.get(0);
 
