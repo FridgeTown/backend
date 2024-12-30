@@ -61,11 +61,12 @@ public class UserController implements UserControllerDocs {
     }
 
 
-    @PostMapping("/health/new/user/check")
-    public String newUser(){
-        User user = new User("20@nav", "hihi", "naver");
-        return user.getProfileImg();
-    }
+//    @PostMapping("/health/new/user/check")
+//    public String newUser(){
+//        User user = new User("20@nav", "hihi", "naver");
+//        return user.getProfileImg();
+//    }
+
 
     @Override
     @GetMapping("/user/recommendation")
