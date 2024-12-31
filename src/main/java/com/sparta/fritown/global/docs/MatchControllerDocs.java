@@ -158,7 +158,7 @@ public interface MatchControllerDocs {
             description ="인증된 유저가 요청받은 매치 목록(PENDING)을 조회할 수 있습니다. 만약 매치가 없으면(요청받은 적이 없다면) 빈 리스트를 반환합니다."
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "요청 받은 스파링을 성공적으로 반환하였습니다.",
+            @ApiResponse(responseCode = "200", description = "요청 받은 스파링을 성공적으로 반환하였습니다. ChallengedTo 가 현재 로그인 되어있는 userId",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ResponseDto.class),
                             examples = @ExampleObject(value = "{ \"status\": \"success\", \"message\": \"PENDING 상태의 매치를 조회했습니다.\" }"))),

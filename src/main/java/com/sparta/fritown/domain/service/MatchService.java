@@ -242,8 +242,8 @@ public class MatchService {
         userMatchRepository.save(opponentMatch);
     }
 
-    public List<MatchPendingDto> getPendingMatchesChallengedBy(Long userId) {
-        return matchesRepository.findByChallengedByIdAndStatus(userId, Status.PENDING)
+    public List<MatchPendingDto> getPendingMatchesChallengedTo(Long userId) {
+        return matchesRepository.findByChallengedToIdAndStatus(userId, Status.PENDING)
                 .stream()
                 .map(match -> new MatchPendingDto(
                         match.getId(),                         // 매치 ID

@@ -77,7 +77,7 @@ public class MatchController implements MatchControllerDocs {
     public ResponseDto<List<MatchPendingDto>> getPendingMatches(@AuthenticationPrincipal UserDetailsImpl userDetails)
     {
         Long userId = userDetails.getId();
-        List<MatchPendingDto> pendingMatches = matchService.getPendingMatchesChallengedBy(userId);
+        List<MatchPendingDto> pendingMatches = matchService.getPendingMatchesChallengedTo(userId);
         return ResponseDto.success(SuccessCode.MATCHES_PENDING, pendingMatches);
     }
 
