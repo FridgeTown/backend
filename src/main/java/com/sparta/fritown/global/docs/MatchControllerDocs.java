@@ -161,7 +161,26 @@ public interface MatchControllerDocs {
             @ApiResponse(responseCode = "200", description = "요청 받은 스파링을 성공적으로 반환하였습니다. ChallengedTo 가 현재 로그인 되어있는 userId",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ResponseDto.class),
-                            examples = @ExampleObject(value = "{ \"status\": \"success\", \"message\": \"PENDING 상태의 매치를 조회했습니다.\" }"))),
+                            examples = @ExampleObject(value = """
+                {
+                    "status": "success",
+                    "message": "PENDING 상태의 매치를 조회했습니다.",
+                    "data": [
+                        {
+                            "matchId": 1,
+                            "challengedBy": 2,
+                            "challengedTo": 1,
+                            "status": "PENDING"
+                        },
+                        {
+                            "matchId": 2,
+                            "challengedBy": 3,
+                            "challengedTo": 1,
+                            "status": "PENDING"
+                        }
+                    ]
+                }
+              """))),
     })
 
     @Parameter(
