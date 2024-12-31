@@ -105,5 +105,16 @@ public class UserController implements UserControllerDocs {
         return ResponseDto.success(SuccessCode.OK, responseDto);
     }
 
+    @Override
+    @GetMapping("/user/{userId}")
+    public ResponseDto<UserInfoResponseDto> getUserInfoByUserId(@PathVariable Long userId)
+    {
+        User user = userService.getUserInfo(userId);
+        String chatToken = authController.callChatLoginApi(userId);
+
+        UserInfoResponseDto responseDto = new UserInfoResponseDto(user, chatToken);
+        return ResponseDto.success(SuccessCode.OK, responseDto);
+    }
+
 
 }

@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -150,9 +151,50 @@ public interface UserControllerDocs {
                                     "code": "USER_NOT_FOUND"
                                 }
                                 """)
+
+
                     )
             )
     })
     public ResponseDto<UserInfoResponseDto> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails);
+
+    @Operation(
+            summary = "유저 정보 조회",
+            description = "userId를 Path Parameter로 받아 유저 정보를 조회합니다."
+    )
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "유저 정보 조회 성공",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserInfoResponseDto.class),
+                            examples = @ExampleObject(value = """
+                                {
+                                    "status": "success",
+                                    "data": {
+                                        "id": 1,
+                                        "email": "user@example.com",
+                                        "provider": "google",
+                                        "profileImg": "https://example.com/profile.jpg",
+                                        "gender": "FEMALE",
+                                        "age": 25,
+                                        "weight": 55,
+                                        "height": 165,
+                                        "bio": "I am passionate about fitness and coding.",
+                                        "points": 1200,
+                                        "heartBeat": 75,
+                                        "punchSpeed": 15,
+                                        "kcal": 300,
+                                        "weightClass": "LIGHTWEIGHT",
+                                        "role": "USER",
+                                        "nickname": "FitCoder",
+                                        "chatToken": "<chat_token>"
+                                    }
+                                }
+                                """)
+                    )),
+            @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음",
+                    content = @Content(mediaType = "application/json"))
+    })
+    public ResponseDto<UserInfoResponseDto> getUserInfoByUserId(@PathVariable Long userId);
 
 }
