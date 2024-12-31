@@ -17,6 +17,7 @@ import com.sparta.fritown.domain.repository.UserMatchRepository;
 import com.sparta.fritown.domain.repository.UserRepository;
 import com.sparta.fritown.global.exception.ErrorCode;
 import com.sparta.fritown.global.exception.custom.ServiceException;
+import com.sparta.fritown.global.s3.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,7 @@ public class MatchService {
     private final UserMatchRepository userMatchRepository;
     private final ChatService chatService;
     private final NotificationService notificationService;
+    private final S3Service s3Service;
 
     public List<RoundsDto> getRoundsByMatchId(Long matchId, Long userId) {
         Matches match = matchesRepository.findById(matchId).orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
@@ -249,10 +251,9 @@ public class MatchService {
         return matchesRepository.findByChallengedToIdAndStatus(userId, Status.PENDING)
                 .stream()
                 .map(match -> new MatchPendingDto(
-                        match.getId(),                         // 매치 ID
-                        match.getChallengedBy().getId(),        // 신청자 ID
-                        match.getChallengedTo().getId(),        // 도전받은 사용자 ID
-                        match.getStatus().name()               // 상태 이름
+                        match,
+                        match.getChallengedBy(),
+                        s3Service.getFileUrl(match.getChallengedBy().getProfileImg())
                 ))
                 .collect(Collectors.toList());
     }
