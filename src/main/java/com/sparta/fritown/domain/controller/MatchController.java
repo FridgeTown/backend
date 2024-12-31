@@ -53,7 +53,7 @@ public class MatchController implements MatchControllerDocs {
     @Override
     @PostMapping("/{opponentId}")
     public ResponseDto<Void> requestMatch(@PathVariable Long opponentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        matchService.requestMatch(opponentId, 87L);
+        matchService.requestMatch(opponentId, userDetails.getId());
         return ResponseDto.success(SuccessCode.MATCH_REQUEST);
     }
 
