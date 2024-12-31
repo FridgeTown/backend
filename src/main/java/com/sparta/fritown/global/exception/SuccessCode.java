@@ -11,7 +11,8 @@ public enum SuccessCode implements ApiCode {
     MATCHING_USERS(HttpStatus.OK, "M002", "스파링 예정 상대들을 성공적으로 반환하였습니다."),
     MATCHING_ACCEPT(HttpStatus.OK, "M003", "매칭이 성사되었습니다."),
     MATCHING_REJECT(HttpStatus.OK, "M004", "매칭 거절이 완료되었습니다."),
-    MATCH_REQUEST(HttpStatus.OK, "M003", "스파링을 성공적으로 요청하였습니다."),
+    MATCH_REQUEST(HttpStatus.OK, "M005", "스파링을 성공적으로 요청하였습니다."),
+    MATCHES_PENDING(HttpStatus.OK, "M006", "요청 받은 스파링을 성공적으로 반환하였습니다." ),
 
     //image
     IMAGE_UPLOADED(HttpStatus.OK, "I001", "이미지를 성공적으로 업로드 하였습니다.");

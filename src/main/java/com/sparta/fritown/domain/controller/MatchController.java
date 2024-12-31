@@ -1,6 +1,7 @@
 package com.sparta.fritown.domain.controller;
 
 import com.sparta.fritown.domain.dto.match.MatchFutureDto;
+import com.sparta.fritown.domain.dto.match.MatchPendingDto;
 import com.sparta.fritown.domain.dto.match.MatchSummaryDto;
 import com.sparta.fritown.domain.dto.rounds.RoundsDto;
 import com.sparta.fritown.domain.entity.Matches;
@@ -52,7 +53,7 @@ public class MatchController implements MatchControllerDocs {
     @Override
     @PostMapping("/{opponentId}")
     public ResponseDto<Void> requestMatch(@PathVariable Long opponentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        matchService.requestMatch(opponentId, userDetails.getId());
+        matchService.requestMatch(opponentId, 87L);
         return ResponseDto.success(SuccessCode.MATCH_REQUEST);
     }
 
@@ -70,4 +71,14 @@ public class MatchController implements MatchControllerDocs {
         matchService.matchReject(matchId, userDetails.getEmail());
         return ResponseDto.success(SuccessCode.MATCHING_REJECT);
     }
+
+    @Override
+    @GetMapping("/pending")
+    public ResponseDto<List<MatchPendingDto>> getPendingMatches(@AuthenticationPrincipal UserDetailsImpl userDetails)
+    {
+        Long userId = userDetails.getId();
+        List<MatchPendingDto> pendingMatches = matchService.getPendingMatchesChallengedBy(userId);
+        return ResponseDto.success(SuccessCode.MATCHES_PENDING, pendingMatches);
+    }
+
 }
