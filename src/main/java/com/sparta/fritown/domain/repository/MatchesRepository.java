@@ -12,4 +12,5 @@ import java.util.List;
 public interface MatchesRepository extends JpaRepository<Matches, Long> {
     List<Matches> findByChallengedToAndChallengedBy(User challengedTo, User challengedBy);
     List<Matches> findByStatusIn(List<Status> statuses);
+    List<Matches> findByChallengedToIdAndStatus(Long challengedById, Status status);
 }
