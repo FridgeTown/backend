@@ -59,7 +59,9 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     //s3 bucket
-    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
+    implementation 'org.springframework.cloud:spring-cloud-aws-context:2.2.6.RELEASE'
+    implementation 'com.amazonaws:aws-java-sdk-core:1.11.1000' // 호환되는 안정 버전
+
 }
 
 tasks.named('test') {
