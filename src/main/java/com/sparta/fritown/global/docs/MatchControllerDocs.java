@@ -169,13 +169,19 @@ public interface MatchControllerDocs {
                         {
                             "matchId": 1,
                             "challengedBy": 2,
-                            "challengedTo": 1,
+                            "nickName": "abc",
+                            "height" : 188,
+                            "weight" : 73,
+                            "profileImg" : ".jpg"
                             "status": "PENDING"
                         },
                         {
                             "matchId": 2,
                             "challengedBy": 3,
-                            "challengedTo": 1,
+                            "nickName": "bcd",
+                            "height" : 188,
+                            "weight" : 73,
+                            "profileImg" : ".jpg"
                             "status": "PENDING"
                         }
                     ]
