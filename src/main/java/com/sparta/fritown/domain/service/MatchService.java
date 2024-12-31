@@ -3,6 +3,7 @@ package com.sparta.fritown.domain.service;
 import com.fasterxml.jackson.databind.deser.DataFormatReaders;
 import com.sparta.fritown.domain.dto.match.MatchFutureDto;
 import com.sparta.fritown.domain.dto.match.MatchInfoDto;
+import com.sparta.fritown.domain.dto.match.MatchPendingDto;
 import com.sparta.fritown.domain.dto.match.MatchSummaryDto;
 import com.sparta.fritown.domain.dto.rounds.RoundsDto;
 import com.sparta.fritown.domain.entity.Matches;
@@ -239,6 +240,18 @@ public class MatchService {
         matchesRepository.save(newMatch);
         userMatchRepository.save(userMatch);
         userMatchRepository.save(opponentMatch);
+    }
+
+    public List<MatchPendingDto> getPendingMatchesChallengedTo(Long userId) {
+        return matchesRepository.findByChallengedToIdAndStatus(userId, Status.PENDING)
+                .stream()
+                .map(match -> new MatchPendingDto(
+                        match.getId(),                         // 매치 ID
+                        match.getChallengedBy().getId(),        // 신청자 ID
+                        match.getChallengedTo().getId(),        // 도전받은 사용자 ID
+                        match.getStatus().name()               // 상태 이름
+                ))
+                .collect(Collectors.toList());
     }
 }
 
