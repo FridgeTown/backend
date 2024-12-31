@@ -1,6 +1,7 @@
 package com.sparta.fritown.global.docs;
 
 import com.sparta.fritown.domain.dto.match.MatchFutureDto;
+import com.sparta.fritown.domain.dto.match.MatchPendingDto;
 import com.sparta.fritown.domain.dto.match.MatchSummaryDto;
 import com.sparta.fritown.domain.dto.rounds.RoundsDto;
 import com.sparta.fritown.global.exception.dto.ErrorResponseDto;
@@ -150,4 +151,23 @@ public interface MatchControllerDocs {
             required = true
     )
     ResponseDto<Void> requestMatch(@PathVariable Long opponentId, @AuthenticationPrincipal UserDetailsImpl userDetails);
+
+
+    @Operation(
+            summary = "요청받은 매치 목록",
+            description ="인증된 유저가 요청받은 매치 목록(PENDING)을 조회할 수 있습니다. 만약 매치가 없으면(요청받은 적이 없다면) 빈 리스트를 반환합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "요청 받은 스파링을 성공적으로 반환하였습니다.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDto.class),
+                            examples = @ExampleObject(value = "{ \"status\": \"success\", \"message\": \"PENDING 상태의 매치를 조회했습니다.\" }"))),
+    })
+
+    @Parameter(
+            name = "userDetails",
+            description = "인증된 유저의 정보 (자동 주입)",
+            required = true
+    )
+    ResponseDto<List<MatchPendingDto>> getPendingMatches(@AuthenticationPrincipal UserDetailsImpl userDetails);
 }
