@@ -39,6 +39,7 @@ public class MatchService {
     private final UserRepository userRepository;
     private final UserMatchRepository userMatchRepository;
     private final ChatService chatService;
+    private final NotificationService notificationService;
 
     public List<RoundsDto> getRoundsByMatchId(Long matchId, Long userId) {
         Matches match = matchesRepository.findById(matchId).orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
@@ -240,6 +241,8 @@ public class MatchService {
         matchesRepository.save(newMatch);
         userMatchRepository.save(userMatch);
         userMatchRepository.save(opponentMatch);
+
+        notificationService.sendNotification(opponentId, user.getNickname());
     }
 
     public List<MatchPendingDto> getPendingMatchesChallengedTo(Long userId) {
