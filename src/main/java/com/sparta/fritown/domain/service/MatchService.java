@@ -251,9 +251,9 @@ public class MatchService {
         return matchesRepository.findByChallengedToIdAndStatus(userId, Status.PENDING)
                 .stream()
                 .map(match -> new MatchPendingDto(
-                        match,                        // 매치 ID
+                        match,
                         match.getChallengedBy(),
-                        s3Service.getFileUrl(match.getChallengedBy().getProfileImg())// 상태 이름
+                        s3Service.getFileUrl(match.getChallengedBy().getProfileImg())
                 ))
                 .collect(Collectors.toList());
     }
