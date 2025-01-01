@@ -177,13 +177,13 @@ public class MatchService {
         validateMatchStatus(matches);
 
         matches.updateStatus(status);
+        matchesRepository.save(matches);
 
         if (status == Status.ACCEPTED) {
             User opponent = getOpponent(matches, user);
             acceptRequestAndCreateChatRoom(matches, user, opponent);
         }
 
-        matchesRepository.save(matches);
         return true;
     }
 
