@@ -177,6 +177,12 @@ public class MatchService {
         validateMatchStatus(matches);
 
         matches.updateStatus(status);
+
+        if (status == Status.ACCEPTED) {
+            User opponent = getOpponent(matches, user);
+            acceptRequestAndCreateChatRoom(matches, user, opponent);
+        }
+
         matchesRepository.save(matches);
         return true;
     }
@@ -215,14 +221,7 @@ public class MatchService {
         // 기존에 상대가 스파링 요청을 한 상태일 시, 수락
         for (Matches matched : matches) {
             if (matched.getStatus().equals(Status.PENDING)) {
-                matched.updateStatus(Status.ACCEPTED);
-                // 이후 채팅방 생성 로직이 들어가거나 해야 할 듯.
-                chatService.createChannel(
-                        Arrays.asList(user, opponent),
-                        user.getNickname() + " vs " + opponent.getNickname(),
-                        "private",
-                        "chatting"
-                        );
+                acceptRequestAndCreateChatRoom(matched, user, opponent);
                 return;
             }
         }
@@ -245,6 +244,17 @@ public class MatchService {
         userMatchRepository.save(opponentMatch);
 
         notificationService.sendNotification(opponentId, user.getNickname());
+    }
+
+    private void acceptRequestAndCreateChatRoom(Matches matched, User user, User opponent) {
+        matched.updateStatus(Status.ACCEPTED);
+        // 이후 채팅방 생성 로직이 들어가거나 해야 할 듯.
+        chatService.createChannel(
+                Arrays.asList(user, opponent),
+                user.getNickname() + " vs " + opponent.getNickname(),
+                "private",
+                "chatting"
+                );
     }
 
     public List<MatchPendingDto> getPendingMatchesChallengedTo(Long userId) {
