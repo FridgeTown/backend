@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package com.example.grpc;
+
+service NodeService {
+  rpc CreateStream (Request) returns (Response);
+  rpc DeleteStream (Request) returns (Response);
+  rpc StartStreaming (Request) returns (Response);
+  rpc StopStreaming (Request) returns (Response);
+}
+
+message Request {
+  int64 channelId = 1;
+}
+
+message Response {
+  bool success = 1;
+}
