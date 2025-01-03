@@ -18,3 +18,10 @@ talkplus:
     get-user-channels: https://api.talkplus.io/v1.4/api/users/:userId/channels
   app-id: abc3aa8d-947b-4549-a793-7c79dcd57333
   api-key: ed4172e48a0c3ff202af330fd381f81cdd2c02f92fec9177b39a8f91b49c8d29
+
+io:
+  netty:
+    resolver:
+      dns:
+        native:
+          disabled=true:
