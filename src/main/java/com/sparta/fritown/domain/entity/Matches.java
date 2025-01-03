@@ -65,4 +65,10 @@ public class Matches {
         this.challengedBy = challengedBy;
         this.status = status;
     }
+
+    public void validateMatchedUserId(Long userId) {
+        if(!challengedBy.getId().equals(userId) && !challengedTo.getId().equals(userId)) {
+            throw new IllegalArgumentException("dd");
+        }
+    }
 }
