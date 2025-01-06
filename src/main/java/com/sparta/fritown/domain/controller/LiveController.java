@@ -63,7 +63,7 @@ public class LiveController implements LiveControllerDocs {
     public ResponseDto setThumbNail(@PathVariable Long matchId,
                                     @RequestParam("file") MultipartFile file){
         try {
-            String imageFileName = s3Service.uploadFile(file, matchId);
+            String imageFileName = s3Service.uploadFile(file);
 
             liveService.updateThumbNail(matchId, imageFileName);
 
