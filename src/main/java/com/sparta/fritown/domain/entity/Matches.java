@@ -86,6 +86,10 @@ public class Matches {
         return this.date.isAfter(todayDate) && this.status.equals(Status.ACCEPTED);
     }
 
+    public void setTitle(String userName, String opponentName) {
+        this.title = userName + "vs" + opponentName;
+    }
+
     public void incrementViewNum()
     {
         this.viewNum++;
