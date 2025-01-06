@@ -71,4 +71,11 @@ public class Matches {
             throw new IllegalArgumentException("dd");
         }
     }
+
+    public boolean isValidHistory(LocalDate todayDate) {
+        return this.date.isBefore(todayDate) && this.status.equals(Status.DONE);
+    }
+    public boolean isValidFuture(LocalDate todayDate) {
+        return this.date.isAfter(todayDate) && this.status.equals(Status.ACCEPTED);
+    }
 }
