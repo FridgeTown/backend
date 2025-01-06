@@ -1,12 +1,19 @@
 package com.sparta.fritown.domain.controller;
 
+import com.sparta.fritown.domain.dto.live.LiveResponseDto;
 import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.domain.service.LiveService;
 import com.sparta.fritown.global.docs.LiveControllerDocs;
+import com.sparta.fritown.global.exception.SuccessCode;
+import com.sparta.fritown.global.exception.dto.ResponseDto;
 import com.sparta.fritown.global.security.dto.UserDetailsImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@Slf4j
 @RestController
 @RequestMapping("/live")
 public class LiveController implements LiveControllerDocs {
@@ -42,7 +49,8 @@ public class LiveController implements LiveControllerDocs {
     }
 
     @GetMapping("/list")
-    public void getLiveList(){
-        liveService.getLiveList();
+    public ResponseDto<List<LiveResponseDto>> getLiveList(){
+        List<LiveResponseDto> liveResponseDtos = liveService.getLiveList();
+        return ResponseDto.success(SuccessCode.LIVE_LIST, liveResponseDtos);
     }
 }
