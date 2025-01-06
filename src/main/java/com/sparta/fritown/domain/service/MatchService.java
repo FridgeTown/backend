@@ -80,19 +80,9 @@ public class MatchService {
         LocalDate todayDate = LocalDate.now();
 
         return user.getUserMatches().stream()
-                .filter(userMatch -> isValidMatch(userMatch, todayDate))
+                .filter(userMatch -> userMatch.getMatches().isValidHistory(todayDate))
                 .map(userMatch -> createMatchSummaryDto(userMatch, user))
                 .collect(Collectors.toList());
-    }
-
-    private boolean isValidMatch(UserMatch userMatch, LocalDate todayDate) {
-        Matches matches = userMatch.getMatches();
-        return matches.getDate().isBefore(todayDate) && matches.getStatus().equals(Status.DONE);
-    }
-
-    private boolean isFutureMatch(UserMatch userMatch, LocalDate todayDate) {
-        Matches matches = userMatch.getMatches();
-        return matches.getDate().isAfter(todayDate) && matches.getStatus().equals(Status.ACCEPTED);
     }
 
 
@@ -155,11 +145,10 @@ public class MatchService {
         LocalDate todayDate = LocalDate.now();
 
         return user.getUserMatches().stream()
-                .filter(userMatch -> isFutureMatch(userMatch, todayDate))
+                .filter(userMatch -> userMatch.getMatches().isValidFuture(todayDate))
                 .map(userMatch -> createMatchFutureDto(userMatch, user))
                 .collect(Collectors.toList());
     }
-
 
     public boolean matchAccept(Long matchId, String email) {
         return handleMatch(matchId, email, Status.ACCEPTED);
