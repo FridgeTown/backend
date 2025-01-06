@@ -42,6 +42,9 @@ public class Matches {
     @JoinColumn(name = "CHALLENGED_BY_ID")
     private User challengedBy;
 
+    private Long viewNum;
+    private String thumbNail;
+
 
     @Builder
     public Matches(User challengedBy, User challengedTo, String place, String title, LocalDate date) {
