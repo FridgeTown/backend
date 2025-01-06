@@ -34,7 +34,12 @@ public class LiveService {
         matchesRepository.save(matches);
     }
 
-    public void liveEnd() {
+    public void liveEnd(Long matchId) {
+        Matches matches = matchesRepository.findById(matchId)
+                .orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
+
+        matches.setStatus(Status.DONE);
+        matchesRepository.save(matches);
     }
 
     public void liveWatchStart() {
