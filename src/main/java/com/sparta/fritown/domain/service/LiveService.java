@@ -1,8 +1,8 @@
 package com.sparta.fritown.domain.service;
 
 import com.sparta.fritown.domain.dto.live.LiveResponseDto;
+import com.sparta.fritown.domain.dto.live.LiveStartRequestDto;
 import com.sparta.fritown.domain.entity.Matches;
-import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.domain.entity.enums.Status;
 import com.sparta.fritown.domain.repository.MatchesRepository;
 import com.sparta.fritown.global.exception.ErrorCode;
@@ -30,10 +30,20 @@ public class LiveService {
         this.s3Service = s3Service;
     }
 
-    public void liveStart() {
+    public void liveStart(LiveStartRequestDto liveStartRequestDto) {
+        Matches matches = matchesRepository.findById(liveStartRequestDto.getMatchId())
+                .orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
+
+        matches.setStatus(Status.PROGRESS);
+        matchesRepository.save(matches);
     }
 
-    public void liveEnd() {
+    public void liveEnd(Long matchId) {
+        Matches matches = matchesRepository.findById(matchId)
+                .orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
+
+        matches.setStatus(Status.DONE);
+        matchesRepository.save(matches);
     }
 
     public void liveWatchStart(Long matchId) {
