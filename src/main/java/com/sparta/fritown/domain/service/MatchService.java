@@ -237,6 +237,7 @@ public class MatchService {
 
     private void acceptRequestAndCreateChatRoom(Matches matched, User user, User opponent) {
         matched.updateStatus(Status.ACCEPTED);
+        matched.setTitle(user.getNickname(), opponent.getNickname());
         // 이후 채팅방 생성 로직이 들어가거나 해야 할 듯.
         chatService.createChannel(
                 Arrays.asList(user, opponent),
@@ -244,6 +245,8 @@ public class MatchService {
                 "private",
                 "chatting"
                 );
+
+        matchesRepository.save(matched);
     }
 
     public List<MatchPendingDto> getPendingMatchesChallengedTo(Long userId) {
