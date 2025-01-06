@@ -1,6 +1,7 @@
 package com.sparta.fritown.domain.controller;
 
 import com.sparta.fritown.domain.dto.live.LiveResponseDto;
+import com.sparta.fritown.domain.dto.live.LiveStartRequestDto;
 import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.domain.service.LiveService;
 import com.sparta.fritown.global.docs.LiveControllerDocs;
@@ -32,14 +33,15 @@ public class LiveController implements LiveControllerDocs {
 
 
     @PostMapping("/start")
-    public void liveStart(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        liveService.liveStart();
-
+    public ResponseDto<Void> liveStart(@RequestBody LiveStartRequestDto liveStartRequestDto) {
+        liveService.liveStart(liveStartRequestDto);
+        return ResponseDto.success(SuccessCode.LIVE_PROGRESS);
     }
 
     @PostMapping("/end/{matchId}")
-    public void liveEnd(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        liveService.liveEnd();
+    public ResponseDto<Void> liveEnd(@PathVariable Long matchId) {
+        liveService.liveEnd(matchId);
+        return ResponseDto.success(SuccessCode.LIVE_DONE);
     }
 
     @PostMapping("/watch/start/{matchId}")
@@ -60,7 +62,7 @@ public class LiveController implements LiveControllerDocs {
     }
 
     @PostMapping("/thumbnail/{matchId}")
-    public ResponseDto setThumbNail(@PathVariable Long matchId,
+    public ResponseDto<Void> setThumbNail(@PathVariable Long matchId,
                                     @RequestParam("file") MultipartFile file){
         try {
             String imageFileName = s3Service.uploadFile(file);
