@@ -86,7 +86,7 @@ public class UserController implements UserControllerDocs {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam("file")MultipartFile file) {
         try {
-            String imageFileName = s3Service.uploadFile(file, userDetails.getId());
+            String imageFileName = s3Service.uploadFile(file);
 
             userService.updateProfileImage(userDetails.getId(), imageFileName);
             klatService.updateProfileImage(userDetails.getId(), imageFileName);
