@@ -1,6 +1,8 @@
 package com.sparta.fritown.domain.entity;
 
 import com.sparta.fritown.domain.entity.enums.Status;
+import com.sparta.fritown.global.exception.ErrorCode;
+import com.sparta.fritown.global.exception.custom.ServiceException;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,7 +44,9 @@ public class Matches {
     @JoinColumn(name = "CHALLENGED_BY_ID")
     private User challengedBy;
 
-    private Long viewNum;
+    @Column(nullable = false)
+    private Long viewNum = 0L;
+
     private String thumbNail;
 
 
@@ -88,5 +92,20 @@ public class Matches {
 
     public void setThumbNail(String thumbNail) {
         this.thumbNail = thumbNail;
+    }
+
+    public void incrementViewNum()
+    {
+        this.viewNum++;
+    }
+
+    public void decrementViewNum() {
+
+        if(this.viewNum <=0)
+        {
+            throw ServiceException.of(ErrorCode.VIEW_COUNT_CANNOT_BE_NEGATIVE);
+        } else {
+            this.viewNum--;
+        }
     }
 }
