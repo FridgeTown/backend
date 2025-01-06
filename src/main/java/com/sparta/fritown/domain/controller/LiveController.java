@@ -39,8 +39,9 @@ public class LiveController implements LiveControllerDocs {
     }
 
     @PostMapping("/end/{matchId}")
-    public void liveEnd(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        liveService.liveEnd();
+    public ResponseDto<Void> liveEnd(@PathVariable Long matchId) {
+        liveService.liveEnd(matchId);
+        return ResponseDto.success(SuccessCode.LIVE_DONE);
     }
 
     @PostMapping("/watch/start/{matchId}")
