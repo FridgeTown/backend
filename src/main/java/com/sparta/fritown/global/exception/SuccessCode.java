@@ -18,7 +18,11 @@ public enum SuccessCode implements ApiCode {
     IMAGE_UPLOADED(HttpStatus.OK, "I001", "이미지를 성공적으로 업로드 하였습니다."),
 
     //live
-    LIVE_LIST(HttpStatus.OK, "L001", "실시간 방송중인 리스트를 성공적으로 반환하였습니다.");
+    LIVE_LIST(HttpStatus.OK, "L001", "실시간 방송중인 리스트를 성공적으로 반환하였습니다."),
+    LIVE_WATCH_STARTED(HttpStatus.OK,"L002","매치의 viewNum을 성공적으로 1 증가시켰습니다."),
+    LIVE_WATCH_ENDED(HttpStatus.OK,"L003","매치의 viewNum을 성공적으로 1 감소시켰습니다."),
+
+    ;
 
     private final HttpStatus status;
     private final String code;
