@@ -15,7 +15,10 @@ public enum SuccessCode implements ApiCode {
     MATCHES_PENDING(HttpStatus.OK, "M006", "요청 받은 스파링을 성공적으로 반환하였습니다." ),
 
     //image
-    IMAGE_UPLOADED(HttpStatus.OK, "I001", "이미지를 성공적으로 업로드 하였습니다.");
+    IMAGE_UPLOADED(HttpStatus.OK, "I001", "이미지를 성공적으로 업로드 하였습니다."),
+
+    //live
+    LIVE_LIST(HttpStatus.OK, "L001", "실시간 방송중인 리스트를 성공적으로 반환하였습니다.");
 
     private final HttpStatus status;
     private final String code;
