@@ -10,10 +10,10 @@ public class LiveResponseDto {
     private final String thumbNail;
     private final String place;
 
-    public LiveResponseDto(Matches matche) {
+    public LiveResponseDto(Matches matche, String fileUrl) {
         this.matchId = matche.getId();
         this.title = matche.getTitle();
-        this.thumbNail = matche.getThumbNail();
+        this.thumbNail = fileUrl;
         this.place = matche.getPlace();
     }
 }
