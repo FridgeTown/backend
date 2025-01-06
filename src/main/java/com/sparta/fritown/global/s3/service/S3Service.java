@@ -25,7 +25,7 @@ public class S3Service {
         this.bucketName = bucketName;
     }
 
-    public String uploadFile(MultipartFile file, Long userId) throws IOException {
+    public String uploadFile(MultipartFile file) throws IOException {
         // MultipartFile을 임시 파일로 변환
         Path tempFile = Files.createTempFile("upload-", file.getOriginalFilename());
         try {
@@ -33,7 +33,7 @@ public class S3Service {
             file.transferTo(tempFile.toFile());
 
             // 파일명을 유니크하게 설정
-            String fileName = userId + "_" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
 
             // S3에 파일 업로드
             amazonS3.putObject(new PutObjectRequest(bucketName, fileName, tempFile.toFile()));
