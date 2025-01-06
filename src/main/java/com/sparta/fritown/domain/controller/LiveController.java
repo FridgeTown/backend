@@ -5,10 +5,7 @@ import com.sparta.fritown.domain.service.LiveService;
 import com.sparta.fritown.global.docs.LiveControllerDocs;
 import com.sparta.fritown.global.security.dto.UserDetailsImpl;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/live")
@@ -33,14 +30,15 @@ public class LiveController implements LiveControllerDocs {
     }
 
     @PostMapping("/watch/start/{matchId}")
-    public void liveWatchStart() {
-        liveService.liveWatchStart();
+    public void liveWatchStart(@PathVariable Long matchId) {
+        // Match의 viewNum 을 1 증가시킵니다.
+        liveService.liveWatchStart(matchId);
     }
 
     @PostMapping("/watch/end/{matchId}")
-    public void liveWatchEnd() {
-        liveService.liveWatchEnd();
-
+    public void liveWatchEnd(@PathVariable Long matchId) {
+        // Match의 viewNum을 1 감소시킵니다.
+        liveService.liveWatchEnd(matchId);
     }
 
     @GetMapping("/list")

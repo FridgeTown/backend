@@ -24,7 +24,10 @@ public enum ErrorCode implements ApiCode {
 
     USER_EMAIL_DUPLICATE(HttpStatus.BAD_REQUEST, "U005", "기존에 존재하는 이메일입니다."),
     // image
-    IMAGE_UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "I001", "이미지 업로드에 실패하였습니다.");
+    IMAGE_UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "I001", "이미지 업로드에 실패하였습니다."),
+
+    // live
+    VIEW_COUNT_CANNOT_BE_NEGATIVE(HttpStatus.BAD_REQUEST, "L001", "매치의 viewNum이 0보다 작을 수 없습니다.");
 
 
     private final HttpStatus status;
