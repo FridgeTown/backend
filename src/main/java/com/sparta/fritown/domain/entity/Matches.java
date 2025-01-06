@@ -90,6 +90,10 @@ public class Matches {
         this.title = userName + "vs" + opponentName;
     }
 
+    public void setThumbNail(String thumbNail) {
+        this.thumbNail = thumbNail;
+    }
+
     public void incrementViewNum()
     {
         this.viewNum++;
