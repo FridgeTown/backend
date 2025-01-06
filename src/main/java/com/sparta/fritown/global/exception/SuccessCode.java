@@ -21,9 +21,8 @@ public enum SuccessCode implements ApiCode {
     LIVE_LIST(HttpStatus.OK, "L001", "실시간 방송중인 리스트를 성공적으로 반환하였습니다."),
     LIVE_WATCH_STARTED(HttpStatus.OK,"L002","매치의 viewNum을 성공적으로 1 증가시켰습니다."),
     LIVE_WATCH_ENDED(HttpStatus.OK,"L003","매치의 viewNum을 성공적으로 1 감소시켰습니다."),
-    LIVE_LIST(HttpStatus.OK, "L004", "실시간 방송중인 리스트를 성공적으로 반환하였습니다."),
-    LIVE_PROGRESS(HttpStatus.OK, "L005", "매치 상태를 PROGRESS로 성공적으로 설정하였습니다."),
-    LIVE_DONE(HttpStatus.OK, "L006", "매치 상태를 DONE으로 성공적으로 설정하였습니다.");
+    LIVE_PROGRESS(HttpStatus.OK, "L004", "매치 상태를 PROGRESS로 성공적으로 설정하였습니다."),
+    LIVE_DONE(HttpStatus.OK, "L005", "매치 상태를 DONE으로 성공적으로 설정하였습니다.");
 
     private final HttpStatus status;
     private final String code;
