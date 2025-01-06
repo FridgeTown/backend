@@ -85,4 +85,8 @@ public class Matches {
     public void setTitle(String userName, String opponentName) {
         this.title = userName + "vs" + opponentName;
     }
+
+    public void setThumbNail(String thumbNail) {
+        this.thumbNail = thumbNail;
+    }
 }

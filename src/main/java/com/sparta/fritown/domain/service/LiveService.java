@@ -2,8 +2,12 @@ package com.sparta.fritown.domain.service;
 
 import com.sparta.fritown.domain.dto.live.LiveResponseDto;
 import com.sparta.fritown.domain.entity.Matches;
+import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.domain.entity.enums.Status;
 import com.sparta.fritown.domain.repository.MatchesRepository;
+import com.sparta.fritown.global.exception.ErrorCode;
+import com.sparta.fritown.global.exception.custom.ServiceException;
+import com.sparta.fritown.global.s3.service.S3Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +19,11 @@ import java.util.List;
 public class LiveService {
 
     private final MatchesRepository matchesRepository;
+    private final S3Service s3Service;
 
-    public LiveService(MatchesRepository matchesRepository) {
+    public LiveService(MatchesRepository matchesRepository, S3Service s3Service) {
         this.matchesRepository = matchesRepository;
+        this.s3Service = s3Service;
     }
 
     public void liveStart() {
@@ -36,10 +42,19 @@ public class LiveService {
         List<Matches> matches = matchesRepository.findByStatus(Status.PROGRESS);
         List<LiveResponseDto> liveResponseDtos = new ArrayList<>();
         for (Matches matche : matches) {
-            LiveResponseDto liveResponseDto = new LiveResponseDto(matche);
+            String fileUrl = s3Service.getFileUrl(matche.getThumbNail());
+            LiveResponseDto liveResponseDto = new LiveResponseDto(matche, fileUrl);
             liveResponseDtos.add(liveResponseDto);
         }
 
         return liveResponseDtos;
+    }
+
+    public void updateThumbNail(Long matchId, String imageFileName) {
+        Matches matches = matchesRepository.findById(matchId)
+                .orElseThrow(() -> ServiceException.of(ErrorCode.IMAGE_UPLOAD_FAIL));
+        matches.setThumbNail(imageFileName);
+
+        matchesRepository.save(matches);
     }
 }
