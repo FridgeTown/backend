@@ -37,15 +37,18 @@ public class LiveController implements LiveControllerDocs {
     }
 
     @PostMapping("/watch/start/{matchId}")
-    public void liveWatchStart(@PathVariable Long matchId) {
+    public ResponseDto<Void> liveWatchStart(@PathVariable Long matchId) {
         // Match의 viewNum 을 1 증가시킵니다.
         liveService.liveWatchStart(matchId);
+        return ResponseDto.success(SuccessCode.LIVE_WATCH_STARTED);
     }
 
     @PostMapping("/watch/end/{matchId}")
-    public void liveWatchEnd(@PathVariable Long matchId) {
+    public ResponseDto<Void> liveWatchEnd(@PathVariable Long matchId) {
         // Match의 viewNum을 1 감소시킵니다.
         liveService.liveWatchEnd(matchId);
+        return ResponseDto.success(SuccessCode.LIVE_WATCH_ENDED);
+
     }
 
     @GetMapping("/list")

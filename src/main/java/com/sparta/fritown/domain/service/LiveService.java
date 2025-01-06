@@ -34,11 +34,18 @@ public class LiveService {
 
         Matches matches = matchesRepository.findById(matchId).orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
         matches.incrementViewNum();
+
+        // 변경 사항 저장
+        matchesRepository.save(matches);
     }
 
     public void liveWatchEnd(Long matchId) {
         Matches matches = matchesRepository.findById(matchId).orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
         matches.decrementViewNum();
+
+        // 변경 사항 저장
+        matchesRepository.save(matches);
+
     }
 
     public List<LiveResponseDto> getLiveList() {
