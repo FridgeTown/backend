@@ -5,7 +5,6 @@ import com.sparta.fritown.domain.service.KlatService;
 import com.sparta.fritown.global.docs.AuthControllerDocs;
 import com.sparta.fritown.global.security.dto.StatusResponseDto;
 import com.sparta.fritown.global.security.util.JwtUtil;
-import com.sparta.fritown.global.security.repository.RefreshTokenRepository;
 import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.domain.service.UserService;
 import io.jsonwebtoken.Claims;
@@ -28,7 +27,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthController implements AuthControllerDocs {
     private final UserService userService;
-    private final RefreshTokenRepository tokenRepository;
     private final JwtUtil jwtUtil;
     private final RestTemplate restTemplate;
     private final KlatService klatService;

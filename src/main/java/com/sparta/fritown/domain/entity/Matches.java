@@ -42,6 +42,9 @@ public class Matches {
     @JoinColumn(name = "CHALLENGED_BY_ID")
     private User challengedBy;
 
+    private Long viewNum;
+    private String thumbNail;
+
 
     @Builder
     public Matches(User challengedBy, User challengedTo, String place, String title, LocalDate date) {
@@ -70,5 +73,12 @@ public class Matches {
         if(!challengedBy.getId().equals(userId) && !challengedTo.getId().equals(userId)) {
             throw new IllegalArgumentException("dd");
         }
+    }
+
+    public boolean isValidHistory(LocalDate todayDate) {
+        return this.date.isBefore(todayDate) && this.status.equals(Status.DONE);
+    }
+    public boolean isValidFuture(LocalDate todayDate) {
+        return this.date.isAfter(todayDate) && this.status.equals(Status.ACCEPTED);
     }
 }
