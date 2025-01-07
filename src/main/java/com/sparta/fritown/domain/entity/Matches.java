@@ -94,6 +94,10 @@ public class Matches {
         this.thumbNail = thumbNail;
     }
 
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
     public void incrementViewNum()
     {
         this.viewNum++;
