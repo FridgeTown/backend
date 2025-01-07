@@ -151,8 +151,21 @@ public interface LiveControllerDocs {
                                     {
                                         "status": 200,
                                         "message": "실시간 방송중인 리스트를 성공적으로 반환하였습니다.",
-                                        "data": []
-                                    }
+                                        "data": [
+                                              {
+                                                 "matchId": 1,
+                                                 "title": "Boxing Championship 2025",
+                                                 "thumbNail": "https://example.com/thumbnail1.jpg",
+                                                 "place": "Madison Square Garden"
+                                              },
+                                              {
+                                                 "matchId": 2,
+                                                 "title": "MMA World Cup",
+                                                 "thumbNail": "https://example.com/thumbnail2.jpg",
+                                                 "place": "Staples Center"
+                                              }
+                                           ]
+                                        }
                                     """
                             )
                     )
