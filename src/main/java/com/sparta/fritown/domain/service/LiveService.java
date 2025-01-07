@@ -30,6 +30,7 @@ public class LiveService {
         Matches matches = matchesRepository.findById(liveStartRequestDto.getMatchId())
                 .orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
 
+        matches.setPlace(liveStartRequestDto.getPlace());
         matches.setStatus(Status.PROGRESS);
         matchesRepository.save(matches);
     }
