@@ -89,4 +89,8 @@ public class Matches {
     public void setThumbNail(String thumbNail) {
         this.thumbNail = thumbNail;
     }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
 }
