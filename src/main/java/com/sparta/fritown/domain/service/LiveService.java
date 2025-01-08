@@ -2,41 +2,57 @@ package com.sparta.fritown.domain.service;
 
 import com.sparta.fritown.domain.dto.live.LiveResponseDto;
 import com.sparta.fritown.domain.dto.live.LiveStartRequestDto;
+import com.sparta.fritown.domain.dto.live.LiveStartResponseDto;
 import com.sparta.fritown.domain.entity.Matches;
+import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.domain.entity.enums.Status;
 import com.sparta.fritown.domain.repository.MatchesRepository;
+import com.sparta.fritown.domain.repository.UserRepository;
 import com.sparta.fritown.global.exception.ErrorCode;
 import com.sparta.fritown.global.exception.custom.ServiceException;
 import com.sparta.fritown.global.s3.service.S3Service;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.sparta.fritown.domain.entity.Matches;
 import com.sparta.fritown.domain.repository.MatchesRepository;
 import com.sparta.fritown.global.exception.ErrorCode;
 import com.sparta.fritown.global.exception.custom.ServiceException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class LiveService {
 
     private final MatchesRepository matchesRepository;
+    private final UserRepository userRepository;
+    private final ChatService chatService;
     private final S3Service s3Service;
 
-    public LiveService(MatchesRepository matchesRepository, S3Service s3Service) {
-        this.matchesRepository = matchesRepository;
-        this.s3Service = s3Service;
-    }
 
-    public void liveStart(LiveStartRequestDto liveStartRequestDto) {
-        Matches matches = matchesRepository.findById(liveStartRequestDto.getMatchId())
-                .orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
+    @Transactional
+    public LiveStartResponseDto liveStart(LiveStartRequestDto liveStartRequestDto, Long userId) {
+        Matches matches = matchesRepository.findByChannelId(liveStartRequestDto.getChannelId());
+
+        User me = userRepository.findById(userId).orElseThrow(() -> ServiceException.of(ErrorCode.USER_NOT_FOUND));
 
         matches.setPlace(liveStartRequestDto.getPlace());
         matches.setStatus(Status.PROGRESS);
+
+        String chatroomId = chatService.createLiveChatChannel(
+                me,
+                matches.getChallengedBy().getNickname() + " vs " + matches.getChallengedTo().getNickname(),
+                "public",
+                "streaming"
+        );
+
         matchesRepository.save(matches);
+        return new LiveStartResponseDto(chatroomId);
     }
 
     public void liveEnd(Long matchId) {

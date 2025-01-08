@@ -2,7 +2,9 @@ package com.sparta.fritown.global.docs;
 
 import com.sparta.fritown.domain.dto.live.LiveResponseDto;
 import com.sparta.fritown.domain.dto.live.LiveStartRequestDto;
+import com.sparta.fritown.domain.dto.live.LiveStartResponseDto;
 import com.sparta.fritown.global.exception.dto.ResponseDto;
+import com.sparta.fritown.global.security.dto.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,6 +14,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,7 +47,7 @@ public interface LiveControllerDocs {
             ))
         }
     )
-    ResponseDto<Void> liveStart(
+    ResponseDto<LiveStartResponseDto> liveStart(
             @RequestBody(description = "방송 시작 요청 데이터", required = true,content = @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = LiveStartRequestDto.class),
@@ -52,12 +55,12 @@ public interface LiveControllerDocs {
                             name = "요청 데이터 예시",
                             value = """
                                     {
-                                        "matchId": 1,
+                                        "channelId": "qpwoehpoasdvasf",
                                         "place" : "Main Arena"
                                     }
                                     """
                     )
-            )) LiveStartRequestDto liveStartRequestDto
+            )) LiveStartRequestDto liveStartRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails
     );
 
     @Operation(summary = "방송 종료", description = "매치 ID를 받아 매치 상태를 DONE 으로 변경합니다.")
