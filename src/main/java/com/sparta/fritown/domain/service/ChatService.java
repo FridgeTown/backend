@@ -24,7 +24,7 @@ public class ChatService {
 
     // 채널 생성
     // MatchService 에서 사용
-    public void createChannel(List<User> userList, String chatRoomName, String type, String category)
+    public String createChannel(List<User> userList, String chatRoomName, String type, String category)
     {
         // 채팅방에 참여하고 있는 유저 Id의 리스트
         List<String> userIdList = new ArrayList<>();
@@ -36,7 +36,7 @@ public class ChatService {
 
         KlatCreateChannelRequestDto request = new KlatCreateChannelRequestDto(chatRoomName,ownerId,type,userIdList,category);
 
-        callCreateChannelApi(request);
+        return callCreateChannelApi(request);
     }
 
     public String createLiveChatChannel(User user, String chatRoomName, String type, String category)

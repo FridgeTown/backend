@@ -4,11 +4,11 @@ import lombok.Getter;
 
 @Getter
 public class LiveStartRequestDto {
-    private final Long matchId;
+    private final String channelId; // 1:1 채팅 아이디
     private final String place;
 
-    public LiveStartRequestDto(Long matchId, String place) {
-        this.matchId = matchId;
+    public LiveStartRequestDto(String place, String channelId) {
+        this.channelId = channelId;
         this.place = place;
     }
 }

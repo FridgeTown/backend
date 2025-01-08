@@ -36,7 +36,7 @@ public class LiveController implements LiveControllerDocs {
 
     @PostMapping("/start")
     public ResponseDto<LiveStartResponseDto> liveStart(@RequestBody LiveStartRequestDto liveStartRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        LiveStartResponseDto liveStartResponseDto = liveService.liveStart(liveStartRequestDto, userDetails.getId());
+        LiveStartResponseDto liveStartResponseDto = liveService.liveStart(liveStartRequestDto,  userDetails.getId());
         return ResponseDto.success(SuccessCode.LIVE_PROGRESS, liveStartResponseDto);
     }
 

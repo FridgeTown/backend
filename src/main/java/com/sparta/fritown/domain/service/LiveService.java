@@ -37,8 +37,7 @@ public class LiveService {
 
     @Transactional
     public LiveStartResponseDto liveStart(LiveStartRequestDto liveStartRequestDto, Long userId) {
-        Matches matches = matchesRepository.findById(liveStartRequestDto.getMatchId())
-                .orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
+        Matches matches = matchesRepository.findByChannelId(liveStartRequestDto.getChannelId());
 
         User me = userRepository.findById(userId).orElseThrow(() -> ServiceException.of(ErrorCode.USER_NOT_FOUND));
 
