@@ -76,7 +76,7 @@ public class Matches {
 
     public void validateMatchedUserId(Long userId) {
         if(!challengedBy.getId().equals(userId) && !challengedTo.getId().equals(userId)) {
-            throw new IllegalArgumentException("dd");
+            throw ServiceException.of(ErrorCode.USER_NOT_PART_OF_MATCH);
         }
     }
 
