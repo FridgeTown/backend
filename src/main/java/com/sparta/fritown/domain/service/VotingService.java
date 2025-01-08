@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class VotingService {
 
     private final Map<Long,Map<Long,SseEmitter>> userEmitters = new ConcurrentHashMap<>();
+    private final Map<Long,Map<Long,Boolean>> voted = new ConcurrentHashMap<>();
     /**
      * userEmitters 데이터 구조:
      *
@@ -55,6 +56,9 @@ public class VotingService {
     // Live 생성 혹은 시청을 시작시에 subscribe 가 호출 된다.
     public SseEmitter subscribe(Long matchId, Long userId)
     {
+
+        voted.computeIfAbsent(matchId, key -> new ConcurrentHashMap<>()).put(userId, false);
+
         // matchId에 해당하는 Matches 엔티티를 확인
         Matches match = matchesRepository.findById(matchId).orElseThrow(()-> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
 
@@ -118,25 +122,28 @@ public class VotingService {
 
 
     // 특정 match의 특정 userId를 가진 user에게 투표
-    public void voteForUser(Long matchId, Long userId)
+    public void voteForUser(Long matchId, Long playerId, Long userId)
     {
         // matchId에 해당하는 Matches 엔티티를 확인
         Matches match = matchesRepository.findById(matchId).orElseThrow(()-> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
 
         // userId가 매치 참여자인지 검증한다.
-        match.validateMatchedUserId(userId);
+        match.validateMatchedUserId(playerId);
 
         // matchId에 대한 유저별 투표 결과 가져오기 (없으면 생성)
         Map<Long,Integer> userVotes = voteResults.computeIfAbsent(matchId,key -> new HashMap<>());
 
-        if(userVotes.containsKey(userId))
-        {
-            log.warn("이미 투표한 사용자: matchId={}, userId={}",matchId,userId);
+        Map<Long,Boolean> matchVotes = voted.computeIfAbsent(matchId, key -> new ConcurrentHashMap<>());
+
+        if(Boolean.TRUE.equals(matchVotes.get(userId))) {
+            log.warn("이미 투표한 사용자: matchId={}, userId={}", matchId, userId);
             throw ServiceException.of(ErrorCode.ALREADY_VOTED);
         }
+        userVotes.put(playerId, userVotes.getOrDefault(playerId, 0) + 1);
 
-        userVotes.put(userId, userVotes.getOrDefault(userId, 0) + 1);
-        log.info("투표 업데이트: matchId {}, userId {}, 현재 투표 결과 {}", matchId, userId, userVotes);
+        // 투표 상태를 true로 설정
+        matchVotes.put(userId, true);
+        log.info("투표 업데이트: matchId {}, userId {}, 현재 투표 결과 {}", matchId, playerId, userVotes);
 
         // 현재 matchId에 연결된 모든 클라이언트에게 실시간 데이터 전송
         broadcastVoteUpdate(matchId, userVotes);
