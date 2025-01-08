@@ -46,7 +46,7 @@ public class LiveService {
 
         String chatroomId = chatService.createLiveChatChannel(
                 me,
-                me.getNickname() + "'s ROOM",
+                matches.getChallengedBy().getNickname() + " vs " + matches.getChallengedTo().getNickname(),
                 "public",
                 "streaming"
         );
