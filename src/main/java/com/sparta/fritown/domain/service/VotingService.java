@@ -93,6 +93,9 @@ public class VotingService {
 
     public void unsubscribe(Long matchId, Long userId)
     {
+        // matchId에 해당하는 Matches 엔티티를 확인
+        Matches match = matchesRepository.findById(matchId).orElseThrow(()-> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
+
         // matchId에 연결된 emitters 리스트 가져오기
         Map<Long,SseEmitter> userSseMap = userEmitters.get(matchId);
 
