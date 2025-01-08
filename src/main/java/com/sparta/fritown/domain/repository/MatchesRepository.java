@@ -14,4 +14,5 @@ public interface MatchesRepository extends JpaRepository<Matches, Long> {
     List<Matches> findByStatusIn(List<Status> statuses);
     List<Matches> findByChallengedToIdAndStatus(Long challengedById, Status status);
     List<Matches> findByStatus(Status status);
+    Matches findByChannelId(String channelId);
 }
