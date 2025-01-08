@@ -2,6 +2,7 @@ package com.sparta.fritown.domain.controller;
 
 import com.sparta.fritown.domain.dto.live.LiveResponseDto;
 import com.sparta.fritown.domain.dto.live.LiveStartRequestDto;
+import com.sparta.fritown.domain.dto.live.LiveStartResponseDto;
 import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.domain.service.LiveService;
 import com.sparta.fritown.global.docs.LiveControllerDocs;
@@ -34,9 +35,9 @@ public class LiveController implements LiveControllerDocs {
 
 
     @PostMapping("/start")
-    public ResponseDto<Void> liveStart(@RequestBody LiveStartRequestDto liveStartRequestDto) {
-        liveService.liveStart(liveStartRequestDto);
-        return ResponseDto.success(SuccessCode.LIVE_PROGRESS);
+    public ResponseDto<LiveStartResponseDto> liveStart(@RequestBody LiveStartRequestDto liveStartRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        LiveStartResponseDto liveStartResponseDto = liveService.liveStart(liveStartRequestDto,  userDetails.getId());
+        return ResponseDto.success(SuccessCode.LIVE_PROGRESS, liveStartResponseDto);
     }
 
     @PostMapping("/end/{matchId}")

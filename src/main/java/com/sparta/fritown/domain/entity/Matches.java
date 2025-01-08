@@ -49,6 +49,7 @@ public class Matches {
 
     private String thumbNail;
 
+    private String channelId; // 1:1 채팅방 아이디
 
     @Builder
     public Matches(User challengedBy, User challengedTo, String place, String title, LocalDate date) {
@@ -111,5 +112,9 @@ public class Matches {
         } else {
             this.viewNum--;
         }
+    }
+
+    public void setChannelId(String channelId) {
+        this.channelId = channelId;
     }
 }
