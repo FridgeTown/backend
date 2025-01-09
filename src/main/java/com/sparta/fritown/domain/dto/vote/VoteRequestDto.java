@@ -8,11 +8,11 @@ public class VoteRequestDto {
 
     @NotNull(message = "매치 ID는 필수입니다")
     private final Long matchId;
-    @NotNull(message = "유저 ID는 필수입니다.")
-    private final Long userId;
+    @NotNull(message = "플레이어 닉네임은 필수입니다.")
+    private final String playerNickname;
 
-    public VoteRequestDto(Long matchId, Long userId) {
+    public VoteRequestDto(Long matchId, String playerNickname) {
         this.matchId = matchId;
-        this.userId = userId;
+        this.playerNickname = playerNickname;
     }
 }
