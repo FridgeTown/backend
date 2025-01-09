@@ -92,4 +92,10 @@ public class User {
     public void setWeightClass(WeightClass weightClass) {
         this.weightClass = weightClass;
     }
+
+    public void resignation() {
+        this.email = "123";
+        this.nickname = "undefined_user";
+        this.profileImg = null;
+    }
 }
