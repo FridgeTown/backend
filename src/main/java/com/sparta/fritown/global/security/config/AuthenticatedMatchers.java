@@ -12,6 +12,10 @@ public class AuthenticatedMatchers {
             "/signup"
     };
 
+    public static final String[] guestArray ={
+            "/voting/guest/**"
+    };
+
     public static final String[] testArray = {
             "/health/**",
             "/test/health"
