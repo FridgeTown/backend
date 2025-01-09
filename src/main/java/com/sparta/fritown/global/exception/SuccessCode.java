@@ -6,6 +6,9 @@ public enum SuccessCode implements ApiCode {
     OK(HttpStatus.OK, "C001", "Well done"),
     CREATED(HttpStatus.CREATED, "C002", "Created successfully"),
 
+    //user
+    USER_DELETED(HttpStatus.OK, "U001", "성공적으로 탈퇴하였습니다"),
+
     //match
     MATCHED_USERS(HttpStatus.OK, "M001", "스파링 했던 상대들을 성공적으로 반환하였습니다."),
     MATCHING_USERS(HttpStatus.OK, "M002", "스파링 예정 상대들을 성공적으로 반환하였습니다."),
@@ -27,7 +30,7 @@ public enum SuccessCode implements ApiCode {
     //vote
     SUBSCRIBE_SUCCESS(HttpStatus.OK, "V001", "구독이 성공적으로 완료되었습니다."),
     UNSUBSCRIBE_SUCCESS(HttpStatus.OK, "V002", "구독이 성공적으로 해지되었습니다."),
-    VOTE_SUCCESS(HttpStatus.OK, "V003", "투표가 성공적으로 완료되었습니다."),;
+    VOTE_SUCCESS(HttpStatus.OK, "V003", "투표가 성공적으로 완료되었습니다.");
 
 
     private final HttpStatus status;

@@ -128,4 +128,10 @@ public class UserService {
         excludedUserIds.add(userId);
         return excludedUserIds;
     }
+
+    public void resignateUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> ServiceException.of(ErrorCode.USER_NOT_FOUND));
+        user.resignation();
+        userRepository.save(user);
+    }
 }
