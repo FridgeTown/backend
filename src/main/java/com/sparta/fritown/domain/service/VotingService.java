@@ -1,7 +1,9 @@
 package com.sparta.fritown.domain.service;
 
 import com.sparta.fritown.domain.entity.Matches;
+import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.domain.repository.MatchesRepository;
+import com.sparta.fritown.domain.repository.UserRepository;
 import com.sparta.fritown.global.exception.ErrorCode;
 import com.sparta.fritown.global.exception.custom.ServiceException;
 import lombok.extern.slf4j.Slf4j;
@@ -11,52 +13,52 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 @Service
 @Slf4j
 public class VotingService {
 
-    private final Map<Long,Map<Long,SseEmitter>> userEmitters = new ConcurrentHashMap<>();
-    private final Map<Long,Map<Long,Boolean>> voted = new ConcurrentHashMap<>();
     /**
      * userEmitters 데이터 구조:
      *
-     * Map<Long, Map<Long, SseEmitter>>
+     * Map<Long, Map<String, SseEmitter>>
      * └── matchId (Long) : 특정 매치 ID
-     *     └── Map<Long, SseEmitter>
-     *         └── userId (Long) : 매치에 연결된 특정 유저 ID
+     *     └── Map<String, SseEmitter>
+     *         └── nickname (String) : 매치에 연결된 특정 유저의 닉네임
      *             └── SseEmitter : 해당 유저와의 SSE 연결 객체
      *
      * 예시 데이터:
      *
      * userEmitters = {
      *     1L: { // matchId 1
-     *         42L: SseEmitter@1234, // userId 42의 SseEmitter
-     *         43L: SseEmitter@5678  // userId 43의 SseEmitter
+     *         "player1": SseEmitter@1234, // 닉네임 "player1"의 SseEmitter
+     *         "player2": SseEmitter@5678  // 닉네임 "player2"의 SseEmitter
      *     },
      *     2L: { // matchId 2
-     *         44L: SseEmitter@9101 // userId 44의 SseEmitter
+     *         "player3": SseEmitter@9101 // 닉네임 "player3"의 SseEmitter
      *     }
      * }
      *
      * 구조 설명:
-     * - Top-level Map: matchId를 키로, 각 매치에 연결된 유저와 그들의 SseEmitter 를 관리.
-     * - Nested Map: userId를 키로, 각 유저의 SseEmitter 를 저장.
+     * - Top-level Map: matchId를 키로, 각 매치에 연결된 유저와 그들의 SseEmitter를 관리.
+     * - Nested Map: nickname을 키로, 각 유저의 SseEmitter를 저장.
      */
-
-
-    // matchId를 기준으로 userId별 투표 수 관리
-    private final Map<Long,Map<Long,Integer>> voteResults = new ConcurrentHashMap<>();
+    private final Map<Long,Map<Long,SseEmitter>> userEmitters = new ConcurrentHashMap<>();
+    private final Map<Long,Map<Long,Boolean>> voted = new ConcurrentHashMap<>();
+    private final Map<Long,Map<String,Integer>> voteResults = new ConcurrentHashMap<>();
+    private final UserRepository userRepository;
     private final MatchesRepository matchesRepository;
 
-    public VotingService(MatchesRepository matchesRepository) {
+    public VotingService(UserRepository userRepository,MatchesRepository matchesRepository) {
+        this.userRepository = userRepository;
         this.matchesRepository = matchesRepository;
     }
 
     // Live 생성 혹은 시청을 시작시에 subscribe 가 호출 된다.
     public SseEmitter subscribe(Long matchId, Long userId)
     {
-
+        // 구독을 처음시작할 때에는 투표 여부를 기본값으로 false로 둔다.
         voted.computeIfAbsent(matchId, key -> new ConcurrentHashMap<>()).put(userId, false);
 
         // matchId에 해당하는 Matches 엔티티를 확인
@@ -122,32 +124,47 @@ public class VotingService {
 
 
     // 특정 match의 특정 userId를 가진 user에게 투표
-    public void voteForUser(Long matchId, Long playerId, Long userId)
+    public void voteForUser(Long matchId, String playerNickname, Long voterUserId)
     {
         // matchId에 해당하는 Matches 엔티티를 확인
         Matches match = matchesRepository.findById(matchId).orElseThrow(()-> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
 
-        // userId가 매치 참여자인지 검증한다.
+        // 닉네임을 기반으로 userId 검색
+        Optional<User> optionalUser = userRepository.findByNickname(playerNickname);
+        if(optionalUser.isEmpty())
+        {
+            log.warn("존재하지 않는 닉네임: nickname={}",playerNickname);
+            throw ServiceException.of(ErrorCode.USER_NOT_FOUND);
+        }
+
+        User player = optionalUser.get();
+        Long playerId = player.getId();
+
+        // playerUserId 가 매치 참여자인지 검증한다.
         match.validateMatchedUserId(playerId);
 
-        // matchId에 대한 유저별 투표 결과 가져오기 (없으면 생성)
-        Map<Long,Integer> userVotes = voteResults.computeIfAbsent(matchId,key -> new HashMap<>());
+        // voterUserId 가 이미 투표했는지 확인
+        Map<Long,Boolean> voterStatus = voted.computeIfAbsent(matchId,key -> new ConcurrentHashMap<>());
 
-        Map<Long,Boolean> matchVotes = voted.computeIfAbsent(matchId, key -> new ConcurrentHashMap<>());
-
-        if(Boolean.TRUE.equals(matchVotes.get(userId))) {
-            log.warn("이미 투표한 사용자: matchId={}, userId={}", matchId, userId);
+        if(Boolean.TRUE.equals(voterStatus.get(voterUserId))) {
+            log.warn("이미 투표한 사용자: matchId={}, userId={}", matchId, voterUserId);
             throw ServiceException.of(ErrorCode.ALREADY_VOTED);
         }
-        userVotes.put(playerId, userVotes.getOrDefault(playerId, 0) + 1);
 
-        // 투표 상태를 true로 설정
-        matchVotes.put(userId, true);
-        log.info("투표 업데이트: matchId {}, userId {}, 현재 투표 결과 {}", matchId, playerId, userVotes);
+        // matchId에 대한 닉네임별 투표 결과 가져오기 (없으면 생성)
+        Map<String,Integer> nicknameVotes = voteResults.computeIfAbsent(matchId,key-> new ConcurrentHashMap<>());
 
-        // 현재 matchId에 연결된 모든 클라이언트에게 실시간 데이터 전송
-        broadcastVoteUpdate(matchId, userVotes);
+        // 투표 업데이트
+        nicknameVotes.put(playerNickname,nicknameVotes.getOrDefault(playerNickname,0) +1);
+
+        // 투표 상태를 true 로 설정
+        voterStatus.put(voterUserId, true);
+        log.info("투표 업데이트: matchId {}, userId {}, 현재 투표 결과 {}", matchId, playerId, nicknameVotes);
+
+        // 닉네임 기반 투표 결과로 변환하여 프론트로 전달
+        broadcastVoteUpdate(matchId, nicknameVotes);
     }
+
 
 
 
@@ -172,7 +189,7 @@ public class VotingService {
         }
     }
 
-    private void broadcastVoteUpdate(Long matchId, Map<Long, Integer> userVotes) {
+    private void broadcastVoteUpdate(Long matchId, Map<String,Integer> nicknameVotes) {
         Map<Long,SseEmitter> userSseMap= userEmitters.get(matchId);
         if (userSseMap != null) {
             userSseMap.forEach((userId, emitter) -> {
@@ -180,11 +197,11 @@ public class VotingService {
                     // 이벤트 전송
                     emitter.send(SseEmitter.event()
                             .name("voteUpdate")
-                            .data(userVotes));
-                    log.info("투표 업데이트 전송 성공: matchId={}, userId={}, votes={}", matchId, userId, userVotes);
+                            .data(nicknameVotes));
+                    log.info("투표 업데이트 전송 성공: matchId={}, userId={}, votes={}", matchId, userId, nicknameVotes);
                 } catch (IOException e) {
                     // 전송 실패 시 Emitter 제거
-                    log.error("전송 실패: matchId={}, userId={}, votes={}", matchId, userId, userVotes, e);
+                    log.error("전송 실패: matchId={}, userId={}, votes={}", matchId, userId, nicknameVotes, e);
                     removeEmitter(matchId, userId);
                 }
             });

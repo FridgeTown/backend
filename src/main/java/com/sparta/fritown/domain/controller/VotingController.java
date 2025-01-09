@@ -50,14 +50,13 @@ public class VotingController {
 
         // DTO 에서 값 추출
         Long matchId = voteRequestDto.getMatchId();
-        Long playerId = voteRequestDto.getMatchId();
+        String playerNickname = voteRequestDto.getPlayerNickname();
 
         // 투표 수행
-        votingService.voteForUser(matchId,playerId,userDetails.getId());
+        votingService.voteForUser(matchId,playerNickname,userDetails.getId());
 
         // 응답 DTO 생성
-        VoteResponseDto voteResponseDto = new VoteResponseDto(matchId,playerId);
-
+        VoteResponseDto voteResponseDto = new VoteResponseDto(matchId,playerNickname);
         return ResponseDto.success(SuccessCode.VOTE_SUCCESS,voteResponseDto);
     }
 
