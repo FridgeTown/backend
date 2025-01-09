@@ -24,6 +24,9 @@ public enum ErrorCode implements ApiCode {
     USER_NICKNAME_INVALID(HttpStatus.BAD_REQUEST, "U004", "닉네임은 2자에서 7자 사이로, 영어 또는 한글만 사용 가능합니다."),
 
     USER_EMAIL_DUPLICATE(HttpStatus.BAD_REQUEST, "U005", "기존에 존재하는 이메일입니다."),
+    USER_NICKNAME_USING(HttpStatus.BAD_REQUEST, "U006", "기존에 존재하는 닉네임입니다."),
+
+
     // image
     IMAGE_UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "I001", "이미지 업로드에 실패하였습니다."),
 
