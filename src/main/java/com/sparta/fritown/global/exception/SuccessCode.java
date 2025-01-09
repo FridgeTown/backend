@@ -27,7 +27,10 @@ public enum SuccessCode implements ApiCode {
     //vote
     SUBSCRIBE_SUCCESS(HttpStatus.OK, "V001", "구독이 성공적으로 완료되었습니다."),
     UNSUBSCRIBE_SUCCESS(HttpStatus.OK, "V002", "구독이 성공적으로 해지되었습니다."),
-    VOTE_SUCCESS(HttpStatus.OK, "V003", "투표가 성공적으로 완료되었습니다."),;
+    VOTE_SUCCESS(HttpStatus.OK, "V003", "투표가 성공적으로 완료되었습니다."),
+
+    // guest
+    GUEST_ID_GENERATED(HttpStatus.OK, "G001", "게스트 ID가 성공적으로 생성되었습니다.");
 
 
     private final HttpStatus status;
