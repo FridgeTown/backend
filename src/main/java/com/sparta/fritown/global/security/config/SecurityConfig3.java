@@ -32,7 +32,7 @@ public class SecurityConfig3 {
                 .csrf(AbstractHttpConfigurer::disable)  // CSRF 보호 비활성화
                 .authorizeHttpRequests(auth -> auth
                         // 게스트용 API 인증 없이 호출 가능
-                        .requestMatchers("voting/guest/**").permitAll()
+                        .requestMatchers(AuthenticatedMatchers.guestArray).permitAll()
                         .requestMatchers(AuthenticatedMatchers.loginArray).permitAll()
                         .requestMatchers(AuthenticatedMatchers.testArray).permitAll()
                         .requestMatchers(AuthenticatedMatchers.swaggerArray).permitAll()
