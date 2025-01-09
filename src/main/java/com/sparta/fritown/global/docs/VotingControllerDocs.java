@@ -101,7 +101,10 @@ public interface VotingControllerDocs {
 
     @Operation(
             summary = "투표",
-            description = "특정 matchId의 userId에게 투표를 수행합니다. 사용자가 이미 투표한 경우 에러를 반환합니다."
+            description = """ 
+                    특정 matchId의 playerNickname(투표 대상 닉네임)에게 투표를 수행합니다. 
+                    사용자가 이미 투표한 경우 에러를 반환합니다.
+                    """
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -116,7 +119,7 @@ public interface VotingControllerDocs {
                 "message": "투표가 성공적으로 완료되었습니다.",
                 "data": {
                     "matchId": 1,
-                    "userId": 1
+                    "playerNickname": "player1"
                 }
             }
             """)
@@ -151,11 +154,27 @@ public interface VotingControllerDocs {
             }
             """)
                     )
+            ),
+            @ApiResponse(
+                    responseCode = "406",
+                    description = "투표하려는 유저는 매치에 참여하고 있지 않습니다.",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(type = "object"),
+                            examples = @ExampleObject(value= """
+                                    {
+                                        "status" : 406,
+                                        "message": "투표하려는 유저는 이 매치에 참여하고 있지 않습니다.",
+                                        "code": "M005"
+                                    }
+                                    """)
+                    )
+
             )
     })
     ResponseDto<VoteResponseDto> vote(
             @RequestBody(
-                    description = "투표 요청 데이터 (matchId 와 userId 를 포함합니다)",
+                    description = "투표 요청 데이터 (matchId 와 playerNickname 포함)",
                     required = true,
                     content = @Content(
                             mediaType = "application/json",
@@ -163,7 +182,7 @@ public interface VotingControllerDocs {
                             examples = @ExampleObject(value= """
                                     {
                                         "matchId" : 1,
-                                        "userId": 42
+                                        "playerNickname": "player1"
                                     }
                                     """)
                     )

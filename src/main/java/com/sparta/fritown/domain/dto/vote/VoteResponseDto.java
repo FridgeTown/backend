@@ -5,10 +5,10 @@ import lombok.Getter;
 @Getter
 public class VoteResponseDto {
     private final Long matchId;
-    private final Long userId;
+    private final String playerNickname;
 
-    public VoteResponseDto(Long matchId, Long userId) {
+    public VoteResponseDto(Long matchId, String playerNickname) {
         this.matchId = matchId;
-        this.userId = userId;
+        this.playerNickname = playerNickname;
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -28,5 +29,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @Param("excludedUserIds") List<Long> excludedUserIds,
             @Param("count") int count
     );
+
+    // 닉네임으로 유저 검색
+    Optional<User> findByNickname(String nickname);
 
 }
