@@ -220,8 +220,8 @@ public class MatchService {
         User opponent = userRepository.findById(opponentId)
                 .orElseThrow(() -> ServiceException.of(ErrorCode.USER_OP_NOT_FOUND));
 
-        //log.info("IS User Managed : {}", entityManager.contains(user));
-        //log.info("IS opponent Managed: {}", entityManager.contains(opponent));
+        log.info("IS User Managed : {}", entityManager.contains(user));
+        log.info("IS opponent Managed: {}", entityManager.contains(opponent));
         log.info("Challenged By ID: {}", user.getId());
         log.info("Challenged To ID: {}", opponent.getId());
         List<Matches> matches = matchesRepository.findByChallengedToAndChallengedBy(user, opponent);
