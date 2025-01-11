@@ -45,10 +45,10 @@ public class MatchService {
     private final NotificationService notificationService;
     private final S3Service s3Service;
 
-
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Transactional
     public List<RoundsDto> getRoundsByMatchId(Long matchId, Long userId) {
         Matches match = matchesRepository.findById(matchId).orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
         List<UserMatch> userMatches = match.getUserMatches();
@@ -77,6 +77,7 @@ public class MatchService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public List<MatchSummaryDto> getMatchHistory(Long userId) {
 
         // 현재 유저 정보 가져오기
@@ -93,7 +94,8 @@ public class MatchService {
 
 
     // MatchSummaryDto 생성 메서드
-    private MatchSummaryDto createMatchSummaryDto(UserMatch userMatch, User currentUser) {
+    @Transactional
+    protected MatchSummaryDto createMatchSummaryDto(UserMatch userMatch, User currentUser) {
         Matches matches = userMatch.getMatches();
         List<Round> rounds = userMatch.getRounds();
 
@@ -107,7 +109,8 @@ public class MatchService {
         return new MatchSummaryDto(matches.getId(), matchInfo, opponent.getNickname());
     }
 
-    private MatchFutureDto createMatchFutureDto(UserMatch userMatch, User currentUser) {
+    @Transactional
+    protected MatchFutureDto createMatchFutureDto(UserMatch userMatch, User currentUser) {
         Matches matches = userMatch.getMatches();
 
         // 상대 유저 찾기
@@ -118,7 +121,8 @@ public class MatchService {
     }
 
     // MatchInfo 계산 로직 분리
-    private MatchInfoDto calculateMatchInfo(List<Round> rounds, LocalDate matchDate) {
+    @Transactional
+    protected MatchInfoDto calculateMatchInfo(List<Round> rounds, LocalDate matchDate) {
         int totalKcal = 0;
         int totalHeartBeat = 0;
         int totalPunchNum = 0;
@@ -135,14 +139,15 @@ public class MatchService {
     }
 
     // 상대 유저 찾기
-    private User getOpponent(Matches matches, User currentUser) {
+    @Transactional
+    protected User getOpponent(Matches matches, User currentUser) {
         return matches.getChallengedBy().equals(currentUser)
                 ? matches.getChallengedTo()
                 : matches.getChallengedBy();
     }
 
 
-
+    @Transactional
     public List<MatchFutureDto> getMatchFuture(Long userId) {
         // 현재 유저 정보 가져오기
         User user = userRepository.findById(userId)
@@ -156,15 +161,18 @@ public class MatchService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public boolean matchAccept(Long matchId, String email) {
         return handleMatch(matchId, email, Status.ACCEPTED);
     }
 
+    @Transactional
     public boolean matchReject(Long matchId, String email) {
         return handleMatch(matchId, email, Status.REJECTED);
     }
 
-    private boolean handleMatch(Long matchId, String email, Status status) {
+    @Transactional
+    protected boolean handleMatch(Long matchId, String email, Status status) {
         User user = userService.findByEmail(email);
         Matches matches = matchesRepository.findById(matchId).orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
 
@@ -182,14 +190,16 @@ public class MatchService {
         return true;
     }
 
-    private void validateUserParticipation(User user, Matches matches) {
+    @Transactional
+    protected void validateUserParticipation(User user, Matches matches) {
         if (user.getId().equals(matches.getChallengedTo().getId())) {
             return;
         }
         throw ServiceException.of(ErrorCode.USER_NOT_CHALLENGED_TO);
     }
 
-    private void validateMatchStatus(Matches matches) {
+    @Transactional
+    protected void validateMatchStatus(Matches matches) {
         if (matches.getStatus().equals(Status.PENDING)) {
             return;
         }
@@ -210,8 +220,8 @@ public class MatchService {
         User opponent = userRepository.findById(opponentId)
                 .orElseThrow(() -> ServiceException.of(ErrorCode.USER_OP_NOT_FOUND));
 
-        log.info("Is User Managed: {}", entityManager.contains(user));
-        log.info("Is Opponent Managed: {}", entityManager.contains(opponent));
+        log.info("IS User Managed : {}", entityManager.contains(user));
+        log.info("IS opponent Managed: {}", entityManager.contains(opponent));
         log.info("Challenged By ID: {}", user.getId());
         log.info("Challenged To ID: {}", opponent.getId());
         List<Matches> matches = matchesRepository.findByChallengedToAndChallengedBy(user, opponent);
@@ -234,22 +244,17 @@ public class MatchService {
         }
 
         Matches newMatch = new Matches(opponent, user, Status.PENDING);
-        log.info("New Match - Challenged By ID: {}", newMatch.getChallengedBy().getId());
-        log.info("New Match - Challenged To ID: {}", newMatch.getChallengedTo().getId());
-        log.info("Challenged By ID: {}", newMatch.getChallengedBy().getId());
-        log.info("Challenged To ID: {}", newMatch.getChallengedTo().getId());
-
         UserMatch userMatch = new UserMatch(newMatch, opponent);
         UserMatch opponentMatch = new UserMatch(newMatch, user);
 
         matchesRepository.save(newMatch);
         userMatchRepository.save(userMatch);
         userMatchRepository.save(opponentMatch);
-
         notificationService.sendNotification(opponentId, user.getNickname());
     }
 
-    private void acceptRequestAndCreateChatRoom(Matches matched, User user, User opponent) {
+    @Transactional
+    protected void acceptRequestAndCreateChatRoom(Matches matched, User user, User opponent) {
         matched.updateStatus(Status.ACCEPTED);
         matched.setTitle(user.getNickname(), opponent.getNickname());
         // 이후 채팅방 생성 로직이 들어가거나 해야 할 듯.
@@ -265,6 +270,7 @@ public class MatchService {
         matchesRepository.save(matched);
     }
 
+    @Transactional
     public List<MatchPendingDto> getPendingMatchesChallengedTo(Long userId) {
         return matchesRepository.findByChallengedToIdAndStatus(userId, Status.PENDING)
                 .stream()
