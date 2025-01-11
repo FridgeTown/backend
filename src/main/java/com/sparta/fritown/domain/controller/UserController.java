@@ -30,17 +30,13 @@ import java.util.List;
 @RestController
 public class UserController implements UserControllerDocs {
 
-    private final TestService testService;
     private final UserService userService;
     private final S3Service s3Service;
-    private final AuthController authController;
     private final KlatService klatService;
 
     public UserController(TestService testService, UserService userService, S3Service s3Service, AuthController authController, KlatService klatService) {
-        this.testService = testService;
         this.userService = userService;
         this.s3Service = s3Service;
-        this.authController = authController;
         this.klatService = klatService;
     }
 
@@ -132,6 +128,7 @@ public class UserController implements UserControllerDocs {
         return ResponseDto.success(SuccessCode.USER_DELETED);
     }
 
+    @Override
     @PatchMapping("/user/bio")
     public ResponseDto<UserInfoResponseDto> updateBio(@RequestBody BioUpdateRequestDto bioUpdateRequestDto,
                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -142,6 +139,7 @@ public class UserController implements UserControllerDocs {
         return ResponseDto.success(SuccessCode.USER_BIO_UPDATED, userInfoResponseDto);
     }
 
+    @Override
     @PatchMapping("user/weight")
     public ResponseDto<UserInfoResponseDto> updateWeight(@RequestBody WeightUpdateRequestDto weightUpdateRequestDto,
                                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -150,6 +148,5 @@ public class UserController implements UserControllerDocs {
         UserInfoResponseDto userInfoResponseDto = getUserInfoResponseDto(userId);
         return ResponseDto.success(SuccessCode.USER_WEIGHT_UPDATED, userInfoResponseDto);
     }
-
 
 }
