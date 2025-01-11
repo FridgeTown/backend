@@ -37,7 +37,8 @@ public class LiveService {
 
     @Transactional
     public LiveStartResponseDto liveStart(LiveStartRequestDto liveStartRequestDto, Long userId) {
-        Matches matches = matchesRepository.findByChannelId(liveStartRequestDto.getChannelId());
+        Matches matches = matchesRepository.findByChannelId(liveStartRequestDto.getChannelId())
+                .orElseThrow(()-> ServiceException.of(ErrorCode.CHANNEL_NOT_FOUND));
 
         User me = userRepository.findById(userId).orElseThrow(() -> ServiceException.of(ErrorCode.USER_NOT_FOUND));
 
@@ -55,9 +56,9 @@ public class LiveService {
         return new LiveStartResponseDto(chatroomId);
     }
 
-    public void liveEnd(Long matchId) {
-        Matches matches = matchesRepository.findById(matchId)
-                .orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
+    public void liveEnd(String channelId) {
+        Matches matches = matchesRepository.findByChannelId(channelId)
+                .orElseThrow(() -> ServiceException.of(ErrorCode.CHANNEL_NOT_FOUND));
 
         matches.setStatus(Status.DONE);
         matchesRepository.save(matches);
