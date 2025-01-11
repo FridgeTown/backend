@@ -224,11 +224,11 @@ public class MatchService {
         }
 
         Matches newMatch = new Matches(opponent, user, Status.PENDING);
+        matchesRepository.save(newMatch);
 
         UserMatch userMatch = new UserMatch(newMatch, opponent);
         UserMatch opponentMatch = new UserMatch(newMatch, user);
 
-        matchesRepository.save(newMatch);
         userMatchRepository.save(userMatch);
         userMatchRepository.save(opponentMatch);
 
