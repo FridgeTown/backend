@@ -102,4 +102,8 @@ public class User {
     public void updateBio(String bio) {
         this.bio = bio;
     }
+
+    public void updateWeight(Integer weight) {
+        this.weight = weight;
+    }
 }
