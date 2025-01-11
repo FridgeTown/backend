@@ -19,6 +19,7 @@ import com.sparta.fritown.global.exception.ErrorCode;
 import com.sparta.fritown.global.exception.custom.ServiceException;
 import com.sparta.fritown.global.s3.service.S3Service;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,7 @@ public class MatchService {
     private final NotificationService notificationService;
     private final S3Service s3Service;
 
+    @PersistenceContext
     private EntityManager entityManager;
 
     @Transactional
