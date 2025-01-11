@@ -143,4 +143,10 @@ public class UserService {
         user.updateBio(bioUpdateRequestDto.getBio());
         userRepository.save(user);
     }
+
+    public void updateWeight(Long userId, WeightUpdateRequestDto weightUpdateRequestDto) {
+        User user = userRepository.findById(userId).orElseThrow(() -> ServiceException.of(ErrorCode.USER_NOT_FOUND));
+        user.updateWeight(weightUpdateRequestDto.getWeight());
+        userRepository.save(user);
+    }
 }

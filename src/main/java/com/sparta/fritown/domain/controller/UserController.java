@@ -1,10 +1,7 @@
 package com.sparta.fritown.domain.controller;
 
 import com.sparta.fritown.domain.dto.rounds.RoundsDto;
-import com.sparta.fritown.domain.dto.user.BioUpdateRequestDto;
-import com.sparta.fritown.domain.dto.user.KlatResponseDto;
-import com.sparta.fritown.domain.dto.user.OpponentDto;
-import com.sparta.fritown.domain.dto.user.UserInfoResponseDto;
+import com.sparta.fritown.domain.dto.user.*;
 import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.domain.service.KlatService;
 import com.sparta.fritown.domain.service.TestService;
@@ -143,6 +140,15 @@ public class UserController implements UserControllerDocs {
         UserInfoResponseDto userInfoResponseDto = getUserInfoResponseDto(userId);
 
         return ResponseDto.success(SuccessCode.USER_BIO_UPDATED, userInfoResponseDto);
+    }
+
+    @PatchMapping("user/weight")
+    public ResponseDto<UserInfoResponseDto> updateWeight(@RequestBody WeightUpdateRequestDto weightUpdateRequestDto,
+                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+        userService.updateWeight(userId, weightUpdateRequestDto);
+        UserInfoResponseDto userInfoResponseDto = getUserInfoResponseDto(userId);
+        return ResponseDto.success(SuccessCode.USER_WEIGHT_UPDATED, userInfoResponseDto);
     }
 
 
