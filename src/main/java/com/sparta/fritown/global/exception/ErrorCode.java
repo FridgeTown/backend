@@ -34,7 +34,10 @@ public enum ErrorCode implements ApiCode {
     VIEW_COUNT_CANNOT_BE_NEGATIVE(HttpStatus.BAD_REQUEST, "L001", "매치의 viewNum이 0보다 작을 수 없습니다."),
 
     // vote
-    ALREADY_VOTED(HttpStatus.BAD_REQUEST, "V001", "이미 투표한 사용자입니다.");
+    ALREADY_VOTED(HttpStatus.BAD_REQUEST, "V001", "이미 투표한 사용자입니다."),
+
+    //channel
+    CHANNEL_NOT_FOUND(HttpStatus.NOT_FOUND, "C001", "채널을 찾지 못했습니다.");
 
     private final HttpStatus status;
     private final String code;

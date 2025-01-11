@@ -40,9 +40,9 @@ public class LiveController implements LiveControllerDocs {
         return ResponseDto.success(SuccessCode.LIVE_PROGRESS, liveStartResponseDto);
     }
 
-    @PostMapping("/end/{matchId}")
-    public ResponseDto<Void> liveEnd(@PathVariable Long matchId) {
-        liveService.liveEnd(matchId);
+    @PostMapping("/end/{channelId}")
+    public ResponseDto<Void> liveEnd(@PathVariable String channelId) {
+        liveService.liveEnd(channelId);
         return ResponseDto.success(SuccessCode.LIVE_DONE);
     }
 
