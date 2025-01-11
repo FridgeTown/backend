@@ -1,5 +1,9 @@
 package com.sparta.fritown.domain.service;
 
+import com.sparta.fritown.domain.entity.User;
+import com.sparta.fritown.domain.repository.UserRepository;
+import com.sparta.fritown.global.exception.ErrorCode;
+import com.sparta.fritown.global.exception.custom.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -13,6 +17,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NotificationService {
 
     private final Map<Long, SseEmitter> sseEmitters = new ConcurrentHashMap<>();
+    private final UserRepository userRepository;
+
+    public NotificationService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public SseEmitter subscribe(Long userId) {
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
         sseEmitters.put(userId, emitter);
@@ -39,6 +49,28 @@ public class NotificationService {
                 emitter.send(SseEmitter.event().name("notification").data(nickname+"님이 스파링 요청을 보냈습니다!"));
             } catch (IOException e) {
                 sseEmitters.remove(opponentId);
+            }
+        }
+    }
+
+    public void sendMatchCreatedNotification(Long userId, Long opponentId) {
+        SseEmitter opEmitter = sseEmitters.get(opponentId);
+        SseEmitter userEmitter = sseEmitters.get(userId);
+
+        User opUser = userRepository.findById(opponentId).orElseThrow(() -> ServiceException.of(ErrorCode.USER_NOT_FOUND));
+        User user = userRepository.findById(userId).orElseThrow(() -> ServiceException.of(ErrorCode.USER_NOT_FOUND));
+
+
+        sendNotificationByEmitter(opEmitter, opponentId, user.getNickname());
+        sendNotificationByEmitter(userEmitter, userId, opUser.getNickname());
+    }
+
+    private void sendNotificationByEmitter(SseEmitter emitter, Long userId, String opNickname) {
+        if (emitter != null) {
+            try {
+                emitter.send(SseEmitter.event().name("notification").data(opNickname + "님과 매치가 성사되었습니다!"));
+            } catch (IOException e) {
+                sseEmitters.remove(userId);
             }
         }
     }
