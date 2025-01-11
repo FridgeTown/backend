@@ -258,6 +258,8 @@ public class MatchService {
         matched.updateStatus(Status.ACCEPTED);
         matched.setTitle(user.getNickname(), opponent.getNickname());
         // 이후 채팅방 생성 로직이 들어가거나 해야 할 듯.
+        notificationService.sendMatchCreatedNotification(user.getId(), opponent.getId());
+
         String channelId = chatService.createChannel(
                 Arrays.asList(user, opponent),
                 user.getNickname() + " vs " + opponent.getNickname(),

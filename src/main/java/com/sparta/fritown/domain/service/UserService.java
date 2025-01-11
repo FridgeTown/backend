@@ -1,7 +1,6 @@
 package com.sparta.fritown.domain.service;
 
-import com.sparta.fritown.domain.dto.user.RegisterRequestDto;
-import com.sparta.fritown.domain.dto.user.OpponentDto;
+import com.sparta.fritown.domain.dto.user.*;
 import com.sparta.fritown.domain.entity.Matches;
 import com.sparta.fritown.domain.entity.enums.Status;
 import com.sparta.fritown.domain.repository.MatchesRepository;
@@ -136,6 +135,18 @@ public class UserService {
     public void resignateUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> ServiceException.of(ErrorCode.USER_NOT_FOUND));
         user.resignation();
+        userRepository.save(user);
+    }
+
+    public void updateBio(Long userId, BioUpdateRequestDto bioUpdateRequestDto) {
+        User user = userRepository.findById(userId).orElseThrow(() -> ServiceException.of(ErrorCode.USER_NOT_FOUND));
+        user.updateBio(bioUpdateRequestDto.getBio());
+        userRepository.save(user);
+    }
+
+    public void updateWeight(Long userId, WeightUpdateRequestDto weightUpdateRequestDto) {
+        User user = userRepository.findById(userId).orElseThrow(() -> ServiceException.of(ErrorCode.USER_NOT_FOUND));
+        user.updateWeight(weightUpdateRequestDto.getWeight());
         userRepository.save(user);
     }
 }
