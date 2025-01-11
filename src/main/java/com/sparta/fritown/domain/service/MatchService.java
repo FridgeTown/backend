@@ -225,6 +225,8 @@ public class MatchService {
         }
 
         Matches newMatch = new Matches(opponent, user, Status.PENDING);
+        log.info("New Match - Challenged By ID: {}", newMatch.getChallengedBy().getId());
+        log.info("New Match - Challenged To ID: {}", newMatch.getChallengedTo().getId());
         matchesRepository.save(newMatch);
         log.info("Challenged By ID: {}", newMatch.getChallengedBy().getId());
         log.info("Challenged To ID: {}", newMatch.getChallengedTo().getId());
