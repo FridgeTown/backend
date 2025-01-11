@@ -8,7 +8,8 @@ public enum SuccessCode implements ApiCode {
 
     //user
     USER_DELETED(HttpStatus.OK, "U001", "성공적으로 탈퇴하였습니다"),
-    USER_BIO_UPDATED(HttpStatus.OK, "U002", "성공적으로 유저 BIO 수정되었습니다."),
+    USER_BIO_UPDATED(HttpStatus.OK, "U002", "성공적으로 유저 Bio가 수정되었습니다."),
+    USER_WEIGHT_UPDATED(HttpStatus.OK, "U003", "성공적으로 유저 몸무게가 수정되었습니다."),
 
     //match
     MATCHED_USERS(HttpStatus.OK, "M001", "스파링 했던 상대들을 성공적으로 반환하였습니다."),
