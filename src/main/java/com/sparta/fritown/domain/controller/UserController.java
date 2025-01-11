@@ -1,6 +1,8 @@
 package com.sparta.fritown.domain.controller;
 
 import com.sparta.fritown.domain.dto.rounds.RoundsDto;
+import com.sparta.fritown.domain.dto.user.BioUpdateRequestDto;
+import com.sparta.fritown.domain.dto.user.KlatResponseDto;
 import com.sparta.fritown.domain.dto.user.OpponentDto;
 import com.sparta.fritown.domain.dto.user.UserInfoResponseDto;
 import com.sparta.fritown.domain.entity.User;
@@ -102,12 +104,17 @@ public class UserController implements UserControllerDocs {
     public ResponseDto<UserInfoResponseDto> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         // 유저 정보, 채팅 토큰 정보 수집
         Long userId = userDetails.getId();
+        UserInfoResponseDto responseDto = getUserInfoResponseDto(userId);
+        return ResponseDto.success(SuccessCode.OK, responseDto);
+    }
+
+    private UserInfoResponseDto getUserInfoResponseDto(Long userId) {
         User user = userService.getUserInfo(userId);
         String chatToken = klatService.login(userId);
 
         // DTO- 정보 담기
         UserInfoResponseDto responseDto = new UserInfoResponseDto(user, chatToken);
-        return ResponseDto.success(SuccessCode.OK, responseDto);
+        return responseDto;
     }
 
     @Override
@@ -126,6 +133,16 @@ public class UserController implements UserControllerDocs {
     public ResponseDto<Void> resignateUser(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.resignateUser(userDetails.getId());
         return ResponseDto.success(SuccessCode.USER_DELETED);
+    }
+
+    @PatchMapping("/user/bio")
+    public ResponseDto<UserInfoResponseDto> updateBio(@RequestBody BioUpdateRequestDto bioUpdateRequestDto,
+                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+        userService.updateBio(userId, bioUpdateRequestDto);
+        UserInfoResponseDto userInfoResponseDto = getUserInfoResponseDto(userId);
+
+        return ResponseDto.success(SuccessCode.USER_BIO_UPDATED, userInfoResponseDto);
     }
 
 
