@@ -53,7 +53,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String nickname;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "users")
     private List<UserMatch> userMatches = new ArrayList<>();
 
     @OneToMany(mappedBy = "challengedTo")
