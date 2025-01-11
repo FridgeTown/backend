@@ -89,7 +89,8 @@ public class UserService {
                         user.getWeight(),           // 몸무게
                         user.getBio(),              // 소개글
                         user.getGender().toString(),// 성별 (Gender Enum -> String 변환)
-                        s3Service.getFileUrl(user.getProfileImg())        // 프로필 이미지
+                        s3Service.getFileUrl(user.getProfileImg()),    // 프로필 이미지
+                        user.getWeightClass()
                 ))
                 .toList();
     }
