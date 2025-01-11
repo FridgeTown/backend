@@ -225,10 +225,11 @@ public class MatchService {
 
         Matches newMatch = new Matches(opponent, user, Status.PENDING);
         matchesRepository.save(newMatch);
+        log.info("Challenged By ID: {}", newMatch.getChallengedBy().getId());
+        log.info("Challenged To ID: {}", newMatch.getChallengedTo().getId());
 
         UserMatch userMatch = new UserMatch(newMatch, opponent);
         UserMatch opponentMatch = new UserMatch(newMatch, user);
-
         userMatchRepository.save(userMatch);
         userMatchRepository.save(opponentMatch);
 
