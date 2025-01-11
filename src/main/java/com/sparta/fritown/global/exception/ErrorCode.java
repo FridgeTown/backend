@@ -24,6 +24,9 @@ public enum ErrorCode implements ApiCode {
     USER_NICKNAME_INVALID(HttpStatus.BAD_REQUEST, "U004", "닉네임은 2자에서 7자 사이로, 영어 또는 한글만 사용 가능합니다."),
 
     USER_EMAIL_DUPLICATE(HttpStatus.BAD_REQUEST, "U005", "기존에 존재하는 이메일입니다."),
+    USER_NICKNAME_USING(HttpStatus.BAD_REQUEST, "U006", "기존에 존재하는 닉네임입니다."),
+
+
     // image
     IMAGE_UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "I001", "이미지 업로드에 실패하였습니다."),
 
@@ -31,7 +34,10 @@ public enum ErrorCode implements ApiCode {
     VIEW_COUNT_CANNOT_BE_NEGATIVE(HttpStatus.BAD_REQUEST, "L001", "매치의 viewNum이 0보다 작을 수 없습니다."),
 
     // vote
-    ALREADY_VOTED(HttpStatus.BAD_REQUEST, "V001", "이미 투표한 사용자입니다.");
+    ALREADY_VOTED(HttpStatus.BAD_REQUEST, "V001", "이미 투표한 사용자입니다."),
+
+    //channel
+    CHANNEL_NOT_FOUND(HttpStatus.NOT_FOUND, "C001", "채널을 찾지 못했습니다.");
 
     private final HttpStatus status;
     private final String code;

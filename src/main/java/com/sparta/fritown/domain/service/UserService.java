@@ -15,11 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -46,6 +43,12 @@ public class UserService {
         // 닉네임 유효성 검사
         if (!NICKNAME_PATTERN.matcher(requestDto.getNickname()).matches()) {
            throw ServiceException.of(ErrorCode.USER_NICKNAME_INVALID);
+        }
+
+        // 닉네임 중복 검사
+        Optional<User> optionalUser = userRepository.findByNickname(requestDto.getNickname());
+        if (optionalUser.isPresent()) {
+            throw ServiceException.of(ErrorCode.USER_NICKNAME_USING);
         }
 
         // 유저 생성 로직
@@ -127,5 +130,11 @@ public class UserService {
         // 자기 자신도 제외
         excludedUserIds.add(userId);
         return excludedUserIds;
+    }
+
+    public void resignateUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> ServiceException.of(ErrorCode.USER_NOT_FOUND));
+        user.resignation();
+        userRepository.save(user);
     }
 }
