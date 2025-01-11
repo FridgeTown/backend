@@ -63,28 +63,54 @@ public interface LiveControllerDocs {
             )) LiveStartRequestDto liveStartRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails
     );
 
-    @Operation(summary = "방송 종료", description = "매치 ID를 받아 매치 상태를 DONE 으로 변경합니다.")
+
+
+    @Operation(
+            summary = "방송 종료",
+            description = "채널 ID를 받아 해당 채널의 방송을 종료합니다. 매치 상태를 DONE으로 변경합니다."
+    )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "매치 상태를 DONE 으로 성공적으로 설정하였습니다.", content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ResponseDto.class),
-                    examples = @ExampleObject(
-                            name = "성공 응답 예시",
-                            value = """
-                        {
-                            "status": 200,
-                            "message": "매치 상태를 DONE으로 성공적으로 설정하였습니다.",
-                            "data": null
-                        }
-                        """
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "방송 종료 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDto.class),
+                            examples = @ExampleObject(
+                                    name = "성공 응답 예시",
+                                    value = """
+                    {
+                        "status": 200,
+                        "message": "매치 상태를 DONE으로 성공적으로 변경하였습니다.",
+                        "data": null
+                    }
+                """
+                            )
                     )
-            )),
-            @ApiResponse(responseCode = "404", description = "매치를 찾을 수 없음", content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(type = "string", example = "매치를 찾지 못했습니다.")
-            ))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "채널을 찾을 수 없음",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(type = "string", example = """
+                {
+                    "status": "error",
+                    "code": "C001",
+                    "message": "채널을 찾지 못했습니다."
+                }
+            """)
+                    )
+            )
     })
-    ResponseDto<Void> liveEnd(@PathVariable Long matchId);
+    ResponseDto<Void> liveEnd(
+            @Parameter(
+                    description = "방송을 종료할 채널의 ID",
+                    required = true,
+                    example = "qpwoehpoasdvasf"
+            )
+            @PathVariable String channelId
+    );
 
 
     @Operation(summary = "시청 시작", description = "매치 ID를 받아 해당 매치의 viewNum을 1 증가시킵니다.")
