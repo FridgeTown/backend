@@ -121,5 +121,12 @@ public class UserController implements UserControllerDocs {
         return ResponseDto.success(SuccessCode.OK, responseDto);
     }
 
+    @Override
+    @DeleteMapping("/user/resignation")
+    public ResponseDto<Void> resignateUser(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.resignateUser(userDetails.getId());
+        return ResponseDto.success(SuccessCode.USER_DELETED);
+    }
+
 
 }

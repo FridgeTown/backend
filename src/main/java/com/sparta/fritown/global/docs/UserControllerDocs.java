@@ -197,4 +197,58 @@ public interface UserControllerDocs {
     })
     public ResponseDto<UserInfoResponseDto> getUserInfoByUserId(@PathVariable Long userId);
 
+
+    @Operation(
+            summary = "회원 탈퇴",
+            description = "현재 로그인한 사용자가 자신의 계정을 탈퇴합니다. 탈퇴한 계정은 복구할 수 없습니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "회원 탈퇴 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseDto.class),
+                            examples = @ExampleObject(value = """
+                {
+                    "status": "success",
+                    "message": "User successfully deleted",
+                    "data": null
+                }
+                """)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "사용자를 찾을 수 없음",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(type = "string"),
+                            examples = @ExampleObject(value = """
+                {
+                    "status": "error",
+                    "message": "유저를 찾지 못했습니다.",
+                    "code": "USER_NOT_FOUND"
+                }
+                """)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 에러",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(type = "string"),
+                            examples = @ExampleObject(value = """
+                {
+                    "status": "error",
+                    "message": "Internal Server Error",
+                    "code": "SERVER_ERROR"
+                }
+                """)
+                    )
+            )
+    })
+    public ResponseDto<Void> resignateUser(@AuthenticationPrincipal UserDetailsImpl userDetails);
+
 }
