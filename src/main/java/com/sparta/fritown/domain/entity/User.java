@@ -98,4 +98,8 @@ public class User {
         this.nickname = "undefined_user";
         this.profileImg = null;
     }
+
+    public void updateBio(String bio) {
+        this.bio = bio;
+    }
 }
