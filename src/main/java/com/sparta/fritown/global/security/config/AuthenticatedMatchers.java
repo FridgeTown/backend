@@ -13,7 +13,9 @@ public class AuthenticatedMatchers {
     };
 
     public static final String[] guestArray ={
-            "/voting/guest/**"
+            "/voting/guest/**",
+            "/live/list",
+            "/live/watch/**"
     };
 
     public static final String[] testArray = {
