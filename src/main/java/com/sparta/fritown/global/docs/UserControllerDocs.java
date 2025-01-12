@@ -1,7 +1,9 @@
 package com.sparta.fritown.global.docs;
 
+import com.sparta.fritown.domain.dto.user.BioUpdateRequestDto;
 import com.sparta.fritown.domain.dto.user.OpponentDto;
 import com.sparta.fritown.domain.dto.user.UserInfoResponseDto;
+import com.sparta.fritown.domain.dto.user.WeightUpdateRequestDto;
 import com.sparta.fritown.global.exception.dto.ResponseDto;
 import com.sparta.fritown.global.security.dto.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -250,5 +253,113 @@ public interface UserControllerDocs {
             )
     })
     public ResponseDto<Void> resignateUser(@AuthenticationPrincipal UserDetailsImpl userDetails);
+
+    @Operation(
+            summary = "유저 Bio 업데이트",
+            description = "현재 로그인한 유저의 Bio를 업데이트합니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "유저 Bio 업데이트 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UserInfoResponseDto.class),
+                            examples = @ExampleObject(value = """
+                {
+                    "status": "success",
+                    "code": "U002",
+                    "message": "성공적으로 유저 Bio가 수정되었습니다.",
+                    "data": {
+                        "id": 1,
+                        "email": "user@example.com",
+                        "nickname": "FitCoder",
+                        "bio": "I love coding and sparring!"
+                    }
+                }
+                """)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "유저를 찾을 수 없음",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(type = "string"),
+                            examples = @ExampleObject(value = """
+                {
+                    "status": "error",
+                    "code": "USER_NOT_FOUND",
+                    "message": "유저를 찾지 못했습니다."
+                }
+                """)
+                    )
+            )
+    })
+    @PatchMapping("/user/bio")
+    ResponseDto<UserInfoResponseDto> updateBio(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "유저 Bio 업데이트 요청",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = BioUpdateRequestDto.class)
+                    )
+            ) BioUpdateRequestDto bioUpdateRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails);
+
+    @Operation(
+            summary = "유저 몸무게 업데이트",
+            description = "현재 로그인한 유저의 몸무게를 업데이트합니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "유저 몸무게 업데이트 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UserInfoResponseDto.class),
+                            examples = @ExampleObject(value = """
+                {
+                    "status": "success",
+                    "code": "U003",
+                    "message": "성공적으로 유저 몸무게가 수정되었습니다.",
+                    "data": {
+                        "id": 1,
+                        "email": "user@example.com",
+                        "nickname": "FitCoder",
+                        "weight": 75
+                    }
+                }
+                """)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "유저를 찾을 수 없음",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(type = "string"),
+                            examples = @ExampleObject(value = """
+                {
+                    "status": "error",
+                    "code": "USER_NOT_FOUND",
+                    "message": "유저를 찾지 못했습니다."
+                }
+                """)
+                    )
+            )
+    })
+    @PatchMapping("/user/weight")
+    ResponseDto<UserInfoResponseDto> updateWeight(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "유저 몸무게 업데이트 요청",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = WeightUpdateRequestDto.class)
+                    )
+            ) WeightUpdateRequestDto weightUpdateRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails);
 
 }
