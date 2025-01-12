@@ -1,8 +1,7 @@
 package com.sparta.fritown.domain.controller;
 
 import com.sparta.fritown.domain.dto.rounds.RoundsDto;
-import com.sparta.fritown.domain.dto.user.OpponentDto;
-import com.sparta.fritown.domain.dto.user.UserInfoResponseDto;
+import com.sparta.fritown.domain.dto.user.*;
 import com.sparta.fritown.domain.entity.User;
 import com.sparta.fritown.domain.service.KlatService;
 import com.sparta.fritown.domain.service.TestService;
@@ -31,17 +30,13 @@ import java.util.List;
 @RestController
 public class UserController implements UserControllerDocs {
 
-    private final TestService testService;
     private final UserService userService;
     private final S3Service s3Service;
-    private final AuthController authController;
     private final KlatService klatService;
 
     public UserController(TestService testService, UserService userService, S3Service s3Service, AuthController authController, KlatService klatService) {
-        this.testService = testService;
         this.userService = userService;
         this.s3Service = s3Service;
-        this.authController = authController;
         this.klatService = klatService;
     }
 
@@ -102,12 +97,17 @@ public class UserController implements UserControllerDocs {
     public ResponseDto<UserInfoResponseDto> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         // 유저 정보, 채팅 토큰 정보 수집
         Long userId = userDetails.getId();
+        UserInfoResponseDto responseDto = getUserInfoResponseDto(userId);
+        return ResponseDto.success(SuccessCode.OK, responseDto);
+    }
+
+    private UserInfoResponseDto getUserInfoResponseDto(Long userId) {
         User user = userService.getUserInfo(userId);
         String chatToken = klatService.login(userId);
 
         // DTO- 정보 담기
         UserInfoResponseDto responseDto = new UserInfoResponseDto(user, chatToken);
-        return ResponseDto.success(SuccessCode.OK, responseDto);
+        return responseDto;
     }
 
     @Override
@@ -128,5 +128,25 @@ public class UserController implements UserControllerDocs {
         return ResponseDto.success(SuccessCode.USER_DELETED);
     }
 
+    @Override
+    @PatchMapping("/user/bio")
+    public ResponseDto<UserInfoResponseDto> updateBio(@RequestBody BioUpdateRequestDto bioUpdateRequestDto,
+                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+        userService.updateBio(userId, bioUpdateRequestDto);
+        UserInfoResponseDto userInfoResponseDto = getUserInfoResponseDto(userId);
+
+        return ResponseDto.success(SuccessCode.USER_BIO_UPDATED, userInfoResponseDto);
+    }
+
+    @Override
+    @PatchMapping("user/weight")
+    public ResponseDto<UserInfoResponseDto> updateWeight(@RequestBody WeightUpdateRequestDto weightUpdateRequestDto,
+                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+        userService.updateWeight(userId, weightUpdateRequestDto);
+        UserInfoResponseDto userInfoResponseDto = getUserInfoResponseDto(userId);
+        return ResponseDto.success(SuccessCode.USER_WEIGHT_UPDATED, userInfoResponseDto);
+    }
 
 }
