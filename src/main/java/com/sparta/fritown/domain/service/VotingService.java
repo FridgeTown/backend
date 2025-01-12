@@ -212,7 +212,6 @@ public class VotingService {
     }
 
     // Live 생성 혹은 시청을 시작할 때 게스트 구독이 호출된다.
-    @Transactional
     public SseEmitter guestSubscribe(Long matchId, String guestId) {
         // 구독을 처음 시작할 때에는 투표 여부를 기본값으로 false로 둔다.
         guestVoted.computeIfAbsent(matchId, key -> new ConcurrentHashMap<>()).put(guestId, false);
