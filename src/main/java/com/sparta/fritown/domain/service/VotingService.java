@@ -222,7 +222,7 @@ public class VotingService {
         //        .orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
 
         // 새로운 SseEmitter 생성
-        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
+        SseEmitter emitter = new SseEmitter(60000L);
 
         // matchId와 guestId를 기준으로 SseEmitter 저장
         guestEmitters.computeIfAbsent(matchId, key -> new ConcurrentHashMap<>()).put(guestId, emitter);
