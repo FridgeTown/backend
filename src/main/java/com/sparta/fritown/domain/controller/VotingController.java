@@ -80,14 +80,14 @@ public class VotingController implements VotingControllerDocs {
     @Override
     @GetMapping("/guest/subscribe/{matchId}")
     public SseEmitter guestSubscribe(@PathVariable Long matchId,
-                                     @RequestHeader(value="Guest-Id") String guestId) {
+                                     @RequestParam(value="guestId") String guestId) {
         return votingService.guestSubscribe(matchId,guestId);
     }
 
     @Override
     @GetMapping("/guest/unsubscribe/{matchId}")
     public ResponseDto<Void> guestUnsubscribe(@PathVariable Long matchId,
-                                              @RequestHeader(value="Guest-Id") String guestId)
+                                              @RequestParam(value="guestId") String guestId)
     {
         votingService.guestUnsubscribe(matchId,guestId);
         return ResponseDto.success(SuccessCode.UNSUBSCRIBE_SUCCESS);
@@ -97,7 +97,7 @@ public class VotingController implements VotingControllerDocs {
     @Override
     @PostMapping("/guest/vote")
     public ResponseDto<VoteResponseDto> guestVote(
-            @RequestHeader(value="Guest-Id") String guestId,
+            @RequestParam(value="guestId") String guestId,
             @RequestBody VoteRequestDto voteRequestDto)
     {
         Long matchId = voteRequestDto.getMatchId();
