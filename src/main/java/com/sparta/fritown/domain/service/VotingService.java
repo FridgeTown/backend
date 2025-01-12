@@ -218,8 +218,8 @@ public class VotingService {
         guestVoted.computeIfAbsent(matchId, key -> new ConcurrentHashMap<>()).put(guestId, false);
 
         // matchId에 해당하는 Matches 엔티티를 확인
-        Matches match = matchesRepository.findById(matchId)
-                .orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
+        //Matches match = matchesRepository.findById(matchId)
+        //        .orElseThrow(() -> ServiceException.of(ErrorCode.MATCH_NOT_FOUND));
 
         // 새로운 SseEmitter 생성
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
