@@ -6,6 +6,7 @@ import com.sparta.fritown.domain.repository.MatchesRepository;
 import com.sparta.fritown.domain.repository.UserRepository;
 import com.sparta.fritown.global.exception.ErrorCode;
 import com.sparta.fritown.global.exception.custom.ServiceException;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -99,6 +100,7 @@ public class VotingService {
     /* 유저 */
 
     // Live 생성 혹은 시청을 시작시에 subscribe 가 호출 된다.
+    @Transactional
     public SseEmitter subscribe(Long matchId, Long userId)
     {
         // 구독을 처음시작할 때에는 투표 여부를 기본값으로 false로 둔다.
@@ -139,7 +141,7 @@ public class VotingService {
 
         return emitter;
     }
-
+    @Transactional
     public void unsubscribe(Long matchId, Long userId)
     {
         // matchId에 해당하는 Matches 엔티티를 확인
@@ -167,6 +169,7 @@ public class VotingService {
 
 
     // 특정 match 의 특정 playerNickname 을 가진 user 에게 투표
+    @Transactional
     public void voteForUser(Long matchId, String playerNickname, Long voterUserId)
     {
         // matchId에 해당하는 Matches 엔티티를 확인
@@ -209,6 +212,7 @@ public class VotingService {
     }
 
     // Live 생성 혹은 시청을 시작할 때 게스트 구독이 호출된다.
+    @Transactional
     public SseEmitter guestSubscribe(Long matchId, String guestId) {
         // 구독을 처음 시작할 때에는 투표 여부를 기본값으로 false로 둔다.
         guestVoted.computeIfAbsent(matchId, key -> new ConcurrentHashMap<>()).put(guestId, false);
@@ -251,6 +255,7 @@ public class VotingService {
     }
 
     // 게스트 SSE 구독 해지
+    @Transactional
     public void guestUnsubscribe(Long matchId, String guestId) {
         // matchId에 해당하는 Matches 엔티티를 확인
         Matches match = matchesRepository.findById(matchId)
@@ -278,6 +283,7 @@ public class VotingService {
     }
 
     // 특정 match 의 특정 guestId를 가진 게스트에게 투표
+    @Transactional
     public void guestVoteForUser(Long matchId, String playerNickname, String guestId) {
         // matchId에 해당하는 Matches 엔티티를 확인
         Matches match = matchesRepository.findById(matchId)
