@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 
@@ -254,7 +255,7 @@ public interface VotingControllerDocs {
     SseEmitter guestSubscribe(
             @Parameter(description = "구독하려는 매치 ID",example="1") @PathVariable Long matchId,
             @Parameter(description = "게스트 고유 ID(UUID)", example ="550e8400-e29b-41d4-a716-446655440000")
-            @RequestHeader(value ="Guest-Id") String guestId
+            @RequestParam(value ="guestId") String guestId
     );
 
     @Operation(
@@ -298,7 +299,8 @@ public interface VotingControllerDocs {
     })
     ResponseDto<Void> guestUnsubscribe(
             @Parameter(description = "구독 해지하려는 MatchId",example = "1" ) @PathVariable Long matchId,
-            @Parameter(description = "게스트의 고유 ID(UUID)", example = "550e8400-e29b-41d4-a716-446655440000") @RequestHeader(value="Guest-Id") String guestId);
+            @Parameter(description = "게스트의 고유 ID(UUID)", example = "550e8400-e29b-41d4-a716-446655440000")
+            @RequestParam(value="guestId") String guestId);
 
 
     @Operation(
@@ -375,7 +377,7 @@ public interface VotingControllerDocs {
     })
     ResponseDto<VoteResponseDto> guestVote(
             @Parameter(description = "게스트의 고유 ID(UUID)", example = "550e8400-e29b-41d4-a716-446655440000")
-            @RequestHeader(value = "Guest-Id") String guestId,
+            @RequestParam(value = "guestId") String guestId,
             @RequestBody(
                     description = "투표 요청 데이터 (matchId와 playerNickname 포함)",
                     required = true,
