@@ -1,6 +1,5 @@
 package com.sparta.fritown.domain.controller;
 
-import com.example.grpc.NodeServiceOuterClass;
 import com.sparta.fritown.domain.dto.vote.VoteRequestDto;
 import com.sparta.fritown.domain.dto.vote.VoteResponseDto;
 import com.sparta.fritown.domain.service.VotingService;
