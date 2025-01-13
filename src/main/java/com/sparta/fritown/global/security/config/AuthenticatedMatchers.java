@@ -26,5 +26,9 @@ public class AuthenticatedMatchers {
             "/swagger",
             "/v3/api-docs/**",
     };
+
+    public static final String[] socketArray = {
+            "/channel/**"
+    };
 }
 
