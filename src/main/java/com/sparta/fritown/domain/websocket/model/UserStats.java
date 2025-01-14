@@ -4,7 +4,7 @@ package com.sparta.fritown.domain.websocket.model;
 public class UserStats {
     private int finalPunch;
     private double avgHeartRate;
-    private int finalCalorie;
+    private double finalCalorie;
     private int heartRateCount;
 
     public UserStats() {
@@ -14,7 +14,7 @@ public class UserStats {
         this.heartRateCount = 0;
     }
 
-    public void updateStats(int punch, double heartRate, int calories) {
+    public void updateStats(int punch, double heartRate, double calories) {
         this.finalPunch += punch;
         this.avgHeartRate = (this.avgHeartRate * heartRateCount + heartRate) / (++heartRateCount);
         this.finalCalorie += calories;
@@ -28,7 +28,7 @@ public class UserStats {
         return avgHeartRate;
     }
 
-    public int getFinalCalorie() {
+    public double getFinalCalorie() {
         return finalCalorie;
     }
 
