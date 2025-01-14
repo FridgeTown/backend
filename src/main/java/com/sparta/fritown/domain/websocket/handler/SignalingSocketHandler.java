@@ -1,6 +1,10 @@
 package com.sparta.fritown.domain.websocket.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.fritown.domain.dto.punchGame.PunchGameEndResponseDto;
+import com.sparta.fritown.domain.websocket.model.UserStats;
+import com.sparta.fritown.global.exception.ErrorCode;
+import com.sparta.fritown.global.exception.custom.ServiceException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -57,7 +61,7 @@ public class SignalingSocketHandler extends TextWebSocketHandler {
         stats.updateStats(
                 (int) data.get("punch"),
                 (double) data.get("heartRate"),
-                (int) data.get("calories"),
+                (double) data.get("calories"),
                 (String) data.get("nickname")
         );
         userStats.get(channelId).put(sessionId, stats);
@@ -121,15 +125,41 @@ public class SignalingSocketHandler extends TextWebSocketHandler {
         return path.split("/channel/")[1];
     }
 
+    public List<PunchGameEndResponseDto> endPunchGame(String channelId) {
+        if (!userStats.containsKey(channelId)) {
+            throw ServiceException.of(ErrorCode.CHANNEL_NOT_FOUND);
+        }
+
+        List<PunchGameEndResponseDto> responseDtos = new ArrayList<>();
+
+        for (Map.Entry<String, UserStats> entry : userStats.get(channelId).entrySet()) {
+            UserStats stats = entry.getValue();
+
+            // UserStats 데이터를 PunchGameEndResponseDto로 변환
+            PunchGameEndResponseDto dto = new PunchGameEndResponseDto(
+                    stats.getNickname(),
+                    stats.getFinalPunch(),
+                    stats.getAvgHeartRate(),
+                    stats.getFinalCalorie()
+            );
+
+            // 변환된 DTO를 리스트에 추가
+            responseDtos.add(dto);
+        }
+
+        // 최종 리스트 반환
+        return responseDtos;
+    }
+
     private static class UserStats {
         private int finalPunch = 0;
         private double avgHeartRate = 0;
-        private int finalCalorie = 0;
+        private double finalCalorie = 0;
         private int heartRateCount = 0;
         private String nickname;
 
-        void updateStats(int punch, double heartRate, int calories, String nickname) {
-            this.finalPunch += punch;
+        void updateStats(int punch, double heartRate, double calories, String nickname) {
+            this.finalPunch = punch;
             this.avgHeartRate = (this.avgHeartRate * heartRateCount + heartRate) / (++heartRateCount);
             this.finalCalorie += calories;
             this.nickname = nickname;
@@ -137,7 +167,7 @@ public class SignalingSocketHandler extends TextWebSocketHandler {
 
         public int getFinalPunch() { return finalPunch; }
         public double getAvgHeartRate() { return avgHeartRate; }
-        public int getFinalCalorie() { return finalCalorie; }
+        public double getFinalCalorie() { return finalCalorie; }
         public int getHeartRateCount() { return heartRateCount; }
         public String getNickname() { return nickname; }
 

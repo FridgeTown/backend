@@ -2,6 +2,7 @@ package com.sparta.fritown.domain.service;
 
 
 import com.fasterxml.jackson.databind.deser.DataFormatReaders;
+import com.sparta.fritown.domain.dto.punchGame.PunchGameEndResponseDto;
 import com.sparta.fritown.domain.dto.punchGame.PunchGameStartRequestDto;
 import com.sparta.fritown.domain.dto.punchGame.PunchGameStartResponseDto;
 import com.sparta.fritown.domain.entity.Matches;
@@ -11,6 +12,8 @@ import com.sparta.fritown.global.exception.ErrorCode;
 import com.sparta.fritown.global.exception.custom.ServiceException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PunchGameService {
@@ -43,4 +46,5 @@ public class PunchGameService {
                 opponent.getProfileImg()           // 프로필 이미지
         );
     }
+
 }
