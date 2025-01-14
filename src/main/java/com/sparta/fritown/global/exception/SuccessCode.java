@@ -38,7 +38,8 @@ public enum SuccessCode implements ApiCode {
     GUEST_ID_GENERATED(HttpStatus.OK, "G001", "게스트 ID가 성공적으로 생성되었습니다."),
 
     // punchGame
-    PUNCH_GAME_STARTED(HttpStatus.OK,"PG001", "펀치 게임이 성공적으로 시작되었습니다.");
+    PUNCH_GAME_STARTED(HttpStatus.OK,"PG001", "펀치 게임이 성공적으로 시작되었습니다."),
+    PUNCH_GAME_ENDED(HttpStatus.OK, "PG002", "펀치 게임이 성공적으로 종료되었습니다.");
 
 
     private final HttpStatus status;
