@@ -154,12 +154,12 @@ public class SignalingSocketHandler extends TextWebSocketHandler {
     private static class UserStats {
         private int finalPunch = 0;
         private double avgHeartRate = 0;
-        private int finalCalorie = 0;
+        private double finalCalorie = 0;
         private int heartRateCount = 0;
         private String nickname;
 
-        void updateStats(int punch, double heartRate, int calories, String nickname) {
-            this.finalPunch += punch;
+        void updateStats(int punch, double heartRate, double calories, String nickname) {
+            this.finalPunch = punch;
             this.avgHeartRate = (this.avgHeartRate * heartRateCount + heartRate) / (++heartRateCount);
             this.finalCalorie += calories;
             this.nickname = nickname;
@@ -167,7 +167,7 @@ public class SignalingSocketHandler extends TextWebSocketHandler {
 
         public int getFinalPunch() { return finalPunch; }
         public double getAvgHeartRate() { return avgHeartRate; }
-        public int getFinalCalorie() { return finalCalorie; }
+        public double getFinalCalorie() { return finalCalorie; }
         public int getHeartRateCount() { return heartRateCount; }
         public String getNickname() { return nickname; }
 
