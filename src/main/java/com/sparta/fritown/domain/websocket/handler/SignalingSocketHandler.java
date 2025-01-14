@@ -61,7 +61,7 @@ public class SignalingSocketHandler extends TextWebSocketHandler {
         stats.updateStats(
                 (int) data.get("punch"),
                 (double) data.get("heartRate"),
-                (int) data.get("calories"),
+                (double) data.get("calories"),
                 (String) data.get("nickname")
         );
         userStats.get(channelId).put(sessionId, stats);
