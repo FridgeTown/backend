@@ -36,6 +36,7 @@ public class SecurityConfig3 {
                         .requestMatchers(AuthenticatedMatchers.loginArray).permitAll()
                         .requestMatchers(AuthenticatedMatchers.testArray).permitAll()
                         .requestMatchers(AuthenticatedMatchers.swaggerArray).permitAll()
+                        .requestMatchers(AuthenticatedMatchers.socketArray).permitAll()
                         .anyRequest().authenticated())  // 다른 모든 요청은 인증 필요
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(LogoutConfigurer::permitAll)
