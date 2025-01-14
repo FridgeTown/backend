@@ -118,6 +118,6 @@ public interface PunchGameControllerDocs {
                     description = "펀치 게임이 종료될 채널 ID",
                     example = "12345",
                     required = true
-            ) @PathVariable Long channelId
+            ) @PathVariable String channelId
     );
 }

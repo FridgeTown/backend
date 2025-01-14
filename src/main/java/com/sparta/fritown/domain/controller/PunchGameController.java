@@ -39,7 +39,7 @@ public class PunchGameController implements PunchGameControllerDocs {
 
     @Override
     @GetMapping("/end/{channelId}")
-    public ResponseDto<List<PunchGameEndResponseDto>> punchGameEnd(@PathVariable Long channelId) {
+    public ResponseDto<List<PunchGameEndResponseDto>> punchGameEnd(@PathVariable String channelId) {
         List<PunchGameEndResponseDto> responseDtos = signalingSocketHandler.endPunchGame(channelId);
         return ResponseDto.success(SuccessCode.PUNCH_GAME_ENDED, responseDtos);
     }

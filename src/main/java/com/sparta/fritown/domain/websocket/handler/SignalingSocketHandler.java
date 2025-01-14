@@ -125,7 +125,7 @@ public class SignalingSocketHandler extends TextWebSocketHandler {
         return path.split("/channel/")[1];
     }
 
-    public List<PunchGameEndResponseDto> endPunchGame(Long channelId) {
+    public List<PunchGameEndResponseDto> endPunchGame(String channelId) {
         if (!userStats.containsKey(channelId)) {
             throw ServiceException.of(ErrorCode.CHANNEL_NOT_FOUND);
         }
