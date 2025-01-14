@@ -117,4 +117,17 @@ public class Matches {
     public void setChannelId(String channelId) {
         this.channelId = channelId;
     }
+
+    // 상대방 유저를 반환하는 메서드 자신의 userId를 넣으면 상대방 User entity를 반환
+    public User getOpponent(Long userId)
+    {
+        if (challengedBy != null & challengedBy.getId().equals(userId)) {
+            return challengedTo;
+        } else if (challengedTo != null && challengedTo.getId().equals(userId)) {
+            return challengedBy;
+        } else {
+            throw ServiceException.of(ErrorCode.USER_NOT_PART_OF_MATCH);
+        }
+
+    }
 }
