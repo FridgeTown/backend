@@ -8,4 +8,11 @@ public class PunchGameEndResponseDto {
     private int finalPunch;
     private double avgHeartRate;
     private int finalCalorie;
+
+    public PunchGameEndResponseDto(String nickname, int finalPunch, double avgHeartRate, int finalCalorie) {
+        this.nickname = nickname;
+        this.finalPunch = finalPunch;
+        this.avgHeartRate = avgHeartRate;
+        this.finalCalorie = finalCalorie;
+    }
 }

@@ -1,6 +1,10 @@
 package com.sparta.fritown.domain.websocket.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.fritown.domain.dto.punchGame.PunchGameEndResponseDto;
+import com.sparta.fritown.domain.websocket.model.UserStats;
+import com.sparta.fritown.global.exception.ErrorCode;
+import com.sparta.fritown.global.exception.custom.ServiceException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -119,6 +123,32 @@ public class SignalingSocketHandler extends TextWebSocketHandler {
     private String getChannelId(WebSocketSession session) {
         String path = session.getUri().getPath();
         return path.split("/channel/")[1];
+    }
+
+    public List<PunchGameEndResponseDto> endPunchGame(Long channelId) {
+        if (!userStats.containsKey(channelId)) {
+            throw ServiceException.of(ErrorCode.CHANNEL_NOT_FOUND);
+        }
+
+        List<PunchGameEndResponseDto> responseDtos = new ArrayList<>();
+
+        for (Map.Entry<String, UserStats> entry : userStats.get(channelId).entrySet()) {
+            UserStats stats = entry.getValue();
+
+            // UserStats 데이터를 PunchGameEndResponseDto로 변환
+            PunchGameEndResponseDto dto = new PunchGameEndResponseDto(
+                    stats.getNickname(),
+                    stats.getFinalPunch(),
+                    stats.getAvgHeartRate(),
+                    stats.getFinalCalorie()
+            );
+
+            // 변환된 DTO를 리스트에 추가
+            responseDtos.add(dto);
+        }
+
+        // 최종 리스트 반환
+        return responseDtos;
     }
 
     private static class UserStats {
