@@ -32,5 +32,9 @@ public class AuthenticatedMatchers {
     public static final String[] socketArray = {
             "/channel/**"
     };
+
+    public static final String[] voteArray = {
+            "/simple/**"
+    };
 }
 
