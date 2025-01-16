@@ -17,7 +17,10 @@ public class SimpleVotingService {
     }
     public void simpleVoting(SimpleVoteRequestDto simpleVoteRequestDto) {
         Vote vote = simpleVotingRepository.findByChannelId(simpleVoteRequestDto.getChannelId())
-                .orElseThrow(() ->ServiceException.of(ErrorCode.CHANNEL_NOT_FOUND));
+                .orElseGet(() -> {
+                    Vote newVote = new Vote(simpleVoteRequestDto.getChannelId());
+                    return simpleVotingRepository.save(newVote);
+                });
 
         vote.voting(simpleVoteRequestDto.getVotes());
         simpleVotingRepository.save(vote);
