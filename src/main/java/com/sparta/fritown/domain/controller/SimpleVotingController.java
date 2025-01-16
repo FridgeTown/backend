@@ -8,7 +8,7 @@ import com.sparta.fritown.global.exception.dto.ResponseDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/simple")
 public class SimpleVotingController {
     private final SimpleVotingService simpleVotingService;
